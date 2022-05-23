@@ -1,0 +1,262 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+homeassistant:
+  customize: !include customize.yaml
+
+http:
+  server_host: 0.0.0.0
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
+  use_x_forwarded_for: true
+  trusted_proxies:
+  # Pod CIDR
+  - 10.0.0.0/8
+  # Node CIDR
+  - 192.168.1.0/24
+
+logger:
+  default: error
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+recorder:
+  db_url: !secret database_url
+  purge_keep_days: 14
+
+alert: !include alerts.yaml
+automation ui: !include automations.yaml
+automation yaml: !include_dir_list automations/
+binary_sensor: !include_dir_merge_list binary_sensors/
+group: !include groups.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+sensor:
+  - platform: waste_collection_schedule
+    name: next_collection
+  - platform: time_date
+    display_options:
+      - "time"
+      - "date"
+      - "date_time"
+      - "date_time_utc"
+      - "date_time_iso"
+      - "time_date"
+      - "time_utc"
+      - "beat"
+  - platform: integration
+    source: sensor.sonoff_1000bff7b5_power
+    name: eBike Power
+    unit_prefix: k
+    round: 2
+  - platform: integration
+    source: sensor.sonoff_1000bff832_power
+    name: Bookshelf Power
+    unit_prefix: k
+    round: 2
+
+template:
+  - sensor:
+      - name: sonoff_1000bff832_power
+        state: >
+          {{ state_attr('switch.sonoff_1000bff832', 'power') }}
+        device_class: power
+        unit_of_measurement: "W"
+      - name: sonoff_1000bff7b5_power
+        state: >
+          {{ state_attr('switch.sonoff_1000bff7b5', 'power') }}
+        device_class: power
+        unit_of_measurement: "W"
+
+notify:
+  - name: ALL_DEVICES
+    platform: group
+    services:
+      - service: mobile_app_pixel_5
+      - service: mobile_app_iphone_2
+  - name: mike_phone
+    platform: group
+    services:
+      - service: mobile_app_pixel_5
+  - name: jena_phone
+    platform: group
+    services:
+      - service: mobile_app_iphone_2
+
+proximity:
+  mike_home:
+    devices:
+      - person.mike
+    tolerance: 10
+  jena_home:
+    devices:
+      - person.jena
+    tolerance: 10
+
+nest:
+  client_id: !secret google_client_id
+  client_secret: !secret google_client_secret
+  project_id: !secret google_project_id
+
+camera:
+  - platform: generic
+    name: Cat Camera
+    stream_source: !secret cat_camera_stream_source
+    still_image_url: /local/loading.gif
+
+spotify:
+  client_id: !secret spotify_client_id
+  client_secret: !secret spotify_client_secret
+
+sonoff:
+  username: !secret sonoff_username
+  password: !secret sonoff_password
+  devices:
+    1000bff832:
+      name: Bookshelf Light
+      host: 10.0.10.216
+    1000bff7b5:
+      name: eBike
+
+
+prometheus:
+  namespace: homeassistant
+  filter:
+    include_domains:
+      - alarm_control_panel
+      - light
+      - binary_sensor
+
+lovelace:
+  mode: yaml
+  resources:
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+    - url: /hacsfiles/simple-weather-card/simple-weather-card-bundle.js
+      type: module
+    - url: /hacsfiles/secondaryinfo-entity-row/secondaryinfo-entity-row.js
+      type: module
+    - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
+      type: module
+    - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+      type: module
+    - url: /hacsfiles/light-entity-card/light-entity-card.js
+      type: module
+    - url: /hacsfiles/lovelace-auto-entities/auto-entities.js
+      type: module
+    - url: /hacsfiles/lovelace-card-tools/card-tools.js
+      type: module
+    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /hacsfiles/lovelace-layout-card/layout-card.js
+      type: module
+    - url: /hacsfiles/my-cards/my-cards.js
+      type: module
+
+  # Add yaml dashboards
+  dashboards:
+    alarm-control-panel:
+      mode: yaml
+      title: Alarm
+      icon: mdi:shield-lock-outline
+      show_in_sidebar: false
+      filename: lovelace-alarm-control-panel.yaml
+
+plant:
+  clyde_junior:
+    sensors:
+      moisture: sensor.xiaomi_hhccjcy01_moisture
+      temperature: sensor.xiaomi_hhccjcy01_temperature
+      conductivity: sensor.xiaomi_hhccjcy01_soil_conductivity
+      brightness: sensor.xiaomi_hhccjcy01_illuminance
+  rubber_boi:
+    sensors:
+      moisture: sensor.xiaomi_hhccjcy03_moisture
+      temperature: sensor.xiaomi_hhccjcy03_temperature
+      conductivity: sensor.xiaomi_hhccjcy03_soil_conductivity
+      brightness: sensor.xiaomi_hhccjcy03_illuminance
+
+waste_collection_schedule:
+  sources:
+    - name: ics
+      calendar_title: !secret waste_collection_schedule_calendar_title
+      args:
+        url: !secret waste_collection_schedule_ics_url
+      customize:
+        - type: Recycling and green waste
+          alias: Recycling
+        - type: Garbage and green waste
+          alias: Garbage
+        - type: Garbage, green waste, and glass recycling
+          alias: Garbage & Glass
+        - type: Recycling, green waste, and glass recycling
+          alias: Recycling & Glass
+        - type: Recycling, glass recycling, and green waste
+          alias: Recycling & Glass
+        - type: Garbage, glass recycling, and green waste
+          alias: Garbage & Glass
+
+google_assistant:
+  project_id: !secret google_assistant_project_id
+  service_account: !include service_account.json
+  report_state: true
+  exposed_domains:
+    - alarm_control_panel
+    - switch
+    - light
+    - lock
+    - cover
+    - vacuum
+    - scene
+  entity_config:
+    light.leviton_plug:
+      expose: false
+      room: Living Room
+    camera.cat_camera:
+      expose: true
+    # Browser Mod Entities Disable
+    light.0ee2ae87_8a834cbe:
+      expose: false
+    light.4a9e20d9_0c14b343:
+      expose: false
+    light.6c47c805_ce28057a:
+      expose: false
+    light.82685850_62ac710b:
+      expose: false
+    light.832bbd12_83f6ad46:
+      expose: false
+    light.a55bf3e4_f3471891:
+      expose: false
+    light.77bb4e65_937efd82:
+      expose: false
+    light.f52bea16_415904fd:
+      expose: false
+    light.fe5d7ce9_80d4a018:
+      expose: false
+
+alarm_control_panel:
+  - platform: manual
+    name: Home Alarm
+    code: !secret alarm_control_panel_code
+    # Don't require the code to arm the alarm
+    code_arm_required: false
+    # Arm again after treiggering
+    disarm_after_trigger: false
+    # Delay from arming and becoming armed, eg. to leave the house
+    arming_time: 120
+    # Allow time to disarm the alarm before it triggers, eg. when arriving home
+    delay_time: 60
+    # Amount of time the alarm is triggered for
+    trigger_time: 600
+    disarmed:
+      # Ensure the alarm can never be directly triggered when disarmed
+      trigger_time: 0
+    armed_home:
+      arming_time: 0

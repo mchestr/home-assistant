@@ -1,0 +1,46 @@
+alias: alarm/triggers.yaml
+id: 62e21db5-25b7-4319-bf89-fe8aaa9840ac
+description: "Sensors that trigger the alarm"
+trigger:
+  - platform: state
+    entity_id: binary_sensor.office_window_contact
+    to: "on"
+  - platform: state
+    entity_id: binary_sensor.guest_bedroom_window_contact
+    to: "on"
+  - platform: state
+    entity_id: binary_sensor.patio_door_contact
+    to: "on"
+  - platform: state
+    entity_id: binary_sensor.balcony_door_contact
+    to: "on"
+  - platform: state
+    entity_id: binary_sensor.kitchen_window_contact
+    to: "on"
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: "unlocked"
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: "unlocking"
+  - platform: state
+    entity_id: cover.garage_door
+    to: "open"
+  - platform: state
+    entity_id: cover.garage_door
+    to: "opening"
+condition:
+  - condition: or
+    conditions:
+      - condition: state
+        state: armed_home
+        entity_id: alarm_control_panel.home_alarm
+      - condition: state
+        state: armed_away
+        entity_id: alarm_control_panel.home_alarm
+action:
+  - service: alarm_control_panel.alarm_trigger
+    data: {}
+    target:
+      entity_id: alarm_control_panel.home_alarm
+mode: single

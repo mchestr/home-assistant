@@ -1,0 +1,17 @@
+title: Media
+path: media
+visible:
+  - user: f16d31d12892445fbe04fa47dcc767e1
+cards:
+  - type: vertical-stack
+    cards:
+      - !include components/header-chips-back-default.yml
+      - type: custom:button-card
+        template: card_title
+        name: Media Controls
+      - type: 'custom:button-card'
+        template: card_media_player
+        entity: media_player.as_aftti43_dmr
+      - type: 'custom:button-card'
+        template: card_media_player
+        entity: media_player.living_room_speaker

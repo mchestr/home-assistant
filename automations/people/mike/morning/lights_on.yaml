@@ -1,0 +1,65 @@
+alias: people/mike/morning/lights_on.yaml
+id: 6204876b-18e5-4bc2-b6ee-8b8f54d97829
+description: Turn on heated floors in the morning
+mode: single
+trigger:
+  - platform: template
+    value_template: >-
+      {{now().strftime('%a %h %d %H:%M %Z %Y') == (((state_attr('sensor.pixel_5_next_alarm', 'Time in Milliseconds') | int / 1000) - 1*60 ) | timestamp_custom('%a %h %d %H:%M %Z %Y'))}}
+condition:
+  - condition: state
+    entity_id: person.mike
+    state: home
+action:
+  - wait_for_trigger:
+      - type: motion
+        platform: device
+        device_id: 8dee1b01f45a35760585a0fde943de25
+        entity_id: binary_sensor.master_bathroom_motion_detector_occupancy
+        domain: binary_sensor
+    timeout: '1800'
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      area_id: master_bathroom
+  - delay:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  - service: homeassistant.turn_on
+    data: {}
+    target:
+      area_id: master_bedroom
+  - type: turn_on
+    device_id: 940a8aee3ffe2cbdd02efb20fd4cf79c
+    entity_id: switch.hallway_lights
+    domain: switch
+  - wait_for_trigger:
+      - platform: device
+        type: turned_off
+        device_id: 8ad4f68449347d77f43b235d92ec5442
+        entity_id: switch.master_bedroom_lights
+        domain: switch
+    timeout: '600'
+  - type: turn_on
+    device_id: ec7b8e02f71c48db858daa22965c5ab9
+    entity_id: switch.second_floor_stairs_lights
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      brightness_pct: 100
+    target:
+      area_id: living_room
+  - service: homeassistant.turn_on
+    target:
+      area_id: kitchen
+  - type: turn_off
+    device_id: 940a8aee3ffe2cbdd02efb20fd4cf79c
+    entity_id: switch.hallway_lights
+    domain: switch

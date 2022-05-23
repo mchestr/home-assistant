@@ -1,0 +1,27 @@
+alias: alarm/front_door_auto_disarm.yaml
+id: acb1aa5e-98b9-416b-ae53-145a0e745874
+description: 'Disarm alarm if unlocked by known entity'
+trigger:
+  - platform: device
+    device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
+    domain: lock
+    entity_id: lock.front_door_lock
+    type: unlocked
+condition:
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state:
+      - armed_away
+      - armed_home
+  - condition: state
+    entity_id: sensor.front_door_lock_operator
+    state: 
+      - Jena Drysdale
+      - Mike Chester
+action:
+  - service: alarm_control_panel.alarm_disarm
+    data:
+      code: '5362'
+    target:
+      entity_id: alarm_control_panel.home_alarm
+mode: single

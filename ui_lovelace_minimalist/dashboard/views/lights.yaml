@@ -1,0 +1,252 @@
+title: Lights
+path: lights
+cards:
+  - type: vertical-stack
+    cards:
+      - !include components/header-chips-back-default.yml
+      - type: horizontal-stack
+        cards:
+        - type: custom:button-card
+          template: card_title
+          name: Home Lights
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_vertical_button_groups
+            entity: group.all_lights
+            icon: mdi:lightbulb
+            name: All
+          - type: "custom:button-card"
+            template: card_vertical_button_groups
+            entity: group.first_floor_lights
+            icon: mdi:lightbulb
+            name: First Floor
+          - type: "custom:button-card"
+            template: card_vertical_button_groups
+            entity: group.main_floor_lights
+            icon: mdi:lightbulb
+            name: Main Floor
+          - type: "custom:button-card"
+            template: card_vertical_button_groups
+            entity: group.second_floor_lights
+            icon: mdi:lightbulb
+            name: Second Floor
+
+      - type: custom:button-card
+        template: card_title
+        name: First Floor
+      - type: custom:button-card
+        template: card_title
+        label: Entry
+      - type: horizontal-stack
+        cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.entry_light
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_enable_color: true
+            ulm_card_light_icon: mdi:lightbulb
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.entry_stairs_lights
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_enable_color: true
+            ulm_card_light_icon: mdi:lightbulb
+      - type: custom:button-card
+        template: card_title
+        label: Garage
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.garage_light
+        variables:
+          ulm_card_light_force_background_color: true
+          ulm_card_light_enable_horizontal_wide: true
+          ulm_card_light_enable_color: true
+          ulm_card_light_icon: mdi:lightbulb
+      - type: "custom:button-card"
+        template: chip_icon_label
+        label: Auto-Off (15 minutes)
+        icon: mdi:timer-outline
+        entity: automation.rooms_garage_timer_light_off_yaml
+        state:
+          - operator: "template"
+            value: |
+              [[[
+                return entity.state == "on";
+              ]]]
+            styles:
+              icon:
+                - color: "[[[ return `rgba(var(--color-yellow), 1)`; ]]]"
+        tap_action:
+          action: call-service
+          service: automation.toggle
+          service_data:
+            entity_id: automation.rooms_garage_timer_light_off_yaml
+
+      - type: custom:button-card
+        template: card_title
+        name: Main Floor
+
+      - type: custom:button-card
+        template: card_title
+        label: Living Room
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.couch_light
+        variables:
+          ulm_card_light_enable_slider: true
+          ulm_card_light_enable_collapse: true
+          ulm_card_light_force_background_color: true
+          ulm_card_light_enable_horizontal_wide: true
+          ulm_card_light_enable_color: true
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.tv_light
+        variables:
+          ulm_card_light_enable_slider: true
+          ulm_card_light_enable_collapse: true
+          ulm_card_light_force_background_color: true
+          ulm_card_light_enable_horizontal_wide: true
+          ulm_card_light_enable_color: true
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.sonoff_1000bff832
+        variables:
+          ulm_card_light_force_background_color: true
+          ulm_card_light_enable_horizontal_wide: true
+          ulm_card_light_enable_color: true
+          ulm_card_light_icon: mdi:lightbulb
+      - type: custom:button-card
+        template: card_title
+        label: Kitchen
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_light
+            entity: light.kitchen_lights
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_icon: mdi:lightbulb
+          - type: "custom:button-card"
+            template: card_light
+            entity: light.kitchen_counter_lights
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_icon: mdi:lightbulb
+      # - type: "custom:button-card"
+      #   template: card_light
+      #   entity: light.dining_room_light
+      #   variables:
+      #     ulm_card_light_force_background_color: true
+      #     ulm_card_light_enable_horizontal_wide: true
+      #     ulm_card_light_enable_color: true
+        
+      - type: custom:button-card
+        template: card_title
+        label: Patio
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.patio_lights
+        variables:
+          ulm_card_light_force_background_color: true
+          ulm_card_light_icon: mdi:lightbulb
+      - type: custom:button-card
+        template: card_title
+        label: Powder Room
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.powder_room_light
+        variables:
+          ulm_card_light_force_background_color: true
+          ulm_card_light_icon: mdi:lightbulb
+
+      - type: custom:button-card
+        template: card_title
+        name: Second Floor
+
+      - type: custom:button-card
+        template: card_title
+        label: Stairs
+      - type: horizontal-stack
+        cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.second_floor_stairs_lights
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_icon: mdi:lightbulb
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.hallway_lights
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_enable_color: true
+            ulm_card_light_icon: mdi:lightbulb
+
+      - type: custom:button-card
+        template: card_title
+        label: Master Bedroom
+      - type: horizontal-stack
+        cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.master_bedroom_lights
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_icon: mdi:lightbulb
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.hue_go
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_enable_color: true
+      - type: custom:button-card
+        template: card_title
+        label: Master Bathroom
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_light
+            entity: light.master_bathroom_lights
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_icon: mdi:lightbulb
+          - type: "custom:button-card"
+            template: card_light
+            entity: light.master_bathroom_mirror_lights
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_icon: mdi:lightbulb
+      - type: custom:button-card
+        template: card_title
+        label: Office
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.office_light
+        variables:
+          ulm_card_light_force_background_color: true
+          ulm_card_light_icon: mdi:lightbulb
+      - type: custom:button-card
+        template: card_title
+        label: Guest Bathroom
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.guest_bathroom_lights
+        variables:
+          ulm_card_light_force_background_color: true
+          ulm_card_light_icon: mdi:lightbulb
+      - type: custom:button-card
+        template: card_title
+        label: Guest Bedroom
+      - type: "custom:button-card"
+        template: card_light
+        entity: light.guest_bedroom_lights
+        variables:
+          ulm_card_light_force_background_color: true
+          ulm_card_light_icon: mdi:lightbulb

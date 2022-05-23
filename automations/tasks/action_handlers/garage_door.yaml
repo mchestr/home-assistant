@@ -1,0 +1,45 @@
+alias: tasks/action_handlers/garage_door.yaml
+id: 628caa03-f695-4ab8-9e56-a5c41c582788
+description: ''
+mode: single
+trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: GARAGE_DOOR_CLOSE
+    id: CLOSE
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: GARAGE_DOOR_OPEN
+    id: OPEN
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: OPEN
+          - condition: device
+            device_id: 9028836a88eecad1538e42463c11dfb4
+            domain: cover
+            entity_id: cover.garage_door
+            type: is_closed
+        sequence:
+          - device_id: 9028836a88eecad1538e42463c11dfb4
+            domain: cover
+            entity_id: cover.garage_door
+            type: open
+      - conditions:
+          - condition: trigger
+            id: CLOSE
+          - condition: device
+            device_id: 9028836a88eecad1538e42463c11dfb4
+            domain: cover
+            entity_id: cover.garage_door
+            type: is_open
+        sequence:
+          - device_id: 9028836a88eecad1538e42463c11dfb4
+            domain: cover
+            entity_id: cover.garage_door
+            type: close
+    default: []

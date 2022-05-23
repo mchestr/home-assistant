@@ -1,0 +1,30 @@
+alias: rooms/entry/garage_entry_door_opened_entering.yaml
+id: 524a1d6f-9419-425f-b674-89985bbab8a5
+description: Automation triggered if entering entry from garage
+mode: single
+trigger:
+  - type: opened
+    platform: device
+    device_id: 13949f7021b2e651a86ea6a5077473ab
+    entity_id: binary_sensor.garage_entry_contact
+    domain: binary_sensor
+condition:
+  - type: is_motion
+    condition: device
+    device_id: 3b5c0fd10dac7d134497b220b6411b9e
+    entity_id: binary_sensor.garage_motion_detector_occupancy
+    domain: binary_sensor
+  - condition: sun
+    before: sunset
+    after: sunset
+    after_offset: '-00:45:00'
+  - condition: device
+    type: is_off
+    device_id: fd0b2233736eaaac5d731d5f56e5b26c
+    entity_id: switch.entry_stairs_lights
+    domain: switch
+action:
+  - type: turn_on
+    device_id: fd0b2233736eaaac5d731d5f56e5b26c
+    entity_id: switch.entry_stairs_lights
+    domain: switch

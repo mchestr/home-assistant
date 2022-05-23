@@ -1,0 +1,33 @@
+alias: rooms/entry/doorbell_pressed_night_light_on.yaml
+id: ed7d6ab4-058a-4f1f-b91d-7032b0e191fd
+description: Turn on entry light if doorbell pressed at night
+mode: restart
+trigger:
+  - platform: device
+    device_id: 2d2d34dd071c750e6af81b674f481d8e
+    domain: nest
+    type: doorbell_chime
+condition:
+  - condition: sun
+    after: sunset
+    before: sunrise
+    before_offset: "-01:00:00"
+  - condition: device
+    type: is_off
+    device_id: 4bc821401b94267779ef1fa10014ddf3
+    entity_id: switch.entry_light
+    domain: switch
+action:
+  - type: turn_on
+    device_id: 4bc821401b94267779ef1fa10014ddf3
+    entity_id: switch.entry_light
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: 4bc821401b94267779ef1fa10014ddf3
+    entity_id: switch.entry_light
+    domain: switch

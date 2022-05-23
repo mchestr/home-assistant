@@ -1,0 +1,25 @@
+alias: rooms/patio/outside_light_timer.yaml
+id: 5c104d0a-ab51-4db9-8f46-50a701202c98
+description: Door light timer
+mode: single
+trigger:
+  - type: not_opened
+    platform: device
+    device_id: cddcd34021e4ca436f0d12a03867dc96
+    entity_id: binary_sensor.patio_door_contact
+    domain: binary_sensor
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+condition:
+  - condition: device
+    type: is_on
+    device_id: 95045b9e5b208f9850a24bfa0fc5dd45
+    entity_id: switch.patio_lights
+    domain: switch
+action:
+  - type: turn_off
+    device_id: 95045b9e5b208f9850a24bfa0fc5dd45
+    entity_id: switch.patio_lights
+    domain: switch

@@ -1,0 +1,45 @@
+alias: rooms/living_room/lights_off_timer.yaml
+id: 6e261c90-0a39-472a-a064-98aa766f1510
+description: ""
+mode: single
+trigger:
+  - platform: time
+    at: "22:30:00"
+    id: 10:30pm
+  - platform: time
+    at: "00:00:00"
+    id: 12am
+condition:
+  - condition: and
+    conditions:
+      - condition: or
+        conditions:
+          - alias: "Jena is home"
+            condition: state
+            entity_id: person.jena
+            state: home
+          - alias: "Mike is home"
+            condition: state
+            entity_id: person.mike
+            state: home
+      - condition: or
+        conditions:
+          - condition: and
+            conditions:
+              - condition: trigger
+                id: 10:30pm
+              - condition: state
+                entity_id: binary_sensor.workday_tomorrow
+                state: "on"
+          - condition: and
+            conditions:
+              - condition: trigger
+                id: 12am
+              - condition: state
+                entity_id: binary_sensor.workday_tomorrow
+                state: "off"
+action:
+  - service: light.turn_off
+    target:
+      area_id: living_room
+    data: {}

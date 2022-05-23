@@ -1,0 +1,49 @@
+alias: people/coming_home.yaml
+id: 0a465eb3-3489-4354-aff3-b73f1c210b4f
+description: "Coming home automation"
+mode: single
+trigger:
+  - platform: zone
+    entity_id: device_tracker.pixel_5
+    zone: zone.home
+    event: enter
+    id: mike
+  - platform: zone
+    entity_id: device_tracker.iphone_13_2
+    zone: zone.home
+    event: enter
+    id: jena
+condition:
+  - alias: "Guest Mode Off"
+    condition: state
+    entity_id: input_boolean.guest_mode
+    state: "off"
+  # Sun is set/setting soon
+  - condition: sun
+    after: sunset
+    after_offset: "-00:45:00"
+action:
+  - wait_for_trigger:
+      - platform: zone
+        entity_id: device_tracker.pixel_5
+        zone: zone.home
+        event: enter
+      - platform: zone
+        entity_id: device_tracker.iphone_13_2
+        zone: zone.home
+        event: enter
+    timeout: "300"
+    continue_on_timeout: false
+  - type: turn_on
+    device_id: fd0b2233736eaaac5d731d5f56e5b26c
+    entity_id: switch.entry_stairs_lights
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
+  - type: turn_on
+    device_id: 336fc12d0bcb111281c0e206490d1ce5
+    entity_id: switch.kitchen_lights
+    domain: switch

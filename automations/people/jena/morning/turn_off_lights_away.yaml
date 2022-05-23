@@ -1,0 +1,32 @@
+alias: people/jena/morning/turn_off_lights_away.yaml
+id: c3526df7-9570-4c5e-97cc-84c16f59129a
+description: Turn on heated floors in the morning
+mode: single
+trigger:
+  - platform: template
+    value_template: >-
+      {{ now().timestamp() | timestamp_custom('%H:%M') == (state_attr('input_datetime.jena_alarm', 'timestamp') - 1*60) | timestamp_custom('%H:%M', false) }}
+condition:
+  - condition: state
+    entity_id: person.jena
+    state: home
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+action:
+  - wait_for_trigger:
+      - platform: zone
+        entity_id: device_tracker.iphone
+        zone: zone.home
+        event: leave
+      - platform: device
+        device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
+        domain: lock
+        entity_id: lock.front_door_lock
+        type: unlocked
+    timeout: '7200'
+  - service: homeassistant.turn_off
+    target:
+      area_id: 
+        - kitchen
+        - living_room

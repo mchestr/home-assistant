@@ -1,0 +1,45 @@
+alias: tasks/action_handlers/scene_hue_go_selector.yaml
+id: 3d087255-fa9b-475a-a5f4-a347289d8e32
+description: scene triggers for hue go
+mode: single
+trigger:
+  - platform: state
+    entity_id: light.hue_go
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.to_state.state == "On" }}'
+        sequence:
+          - type: turn_on
+            device_id: f8b9d484dab31131366d85f1fc5c1dee
+            entity_id: light.hue_go
+            domain: light
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.to_state.state == "Off" }}'
+        sequence:
+          - type: turn_off
+            device_id: f8b9d484dab31131366d85f1fc5c1dee
+            entity_id: light.hue_go
+            domain: light
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.to_state.state == "Dimmed" }}'
+        sequence:
+          - type: turn_on
+            device_id: f8b9d484dab31131366d85f1fc5c1dee
+            entity_id: light.hue_go
+            domain: light
+            brightness_pct: 100
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.to_state.state == "Night Light" }}'
+        sequence:
+          - type: turn_on
+            device_id: f8b9d484dab31131366d85f1fc5c1dee
+            entity_id: light.hue_go
+            domain: light
+            brightness_pct: 50
+    default: []

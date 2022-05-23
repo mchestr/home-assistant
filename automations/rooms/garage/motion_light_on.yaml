@@ -1,0 +1,21 @@
+alias: rooms/garage/motion_light_on.yaml
+id: d3e91c77-8ef1-4cc7-b110-86cd9eccdfae
+description: motion detected in garage
+mode: single
+trigger:
+  - type: motion
+    platform: device
+    device_id: 3b5c0fd10dac7d134497b220b6411b9e
+    entity_id: binary_sensor.garage_motion_detector_occupancy
+    domain: binary_sensor
+condition:
+  - condition: device
+    type: is_off
+    device_id: 2c64cb0b000b485c989b1e0c44cfdf3c
+    entity_id: switch.garage_light
+    domain: switch
+action:
+  - type: turn_on
+    device_id: 2c64cb0b000b485c989b1e0c44cfdf3c
+    entity_id: switch.garage_light
+    domain: switch

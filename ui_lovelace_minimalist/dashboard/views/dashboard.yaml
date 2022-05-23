@@ -1,0 +1,168 @@
+title: Dashboard
+path: dashboard
+cards:
+  - type: vertical-stack
+    cards:
+      - !include components/header-chips-back-menu.yml
+      - type: custom:button-card
+        template: card_title
+        name: Home
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_person
+            variables:
+              ulm_card_person_entity: person.mike
+              ulm_card_person_use_entity_picture: true
+              ulm_card_person_zone1: home
+              ulm_card_person_zone2: away
+          - type: "custom:button-card"
+            template: card_person
+            variables:
+              ulm_card_person_entity: person.jena
+              ulm_card_person_use_entity_picture: true
+              ulm_card_person_zone1: home
+              ulm_card_person_zone2: away
+            hold_action:
+              action: more-info
+              entity: input_datetime.jena_alarm
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: cover.garage_door
+            show_last_changed: true
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: lock.front_door_lock
+            name: Front Door
+            show_last_changed: true
+      - type: custom:button-card
+        template: card_title
+        label: Lights
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_vertical_button_groups
+            entity: group.all_lights
+            icon: mdi:lightbulb
+            name: All
+          - type: "custom:button-card"
+            template: card_vertical_button_groups
+            entity: group.first_floor_lights
+            icon: mdi:lightbulb
+            name: First Floor
+          - type: "custom:button-card"
+            template: card_vertical_button_groups
+            entity: group.main_floor_lights
+            icon: mdi:lightbulb
+            name: Main Floor
+          - type: "custom:button-card"
+            template: card_vertical_button_groups
+            entity: group.second_floor_lights
+            icon: mdi:lightbulb
+            name: Second Floor
+      #### LIVING ROOM
+      - type: custom:button-card
+        template: card_title
+        name: Living Room
+      - type: "custom:button-card"
+        template: card_graph
+        variables:
+          ulm_card_graph_color: "var(--google-blue)"
+          ulm_card_graph_name: Temperature Livingroom
+          ulm_card_graph_entity: sensor.nest_thermostat_temperature
+      - type: "custom:button-card"
+        template: card_thermostat
+        entity: climate.nest_thermostat
+        variables:
+          ulm_card_thermostat_enable_controls: true
+          ulm_card_thermostat_enable_collapse: true
+          ulm_card_thermostat_enable_hvac_modes: true
+          ulm_card_thermostat_enable_display_temperature: true
+          ulm_card_thermostat_enable_background_color: true
+          ulm_card_thermostat_enable_popup: true
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: vertical_buttons_custom_state
+            entity: input_select.living_room
+            variables:
+              state: "On"
+          - type: "custom:button-card"
+            template: vertical_buttons_custom_state
+            entity: input_select.living_room
+            variables:
+              state: "Off"
+          - type: "custom:button-card"
+            template: vertical_buttons_custom_state
+            entity: input_select.living_room
+            variables:
+              state: "Dimmed"
+          - type: "custom:button-card"
+            template: vertical_buttons_custom_state
+            entity: input_select.living_room
+            variables:
+              state: "Night Light"
+      ###### BEDROOM
+      - type: custom:button-card
+        template: card_title
+        name: Bedroom
+      - type: "custom:button-card"
+        template: card_graph
+        variables:
+          ulm_card_graph_color: "var(--google-blue)"
+          ulm_card_graph_name: Temperature Heated Floors
+          ulm_card_graph_entity: sensor.master_bathroom_heated_floors_local_temperature
+      - type: "custom:button-card"
+        template: card_thermostat
+        entity: climate.master_bathroom_heated_floors
+        variables:
+          ulm_card_thermostat_enable_background_color: true
+          ulm_card_thermostat_enable_controls: true
+          ulm_card_thermostat_enable_collapse: true
+          ulm_card_thermostat_enable_display_temperature: true
+          ulm_card_thermostat_enable_popup: true
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: vertical_buttons_custom_state
+            entity: input_select.hue_go
+            variables:
+              state: "On"
+          - type: "custom:button-card"
+            template: vertical_buttons_custom_state
+            entity: input_select.hue_go
+            variables:
+              state: "Off"
+          - type: "custom:button-card"
+            template: vertical_buttons_custom_state
+            entity: input_select.hue_go
+            variables:
+              state: "Dimmed"
+          - type: "custom:button-card"
+            template: vertical_buttons_custom_state
+            entity: input_select.hue_go
+            variables:
+              state: "Night Light"
+      - type: custom:button-card
+        template: card_title
+        name: Utilities
+      - type: custom:button-card
+        entity: vacuum.zoomba
+        template: card_vacuum
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_light
+            entity: switch.garage_light
+          # - type: "custom:button-card"
+          #   template: card_power_outlet
+          #   variables:
+          #     ulm_card_power_outlet_consumption_sensor: sensor.sonoff_1000bff7b5_power
+          #   entity: switch.sonoff_1000bff7b5
+          #   name: Power Outlet Garage

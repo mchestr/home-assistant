@@ -1,0 +1,23 @@
+alias: rooms/entry/outside_light_timer.yaml
+id: e65a23fa-63b7-4caf-bcf6-26ccc9ffabbe
+description: Door light timer
+mode: single
+trigger:
+  - platform: sun
+    event: sunset
+    offset: "+00:20:00"
+    id: "turn_on"
+  - platform: sun
+    event: sunset
+    offset: "02:00:00"
+    id: "turn_off"
+  - platform: sun
+    event: sunrise
+    offset: 0
+    id: "turn_off"
+condition: []
+action:
+  - service: >
+      homeassistant.{{ trigger.id }}
+    target:
+      entity_id: switch.entry_light

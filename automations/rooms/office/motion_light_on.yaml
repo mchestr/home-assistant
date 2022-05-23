@@ -1,0 +1,22 @@
+alias: rooms/office/motion_light_on.yaml
+id: a0f35bf5-ddb8-4ce7-b784-532141c39312
+description: Turn light on when motion detected
+mode: single
+trigger:
+  - platform: state
+    entity_id: binary_sensor.entry_motion_detector_occupancy
+    to: 'on'
+condition:
+  - condition: device
+    type: is_off
+    device_id: 81cfed92a781040d45804ac0c25bec36
+    entity_id: switch.office_light
+    domain: switch
+  - condition: time
+    before: '21:00:00'
+    after: '06:00:00'
+action:
+  - type: turn_on
+    device_id: 81cfed92a781040d45804ac0c25bec36
+    entity_id: switch.office_light
+    domain: switch

@@ -1,0 +1,83 @@
+alias: tasks/action_handlers/scene_living_room_selector.yaml
+id: 89f3da7a-2fce-49d8-a955-48c2d3f3321a
+description: automation for input_select.living_room
+mode: single
+trigger:
+  - platform: state
+    entity_id: input_select.living_room
+  - platform: state
+    entity_id: group.living_room_lights_all
+    id: group_trigger_all
+  - platform: state
+    entity_id: group.living_room_lights
+    id: group_trigger
+  - platform: state
+    entity_id: light.jena_lamp
+    id: entity
+  - platform: state
+    entity_id: light.tv_lamp
+    id: entity
+  - platform: state
+    entity_id: switch.sonoff_1000bff832
+    id: entity
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: or
+            conditions:
+              - condition: trigger
+                id: group_trigger_all
+              - condition: trigger
+                id: entity
+              - condition: trigger
+                id: group_trigger
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: state
+                    entity_id: group.living_room_lights
+                    state: 'off'
+                sequence:
+                  - service: input_select.select_option
+                    data:
+                      option: 'Off'
+                    target:
+                      entity_id: input_select.living_room
+              - conditions:
+                  - condition: state
+                    entity_id: group.living_room_lights_all
+                    state: 'on'
+                sequence:
+                  - service: input_select.select_option
+                    data:
+                      option: 'On'
+                    target:
+                      entity_id: input_select.living_room
+            default:
+              - service: input_select.select_option
+                data:
+                  option: Unknown
+                target:
+                  entity_id: input_select.living_room
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.to_state.state == "On" }}'
+        sequence:
+          - scene: scene.living_room_on
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.to_state.state == "Off" }}'
+        sequence:
+          - scene: scene.living_room_off
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.to_state.state == "Dimmed" }}'
+        sequence:
+          - scene: scene.living_room_dimmed_2
+      - conditions:
+          - condition: template
+            value_template: '{{ trigger.to_state.state == "Night Light" }}'
+        sequence:
+          - scene: scene.living_room_night_light
+    default: []

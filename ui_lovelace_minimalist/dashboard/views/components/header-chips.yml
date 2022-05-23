@@ -1,0 +1,34 @@
+type: horizontal-stack
+cards:
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: chip_temperature
+            variables:
+              ulm_chip_temperature_inside: sensor.nest_thermostat_temperature
+              ulm_chip_temperature_outside: sensor.pitt_meadows_temperature
+              ulm_chip_temperature_weather: weather.pitt_meadows
+          - type: "custom:button-card"
+            template: chip_alarm
+            entity: alarm_control_panel.home_alarm
+            tap_action:
+              action: "navigate"
+              navigation_path: "/lovelace/security"
+      - type: "custom:button-card"
+        template: chip_icon_label
+        entity: sensor.next_collection
+        label: |
+          [[[
+            return entity.state
+          ]]]
+        icon: |
+          [[[
+            if(entity.state.includes('Garbage'))
+              return 'mdi:trash-can'
+            return 'mdi:recycle'
+          ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /calendar

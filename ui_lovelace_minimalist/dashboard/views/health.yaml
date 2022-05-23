@@ -1,0 +1,317 @@
+title: Health
+path: health
+visible:
+  - user: f16d31d12892445fbe04fa47dcc767e1
+cards:
+  - type: vertical-stack
+    cards:
+      - !include components/header-chips-back-default.yml
+      - type: custom:button-card
+        template: card_title
+        name: Home Health
+
+      - type: custom:button-card
+        template: card_title
+        name: First Floor
+
+      - type: custom:button-card
+        template: card_title
+        label: Sensors
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: cover.garage_door
+            show_last_changed: true
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: lock.front_door_lock
+            show_last_changed: true
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.garage_entry_contact
+            show_last_changed: true
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.garage_motion_detector_occupancy
+            show_last_changed: true
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.utility_closet_water_leak
+            show_last_changed: true
+
+      - type: custom:button-card
+        template: card_title
+        label: Batteries
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.garage_entry_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.garage_entry_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 80
+            name: Garage Entry Contact
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.front_door_lock_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.front_door_lock_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Front Door Lock
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.garage_motion_detector_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.garage_motion_detector_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Garage Motion Detector
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.utility_closet_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.utility_closet_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Utility Closet Leak Detector
+
+      - type: custom:button-card
+        template: card_title
+        name: Main Floor
+
+      - type: custom:button-card
+        template: card_title
+        label: Sensors
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.balcony_door_contact
+            show_last_changed: true
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.patio_door_contact
+            show_last_changed: true
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.living_room_right_window_contact
+            show_last_changed: true
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.kitchen_window_contact
+            show_last_changed: true
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.living_room_left_window_contact
+            show_last_changed: true
+
+      - type: custom:button-card
+        template: card_title
+        label: Batteries
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.balcony_door_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.balcony_door_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Balcony Door Contact
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.patio_door_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.patio_door_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Patio Door Contact
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.living_room_right_window_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.living_room_right_window_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Living Room Right Window Contact
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.zoomba_battery_level
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.zoomba_battery_level
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Zoomba
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.living_room_left_window_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.living_room_left_window_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Living Room Left Window Contact
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.kitchen_window_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.kitchen_window_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Kitchen Window Contact
+
+      - type: custom:button-card
+        template: card_title
+        name: Second Floor
+
+      - type: custom:button-card
+        template: card_title
+        label: Sensors
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.washing_machine_water_leak
+            show_last_changed: true
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.office_window_contact
+            show_last_changed: true
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.guest_bedroom_window_contact
+            show_last_changed: true
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.vibration_sensor_1_vibration
+            show_last_changed: true
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_binary_sensor_alert
+            variables:
+              - ulm_card_binary_sensor_alert: true
+            entity: binary_sensor.master_bedroom_window_contact
+            show_last_changed: true
+
+      - type: custom:button-card
+        template: card_title
+        label: Batteries
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.washing_machine_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.washing_machine_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Washing Machine Leak Detector
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.guest_bedroom_window_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.guest_bedroom_window_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Guest Window Contact
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.magic_cube_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.magic_cube_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Magic Cube
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.master_bathroom_motion_detector_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.master_bathroom_motion_detector_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Master Bath Motion Detector
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.office_window_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.office_window_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Office Window Contact
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.vibration_sensor_1_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.vibration_sensor_1_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Vibration Detector 1
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.office_closet_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.office_closet_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Office Closet Temperature
+          - type: "custom:button-card"
+            template: card_battery
+            entity: sensor.master_bedroom_window_battery
+            variables:
+              ulm_card_battery_charger_type_entity_id: sensor.master_bedroom_window_battery
+              ulm_card_battery_battery_level_danger: 30
+              ulm_card_battery_battery_level_warning: 50
+            name: Master Bedroom Window Contact

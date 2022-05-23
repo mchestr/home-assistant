@@ -1,0 +1,24 @@
+alias: rooms/patio/patio_door_opened_lights_on.yaml
+id: 5004bc7f-7321-47f9-a883-e2346651a5bb
+description: Patio door opened, turn on light
+mode: single
+trigger:
+  - type: opened
+    platform: device
+    device_id: cddcd34021e4ca436f0d12a03867dc96
+    entity_id: binary_sensor.patio_door_contact
+    domain: binary_sensor
+condition:
+  - condition: device
+    type: is_off
+    device_id: 95045b9e5b208f9850a24bfa0fc5dd45
+    entity_id: switch.patio_lights
+    domain: switch
+  - condition: sun
+    after: sunset
+    after_offset: '-00:45:00'
+action:
+  - type: turn_on
+    device_id: 95045b9e5b208f9850a24bfa0fc5dd45
+    entity_id: switch.patio_lights
+    domain: switch

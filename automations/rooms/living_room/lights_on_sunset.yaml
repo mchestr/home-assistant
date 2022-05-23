@@ -1,0 +1,25 @@
+alias: rooms/living_room/lights_on_sunset.yaml
+id: e7c600ee-6fcb-492f-8a16-5a4da2a4b01c
+description: "Turn living room lights on at sunset"
+mode: single
+trigger:
+  - platform: sun
+    event: sunset
+    id: sunset
+    offset: "-00:30:00"
+condition:
+  - condition: or
+    conditions:
+      - alias: "Jena is home"
+        condition: state
+        entity_id: person.jena
+        state: home
+      - alias: "Mike is home"
+        condition: state
+        entity_id: person.mike
+        state: home
+action:
+  - service: light.turn_on
+    target:
+      area_id: living_room
+    data: {}

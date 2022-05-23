@@ -1,0 +1,13 @@
+alias: tasks/set_theme.yaml
+id: 75205dc0-69e5-4502-a89d-4895b455467b
+description: 'Set theme on start'
+mode: single
+trigger:
+  - platform: homeassistant
+    event: start
+condition: []
+action:
+  - service: frontend.set_theme
+    data:
+      name: minimalist-mobile-tapbar
+      mode: dark

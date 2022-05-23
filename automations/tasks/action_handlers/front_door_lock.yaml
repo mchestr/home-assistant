@@ -1,0 +1,15 @@
+alias: tasks/action_handlers/front_door_lock.yaml
+id: f6045fd6-c2d7-4658-bb03-e6eed6676717
+description: ''
+mode: single
+trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: FRONT_DOOR_LOCK
+condition: []
+action:
+  - device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
+    domain: lock
+    entity_id: lock.front_door_lock
+    type: lock

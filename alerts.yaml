@@ -1,0 +1,57 @@
+garage_door_open:
+    name: Garage door is open
+    done_message: Garage door is closed
+    entity_id: cover.garage_door
+    state: open
+    repeat: 15
+    can_acknowledge: true
+    skip_first: true
+    data:
+      actions:
+        - action: "GARAGE_DOOR_CLOSE"
+          title: "Close Door"
+          destructive: true
+    notifiers:
+      - ALL_DEVICES
+front_door_unlocked:
+  name: Front door is unlocked
+  done_message: Front door is locked
+  entity_id: lock.front_door_lock
+  state: unlocked
+  repeat: 15
+  can_acknowledge: true
+  skip_first: true
+  data:
+    actions:
+      - action: "FRONT_DOOR_LOCK"
+        title: "Lock Door"
+        destructive: true
+  notifiers:
+    - ALL_DEVICES
+zoomba_bin_full:
+  name: Zoomba bin is full
+  done_message: Zoomba bin is empty
+  entity_id: binary_sensor.zoomba_bin_full
+  state: 'on'
+  repeat: 1440
+  can_acknowledge: true
+  notifiers:
+    - ALL_DEVICES
+washing_machine_water_detected:
+  name: Washing machine water detected
+  done_message: Washing machine is dry
+  entity_id: binary_sensor.washing_machine_water_leak
+  state: 'on'
+  repeat: 5
+  can_acknowledge: true
+  notifiers:
+    - ALL_DEVICES
+utility_closet_water_detected:
+  name: Utility closet water detected
+  done_message: Utility closet is dry
+  entity_id: binary_sensor.utility_closet_water_leak
+  state: 'on'
+  repeat: 5
+  can_acknowledge: true
+  notifiers:
+    - ALL_DEVICES

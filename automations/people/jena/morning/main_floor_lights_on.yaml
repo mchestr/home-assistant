@@ -1,0 +1,29 @@
+alias: people/jena/morning/main_floor_lights_on.yaml
+id: 6e066124-4353-4461-8dd9-7f80bc59a817
+description: Turn Hue Go on in the morning
+mode: single
+trigger:
+  - platform: template
+    value_template: >-
+      {{ now().timestamp() | timestamp_custom('%H:%M') == (state_attr('input_datetime.jena_alarm', 'timestamp') - 1*60) | timestamp_custom('%H:%M', false) }}
+condition:
+  - condition: state
+    entity_id: person.jena
+    state: home
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+action:
+  - delay:
+      hours: 0
+      minutes: 13
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_on
+    data:
+      brightness_pct: 100
+    target:
+      area_id: living_room
+  - service: homeassistant.turn_on
+    target:
+      area_id: kitchen

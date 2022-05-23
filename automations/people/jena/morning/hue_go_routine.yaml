@@ -1,0 +1,32 @@
+alias: people/jena/morning/hue_go_routine.yaml
+id: 5cc08cda-5ac8-4f24-80c9-869cb75ad7d7
+description: Turn Hue Go on in the morning
+mode: single
+trigger:
+  - platform: template
+    value_template: >- 
+      {{ now().timestamp() | timestamp_custom('%H:%M') == (state_attr('input_datetime.jena_alarm', 'timestamp') - 5*60) | timestamp_custom('%H:%M', false) }}
+condition:
+  - condition: state
+    entity_id: person.jena
+    state: home
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+action:
+  - service: light.turn_on
+    data:
+      transition: 300
+      brightness_step: 200
+      color_temp: 355
+    target:
+      entity_id: light.hue_go
+  - delay:
+      hours: 0
+      minutes: 25
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: f8b9d484dab31131366d85f1fc5c1dee
+    entity_id: light.hue_go
+    domain: light

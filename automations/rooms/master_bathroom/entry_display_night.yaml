@@ -1,0 +1,38 @@
+alias: rooms/master_bedroom/entry_display_night.yaml
+id: 149589f8-a2a5-40ea-9312-c425f05c73ce
+description: Display doorbell camera on bedside display if doorbell rings at night or door unlocked
+mode: restart
+trigger:
+  - platform: device
+    device_id: 2d2d34dd071c750e6af81b674f481d8e
+    domain: nest
+    type: doorbell_chime
+  - platform: device
+    device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
+    domain: lock
+    entity_id: lock.front_door_lock
+    type: unlocked
+condition:
+  - condition: time
+    before: '08:00:00'
+    after: '23:00:00'
+  - alias: "Mike is home"
+    condition: state
+    entity_id: person.mike
+    state: "home"
+action:
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.bedroom_display
+    data:
+      media_content_id: media-source://camera/camera.doorbell
+      media_content_type: application/vnd.apple.mpegurl
+    metadata:
+      title: Front Door
+      thumbnail: /api/camera_proxy/camera.doorbell
+      media_class: video
+      children_media_class: null
+      navigateIds:
+        - {}
+        - media_content_type: app
+          media_content_id: media-source://camera

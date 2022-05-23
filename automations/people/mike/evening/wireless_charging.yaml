@@ -1,0 +1,99 @@
+alias: people/mike/evening/wireless_charging.yaml
+id: f3cd99ed-0141-4fde-8e25-dbecfc93e64b
+description: "Evening Routine, wireless charging trigger"
+mode: single
+trigger:
+  - platform: state
+    entity_id: sensor.pixel_5_charger_type
+    to: wireless
+condition:
+  - condition: time
+    before: "04:00:00"
+    after: "21:00:00"
+  - condition: zone
+    entity_id: person.mike
+    zone: zone.home
+action:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: alarm_control_panel.home_alarm
+            state: disarmed
+        sequence:
+          - service: media_player.volume_mute
+            data:
+              is_volume_muted: true
+            target:
+              device_id: 72ddc2d2e821815e40172e1a34983401
+          - service: cast.show_lovelace_view
+            data:
+              entity_id: media_player.bedroom_display
+              dashboard_path: alarm-control-panel
+              view_path: alarm
+          - wait_for_trigger:
+              - platform: state
+                entity_id: alarm_control_panel.home_alarm
+            timeout: "300"
+          - service: media_player.volume_mute
+            data:
+              is_volume_muted: false
+            target:
+              device_id: 72ddc2d2e821815e40172e1a34983401
+          - service: media_player.turn_off
+            data: {}
+            target:
+              device_id: 72ddc2d2e821815e40172e1a34983401
+  - alias: "Turn all lights off, check if Jena is awake to cancel"
+    choose:
+      - conditions:
+          - condition: zone
+            entity_id: person.jena
+            zone: zone.home
+          - condition: time
+            weekday:
+              - fri
+              - sat
+        sequence:
+          # inside a automation actions or script sequence
+          - alias: "Set up variables for the actions"
+            variables:
+              # Including an id in the action allows us to identify this script run
+              # and not accidentally trigger for other notification actions
+              action_yes: "{{ 'YES_' ~ context.id }}"
+              action_no: "{{ 'NO_' ~ context.id }}"
+          - alias: "Ask to cancel lights off"
+            service: notify.mobile_app_iphone
+            data:
+              title: It is bedtime!
+              message: would you like to turn the lights off?
+              data:
+                actions:
+                  - action: "{{ action_yes }}"
+                    title: "Yes, lights off"
+                  - action: "{{ action_no }}"
+                    title: "No, keep them on"
+          - alias: "Wait for a response"
+            wait_for_trigger:
+              - platform: event
+                event_type: mobile_app_notification_action
+                event_data:
+                  action: "{{ action_yes }}"
+              - platform: event
+                event_type: mobile_app_notification_action
+                event_data:
+                  action: "{{ action_no }}"
+            timeout: "60"
+          - alias: "Perform the action"
+            choose:
+              - conditions: "{{ wait.trigger.event.data.action == action_no }}"
+                sequence: []
+            default:
+              - service: homeassistant.turn_off
+                data: {}
+                target:
+                  entity_id: group.all_lights
+    default:
+      - service: homeassistant.turn_off
+        data: {}
+        target:
+          entity_id: group.all_lights
