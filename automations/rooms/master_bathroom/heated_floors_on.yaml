@@ -37,6 +37,8 @@ condition:
           state: "on"
         - condition: trigger
           id: jena
+        - condition: template
+          value_template: '{{ now().month >= 10 or now().month <= 4 }}'
     - condition: and
       conditions:
         - condition: trigger
