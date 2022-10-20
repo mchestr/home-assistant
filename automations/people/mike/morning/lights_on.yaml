@@ -5,7 +5,7 @@ mode: single
 trigger:
   - platform: template
     value_template: >-
-      {{now().strftime('%a %h %d %H:%M %Z %Y') == (((state_attr('sensor.pixel_5_next_alarm', 'Time in Milliseconds') | int / 1000) - 1*60 ) | timestamp_custom('%a %h %d %H:%M %Z %Y'))}}
+      {{now().strftime('%a %h %d %H:%M %Z %Y') == (((state_attr('sensor.pixel_7_pro_next_alarm', 'Time in Milliseconds') | int / 1000) - 1*60 ) | timestamp_custom('%a %h %d %H:%M %Z %Y'))}}
 condition:
   - condition: state
     entity_id: person.mike
@@ -30,7 +30,7 @@ action:
   - service: homeassistant.turn_on
     data: {}
     target:
-      area_id: master_bedroom
+      entity_id: light.master_bedroom_lights
   - type: turn_on
     device_id: 940a8aee3ffe2cbdd02efb20fd4cf79c
     entity_id: switch.hallway_lights

@@ -79,16 +79,16 @@ notify:
   - name: ALL_DEVICES
     platform: group
     services:
-      - service: mobile_app_pixel_5
-      - service: mobile_app_iphone_2
+      - service: mobile_app_pixel_7_pro
+      - service: mobile_app_iphone_210
   - name: mike_phone
     platform: group
     services:
-      - service: mobile_app_pixel_5
+      - service: mobile_app_pixel_7_pro
   - name: jena_phone
     platform: group
     services:
-      - service: mobile_app_iphone_2
+      - service: mobile_app_iphone_210
 
 proximity:
   mike_home:
@@ -110,10 +110,6 @@ camera:
     name: Cat Camera
     stream_source: !secret cat_camera_stream_source
     still_image_url: /local/loading.gif
-
-spotify:
-  client_id: !secret spotify_client_id
-  client_secret: !secret spotify_client_secret
 
 sonoff:
   username: !secret sonoff_username
@@ -206,6 +202,7 @@ waste_collection_schedule:
 google_assistant:
   project_id: !secret google_assistant_project_id
   service_account: !include service_account.json
+  expose_by_default: false
   report_state: true
   exposed_domains:
     - alarm_control_panel

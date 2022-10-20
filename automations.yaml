@@ -1,1 +1,11 @@
-[]
+- id: '1658266860192'
+  alias: people/jena/button.yaml
+  description: ''
+  use_blueprint:
+    path: tradfri/button.yaml
+    input:
+      remote_entity: sensor.jena_button_action
+      light_entity:
+        entity_id:
+        - light.couch_light
+        - light.tv_light

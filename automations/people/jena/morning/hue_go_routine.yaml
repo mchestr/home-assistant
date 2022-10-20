@@ -14,7 +14,7 @@ condition:
     entity_id: binary_sensor.workday
     state: 'on'
   - condition: template
-    value_template: '{{ now().month >= 10 or now().month <= 4 }}'
+    value_template: '{{ now().month >= 8 or now().month <= 4 }}'
 action:
   - service: light.turn_on
     data:

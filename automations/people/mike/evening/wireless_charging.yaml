@@ -4,7 +4,7 @@ description: "Evening Routine, wireless charging trigger"
 mode: single
 trigger:
   - platform: state
-    entity_id: sensor.pixel_5_charger_type
+    entity_id: sensor.pixel_7_pro_charger_type
     to: wireless
 condition:
   - condition: time

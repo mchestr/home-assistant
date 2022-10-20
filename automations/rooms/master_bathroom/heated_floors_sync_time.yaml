@@ -1,0 +1,12 @@
+description: "Periodically sync the time on the thermostat"
+alias: rooms/master_bathroom/heated_floors_sync_time.yaml
+trigger:
+  - platform: time
+    at: "00:00:00"
+condition: []
+action:
+  - service: mqtt.publish
+    data:
+      topic: zigbee2mqtt/Master Bathroom Heated Floors/set
+      payload: "{\"thermostat_time:\"\"}"
+mode: single
