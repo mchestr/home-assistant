@@ -4,12 +4,12 @@ description: "Coming home automation"
 mode: single
 trigger:
   - platform: zone
-    entity_id: device_tracker.pixel_5
+    entity_id: person.jena
     zone: zone.home
     event: enter
     id: mike
   - platform: zone
-    entity_id: device_tracker.iphone_13_2
+    entity_id: person.mike
     zone: zone.home
     event: enter
     id: jena
@@ -25,11 +25,11 @@ condition:
 action:
   - wait_for_trigger:
       - platform: zone
-        entity_id: device_tracker.pixel_5
+        entity_id: person.mike
         zone: zone.home
         event: enter
       - platform: zone
-        entity_id: device_tracker.iphone_13_2
+        entity_id: person.jena
         zone: zone.home
         event: enter
     timeout: "300"

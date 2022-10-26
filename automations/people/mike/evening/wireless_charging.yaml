@@ -62,7 +62,7 @@ action:
               action_yes: "{{ 'YES_' ~ context.id }}"
               action_no: "{{ 'NO_' ~ context.id }}"
           - alias: "Ask to cancel lights off"
-            service: notify.mobile_app_iphone
+            service: notify.jena_phone
             data:
               title: It is bedtime!
               message: would you like to turn the lights off?

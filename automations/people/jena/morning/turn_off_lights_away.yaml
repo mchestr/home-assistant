@@ -16,7 +16,7 @@ condition:
 action:
   - wait_for_trigger:
       - platform: zone
-        entity_id: device_tracker.iphone
+        entity_id: person.jena
         zone: zone.home
         event: leave
       - platform: device
