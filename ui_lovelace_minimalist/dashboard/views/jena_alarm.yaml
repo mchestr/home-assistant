@@ -1,0 +1,34 @@
+title: Alarm Settings
+path: jena_alarm
+visible:
+  - user: fbc547b64f1144539e99db2e21d47820
+cards:
+  - type: vertical-stack
+    cards:
+      - type: custom:button-card
+        template: card_title
+        name: Alarm Settings
+      - type: horizontal-stack
+        cards:
+          - type: 'custom:button-card'
+            template: card_binary_sensor
+            variables:
+              ulm_card_binary_sensor_name: Hue Go Routine
+            entity: automation.people_jena_morning_hue_go_routine_yaml
+            lock:
+              enabled: true
+              unlock: double_tap
+          - type: 'custom:button-card'
+            template: card_binary_sensor
+            variables:
+              ulm_card_binary_sensor_name: Main Floor Lights
+            entity: automation.people_jena_morning_main_floor_lights_on_yaml
+            lock:
+              enabled: true
+              unlock: double_tap
+
+      - type: "custom:button-card"
+        template: card_input_datetime
+        entity: input_datetime.jena_alarm
+        variables:
+          ulm_card_input_datetime_name: Alarm

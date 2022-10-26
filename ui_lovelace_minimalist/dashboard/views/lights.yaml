@@ -16,21 +16,33 @@ cards:
             entity: group.all_lights
             icon: mdi:lightbulb
             name: All
+            lock:
+              enabled: true
+              unlock: double_tap
           - type: "custom:button-card"
             template: card_vertical_button_groups
             entity: group.first_floor_lights
             icon: mdi:lightbulb
             name: First Floor
+            lock:
+              enabled: true
+              unlock: double_tap
           - type: "custom:button-card"
             template: card_vertical_button_groups
             entity: group.main_floor_lights
             icon: mdi:lightbulb
             name: Main Floor
+            lock:
+              enabled: true
+              unlock: double_tap
           - type: "custom:button-card"
             template: card_vertical_button_groups
             entity: group.second_floor_lights
             icon: mdi:lightbulb
             name: Second Floor
+            lock:
+              enabled: true
+              unlock: double_tap
 
       - type: custom:button-card
         template: card_title
@@ -112,14 +124,24 @@ cards:
           ulm_card_light_force_background_color: true
           ulm_card_light_enable_horizontal_wide: true
           ulm_card_light_enable_color: true
-      - type: "custom:button-card"
-        template: card_light
-        entity: light.sonoff_1000bff832
-        variables:
-          ulm_card_light_force_background_color: true
-          ulm_card_light_enable_horizontal_wide: true
-          ulm_card_light_enable_color: true
-          ulm_card_light_icon: mdi:lightbulb
+      - type: horizontal-stack
+        cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.sonoff_1000bff832
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_enable_color: true
+            ulm_card_light_icon: mdi:lightbulb
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.leviton_plug
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_enable_color: true
+            ulm_card_light_icon: mdi:lightbulb
       - type: custom:button-card
         template: card_title
         label: Kitchen

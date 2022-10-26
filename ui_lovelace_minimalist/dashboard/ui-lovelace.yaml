@@ -7,6 +7,7 @@ background: "var(--background-image)"
 views: 
   - !include views/dashboard.yaml
   - !include views/lights.yaml
+  - !include views/jena_alarm.yaml
   - !include views/security.yaml
   - !include views/health.yaml
   - !include views/nas.yaml

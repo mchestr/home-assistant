@@ -11,6 +11,7 @@ cards:
         cards:
           - type: "custom:button-card"
             template: card_person
+            entity: person.mike
             variables:
               ulm_card_person_entity: person.mike
               ulm_card_person_use_entity_picture: true
@@ -18,6 +19,7 @@ cards:
               ulm_card_person_zone2: away
           - type: "custom:button-card"
             template: card_person
+            entity: person.jena
             variables:
               ulm_card_person_entity: person.jena
               ulm_card_person_use_entity_picture: true
@@ -29,18 +31,25 @@ cards:
       - type: horizontal-stack
         cards:
           - type: "custom:button-card"
-            template: card_binary_sensor_alert
+            template: card_cover
+            lock:
+              enabled: true
+              unlock: double_tap
             variables:
-              - ulm_card_binary_sensor_alert: true
+              ulm_card_cover_garage: true
             entity: cover.garage_door
-            show_last_changed: true
           - type: "custom:button-card"
-            template: card_binary_sensor_alert
-            variables:
-              - ulm_card_binary_sensor_alert: true
             entity: lock.front_door_lock
+            template: custom_card_eraycetinay_lock
             name: Front Door
-            show_last_changed: true
+            lock:
+              enabled: true
+              unlock: double_tap
+            variables:
+              ulm_custom_card_eraycetinay_lock_tap_control: true
+              ulm_custom_card_eraycetinay_lock_battery_level: sensor.front_door_lock_battery
+            triggers_update:
+              - sensor.front_door_lock_battery
       - type: custom:button-card
         template: card_title
         label: Lights
@@ -72,6 +81,7 @@ cards:
         name: Living Room
       - type: "custom:button-card"
         template: card_graph
+        entity: sensor.nest_thermostat_temperature
         variables:
           ulm_card_graph_color: "var(--google-blue)"
           ulm_card_graph_name: Temperature Livingroom
@@ -114,6 +124,7 @@ cards:
         name: Bedroom
       - type: "custom:button-card"
         template: card_graph
+        entity: sensor.master_bathroom_heated_floors_local_temperature
         variables:
           ulm_card_graph_color: "var(--google-blue)"
           ulm_card_graph_name: Temperature Heated Floors
@@ -155,14 +166,3 @@ cards:
       - type: custom:button-card
         entity: vacuum.zoomba
         template: card_vacuum
-      - type: horizontal-stack
-        cards:
-          - type: "custom:button-card"
-            template: card_light
-            entity: switch.garage_light
-          # - type: "custom:button-card"
-          #   template: card_power_outlet
-          #   variables:
-          #     ulm_card_power_outlet_consumption_sensor: sensor.sonoff_1000bff7b5_power
-          #   entity: switch.sonoff_1000bff7b5
-          #   name: Power Outlet Garage
