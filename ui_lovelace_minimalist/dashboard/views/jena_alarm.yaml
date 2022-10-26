@@ -5,6 +5,7 @@ visible:
 cards:
   - type: vertical-stack
     cards:
+      - !include components/header-chips-back-menu.yml
       - type: custom:button-card
         template: card_title
         name: Alarm Settings

@@ -16,33 +16,21 @@ cards:
             entity: group.all_lights
             icon: mdi:lightbulb
             name: All
-            lock:
-              enabled: true
-              unlock: double_tap
           - type: "custom:button-card"
             template: card_vertical_button_groups
             entity: group.first_floor_lights
             icon: mdi:lightbulb
             name: First Floor
-            lock:
-              enabled: true
-              unlock: double_tap
           - type: "custom:button-card"
             template: card_vertical_button_groups
             entity: group.main_floor_lights
             icon: mdi:lightbulb
             name: Main Floor
-            lock:
-              enabled: true
-              unlock: double_tap
           - type: "custom:button-card"
             template: card_vertical_button_groups
             entity: group.second_floor_lights
             icon: mdi:lightbulb
             name: Second Floor
-            lock:
-              enabled: true
-              unlock: double_tap
 
       - type: custom:button-card
         template: card_title
