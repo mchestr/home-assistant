@@ -22,6 +22,7 @@ living_room_lights_all:
     - light.couch_light
     - light.tv_light
     - light.sonoff_1000bff832
+    - light.leviton_plug
 
 living_room_lights:
   name: Living Room Lights
@@ -29,6 +30,7 @@ living_room_lights:
     - light.couch_light
     - light.tv_light
     - light.sonoff_1000bff832
+    - light.leviton_plug
 
 kitchen_lights:
   name: Kitchen Lights
