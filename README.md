@@ -1,6 +1,6 @@
 # Home Assistant Configuration
 
-[Home Assistant Core](https://home-assistant.io/) running on [my Kubernetes cluster](https://github.com/mchestr/cluster-k3s).  This configuration is read and persisted within Home Assistant.
+[Home Assistant Core](https://home-assistant.io/) running on [my Kubernetes cluster](https://github.com/mchestr/home-cluster).  This configuration is read and persisted within Home Assistant.
 
 ## Automations
 
