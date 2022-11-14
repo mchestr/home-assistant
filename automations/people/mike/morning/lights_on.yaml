@@ -18,6 +18,7 @@ action:
         entity_id: binary_sensor.master_bathroom_motion_detector_occupancy
         domain: binary_sensor
     timeout: '1800'
+    continue_on_timeout: false
   - service: homeassistant.turn_on
     data: {}
     target:
@@ -42,6 +43,7 @@ action:
         entity_id: switch.master_bedroom_lights
         domain: switch
     timeout: '600'
+    continue_on_timeout: false
   - type: turn_on
     device_id: ec7b8e02f71c48db858daa22965c5ab9
     entity_id: switch.second_floor_stairs_lights
