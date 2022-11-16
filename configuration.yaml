@@ -79,12 +79,12 @@ notify:
   - name: ALL_DEVICES
     platform: group
     services:
-      - service: mobile_app_pixel_7_pro
+      - service: mobile_app_mchestr
       - service: mobile_app_iphone_210
   - name: mike_phone
     platform: group
     services:
-      - service: mobile_app_pixel_7_pro
+      - service: mobile_app_mchestr
   - name: jena_phone
     platform: group
     services:

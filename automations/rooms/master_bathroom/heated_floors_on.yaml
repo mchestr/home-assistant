@@ -9,7 +9,7 @@ trigger:
     id: jena
   - platform: template
     value_template: >-
-      {{now().strftime('%a %h %d %H:%M %Z %Y') == (((state_attr('sensor.pixel_5_next_alarm', 'Time in Milliseconds') | int / 1000) - 60*60 ) | timestamp_custom('%a %h %d %H:%M %Z %Y'))}}
+      {{now().strftime('%a %h %d %H:%M %Z %Y') == (((state_attr('sensor.mike_phone_next_alarm', 'Time in Milliseconds') | int / 1000) - 60*60 ) | timestamp_custom('%a %h %d %H:%M %Z %Y'))}}
     id: mike
   - platform: time
     at: '07:30:00'
