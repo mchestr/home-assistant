@@ -124,11 +124,9 @@ cards:
             ulm_card_light_icon: mdi:lightbulb
         - type: "custom:button-card"
           template: card_light
-          entity: light.leviton_plug
+          entity: light.wled_livingroom
           variables:
-            ulm_card_light_force_background_color: true
             ulm_card_light_enable_horizontal_wide: true
-            ulm_card_light_enable_color: true
             ulm_card_light_icon: mdi:lightbulb
       - type: custom:button-card
         template: card_title
@@ -236,12 +234,20 @@ cards:
       - type: custom:button-card
         template: card_title
         label: Office
-      - type: "custom:button-card"
-        template: card_light
-        entity: light.office_light
-        variables:
-          ulm_card_light_force_background_color: true
-          ulm_card_light_icon: mdi:lightbulb
+      - type: horizontal-stack
+        cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.office_light
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_icon: mdi:lightbulb
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.wled_office_master
+          variables:
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_icon: mdi:lightbulb
       - type: custom:button-card
         template: card_title
         label: Guest Bathroom

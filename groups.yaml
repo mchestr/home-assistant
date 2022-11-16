@@ -22,7 +22,7 @@ living_room_lights_all:
     - light.couch_light
     - light.tv_light
     - light.sonoff_1000bff832
-    - light.wled_esp32_1
+    - light.wled_livingroom
 
 living_room_lights:
   name: Living Room Lights
@@ -30,7 +30,7 @@ living_room_lights:
     - light.couch_light
     - light.tv_light
     - light.sonoff_1000bff832
-    - light.wled_esp32_1
+    - light.wled_livingroom
 
 kitchen_lights:
   name: Kitchen Lights
@@ -73,6 +73,7 @@ office_lights:
   name: Office Lights
   entities:
     - light.office_light
+    - light.wled_office_master
 
 guest_bathroom_lights:
   name: Guest Bathroom Lights
