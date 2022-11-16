@@ -8,5 +8,6 @@ action:
   - service: mqtt.publish
     data:
       topic: zigbee2mqtt/Master Bathroom Heated Floors/set
-      payload: "{\"thermostat_time\":\"\"}"
+      payload: |
+        {"thermostat_time":""}
 mode: single
