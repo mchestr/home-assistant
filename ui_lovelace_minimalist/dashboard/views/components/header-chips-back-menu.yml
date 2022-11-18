@@ -1,7 +1,8 @@
 type: horizontal-stack
 cards:
-  - type: 'custom:button-card'
-    template: chip_back
-    variables:
-      ulm_chip_back_path: /config/automation/dashboard
   - !include header-chips.yml
+  - type: custom:button-card
+    template: chip_navigate
+    variables:
+      ulm_chip_navigate_path: /config/dashboard
+      ulm_chip_navigate_icon: mdi:cog

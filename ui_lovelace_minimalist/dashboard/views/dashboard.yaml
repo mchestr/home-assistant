@@ -31,7 +31,8 @@ cards:
       - type: horizontal-stack
         cards:
           - type: "custom:button-card"
-            template: card_cover
+            template: 
+              - card_cover_custom
             lock:
               enabled: true
               unlock: double_tap
@@ -57,22 +58,22 @@ cards:
         cards:
           - type: "custom:button-card"
             template: card_vertical_button_groups
-            entity: group.all_lights
+            entity: light.all_lights
             icon: mdi:lightbulb
             name: All
           - type: "custom:button-card"
             template: card_vertical_button_groups
-            entity: group.first_floor_lights
+            entity: light.first_floor_lights
             icon: mdi:lightbulb
             name: First Floor
           - type: "custom:button-card"
             template: card_vertical_button_groups
-            entity: group.main_floor_lights
+            entity: light.main_floor_lights
             icon: mdi:lightbulb
             name: Main Floor
           - type: "custom:button-card"
             template: card_vertical_button_groups
-            entity: group.second_floor_lights
+            entity: light.second_floor_lights
             icon: mdi:lightbulb
             name: Second Floor
       #### LIVING ROOM

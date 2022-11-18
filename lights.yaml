@@ -1,0 +1,108 @@
+- platform: group
+  name: Garage Lights
+  entities:
+    - light.garage_light
+
+- platform: group
+  name: Entry Lights
+  entities:
+    - light.entry_light
+    - light.entry_stairs_light
+  
+- platform: group
+  name: Living Room Lights All
+  all: true
+  entities:
+    - light.couch_light
+    - light.tv_light
+    - light.sonoff_1000bff832
+    - light.wled_livingroom
+
+- platform: group
+  name: Living Room Lights
+  entities:
+    - light.couch_light
+    - light.tv_light
+    - light.sonoff_1000bff832
+    - light.wled_livingroom
+
+- platform: group
+  name: Kitchen Lights
+  entities:
+    - light.kitchen_light
+    - light.kitchen_counter_light
+
+- platform: group
+  name: Patio Lights
+  entities:
+    - light.patio_light
+
+- platform: group
+  name: Powder Room Lights
+  entities:
+    - light.powder_room_light
+
+- platform: group
+  name: Master Bedroom Lights
+  entities:
+    - light.hue_go
+    - light.master_bedroom_light
+
+- platform: group
+  name: Master Bathroom Lights
+  entities:
+    - light.master_bathroom_light
+    - light.master_bathroom_mirror_light
+
+- platform: group
+  name: Office Lights
+  entities:
+    - light.office_light
+    - light.wled_office_master
+
+- platform: group
+  name: Guest Bathroom Lights
+  entities:
+    - light.guest_bathroom_light
+
+- platform: group
+  name: Guest Bedroom Lights
+  entities:
+    - light.guest_bedroom_light
+
+- platform: group
+  name: Hallway Lights
+  entities:
+    - light.second_floor_stairs_light
+    - light.hallway_light
+
+- platform: group
+  name: First Floor Lights
+  entities:
+    - light.garage_lights
+    - light.entry_lights
+
+- platform: group
+  name: Main Floor Lights
+  entities:
+    - light.living_room_lights
+    - light.kitchen_lights
+    - light.powder_room_lights
+    - light.patio_lights
+
+- platform: group
+  name: Second Floor Lights
+  entities:
+    - light.master_bedroom_lights
+    - light.master_bathroom_lights
+    - light.office_lights
+    - light.guest_bathroom_lights
+    - light.guest_bedroom_lights
+    - light.hallway_lights
+
+- platform: group
+  name: All Lights
+  entities:
+    - light.first_floor_lights
+    - light.main_floor_lights
+    - light.second_floor_lights

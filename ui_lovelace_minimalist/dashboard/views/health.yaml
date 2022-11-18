@@ -25,12 +25,18 @@ cards:
               ulm_card_binary_sensor_alert: true
               ulm_show_last_changed: true
             entity: cover.garage_door
+            lock:
+              enabled: true
+              unlock: double_tap
           - type: "custom:button-card"
             template: card_binary_sensor_alert
             variables:
               ulm_card_binary_sensor_alert: true
               ulm_show_last_changed: true
             entity: lock.front_door_lock
+            lock:
+              enabled: true
+              unlock: double_tap
       - type: horizontal-stack
         cards:
           - type: "custom:button-card"
