@@ -4,16 +4,16 @@ description: Turn heated floors off after a while
 mode: single
 trigger:
   - platform: state
-    entity_id: climate.master_bathroom_heated_floors
+    entity_id: 
+      - climate.master_bathroom_heated_floors
     to: heat
     for:
       hours: 2
-      minutes: 30
+      minutes: 0
       seconds: 0
 condition: []
 action:
-  - device_id: bf5497507c63aaf34849200d9360e759
-    domain: climate
-    entity_id: climate.master_bathroom_heated_floors
-    type: set_hvac_mode
-    hvac_mode: 'off'
+  - service: climate.turn_off
+    data: {}
+    target:
+      entity_id: climate.master_bathroom_heated_floors
