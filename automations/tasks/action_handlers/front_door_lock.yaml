@@ -9,6 +9,6 @@ trigger:
       action: FRONT_DOOR_LOCK
 condition: []
 action:
-  - domain: lock
-    entity_id: lock.front_door_lock
-    type: lock
+  - service: lock.lock
+    target:
+      entity_id: lock.front_door_lock
