@@ -19,10 +19,10 @@ action:
         entity_id: person.jena
         zone: zone.home
         event: leave
-      - platform: device
-        domain: lock
-        entity_id: lock.front_door_lock
-        type: unlocked
+      - platform: state
+        entity_id:
+          - lock.front_door_lock
+        to: unlocked
     timeout: '1800'
   - service: homeassistant.turn_off
     target:
