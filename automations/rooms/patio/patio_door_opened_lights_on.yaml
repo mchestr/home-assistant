@@ -3,15 +3,15 @@ id: 5004bc7f-7321-47f9-a883-e2346651a5bb
 description: Patio door opened, turn on light
 mode: single
 trigger:
-  - type: opened
-    platform: device
-    entity_id: binary_sensor.patio_door_contact
-    domain: binary_sensor
+  - platform: state
+    entity_id:
+      - binary_sensor.patio_door_contact
+    to: "on"
 condition:
-  - condition: device
-    type: is_off
-    entity_id: light.patio_lights
-    domain: light
+  - condition: state
+    entity_id: 
+      - light.patio_lights
+    state: "off"
   - condition: sun
     after: sunset
     after_offset: '-00:45:00'

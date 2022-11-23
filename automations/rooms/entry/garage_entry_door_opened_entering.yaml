@@ -3,23 +3,21 @@ id: 524a1d6f-9419-425f-b674-89985bbab8a5
 description: Automation triggered if entering entry from garage
 mode: single
 trigger:
-  - type: opened
-    platform: device
-    entity_id: binary_sensor.garage_entry_contact
-    domain: binary_sensor
+  - platform: state
+    entity_id:
+      - binary_sensor.garage_entry_contact
+    to: "on"
 condition:
-  - type: is_motion
-    condition: device
+  - condition: state
     entity_id: binary_sensor.garage_motion_detector_occupancy
-    domain: binary_sensor
+    state: "on"
   - condition: sun
     before: sunset
     after: sunset
     after_offset: '-00:45:00'
-  - condition: device
-    type: is_off
+  - condition: state
     entity_id: light.entry_stairs_light
-    domain: light
+    state: "off"
 action:
   - service: homeassistant.turn_on
     target:

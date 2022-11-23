@@ -15,6 +15,7 @@ condition:
         entity_id: binary_sensor.workday
         state: "off"
 action:
-    domain: vacuum
-    entity_id: vacuum.zoomba
-    type: clean
+  - service: vacuum.start
+    data: {}
+    target:
+      entity_id: vacuum.zoomba

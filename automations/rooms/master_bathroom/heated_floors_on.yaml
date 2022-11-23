@@ -64,7 +64,8 @@ action:
       temperature: 27
     target:
       entity_id: climate.master_bathroom_heated_floors
-  - domain: climate
-    entity_id: climate.master_bathroom_heated_floors
-    type: set_hvac_mode
-    hvac_mode: heat
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: heat
+    target:
+      entity_id: climate.master_bathroom_heated_floors

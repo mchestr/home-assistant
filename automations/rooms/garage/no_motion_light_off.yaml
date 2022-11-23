@@ -3,19 +3,18 @@ id: 24602d24-0843-414d-93d8-dc6f750de31f
 description: turn light off after 15 minutes
 mode: single
 trigger:
-  - type: no_motion
-    platform: device
-    entity_id: binary_sensor.garage_motion_detector_occupancy
-    domain: binary_sensor
+  - platform: state
+    entity_id:
+      - binary_sensor.garage_motion_detector_occupancy
+    to: "on"
     for:
       hours: 0
       minutes: 10
       seconds: 0
 condition:
-  - condition: device
-    type: is_on
+  - condition: state
     entity_id: light.garage_light
-    domain: light
+    state: "on"
 action:
   - service: homeassistant.turn_off
     target:

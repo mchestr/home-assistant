@@ -19,23 +19,21 @@ action:
       - conditions:
           - condition: trigger
             id: OPEN
-          - condition: device
-            domain: cover
+          - condition: state
             entity_id: cover.garage_door
-            type: is_closed
+            state: closed
         sequence:
-          - domain: cover
-            entity_id: cover.garage_door
-            type: open
+          - service: cover.open_cover
+            target:
+              entity_id: cover.garage_door
       - conditions:
           - condition: trigger
             id: CLOSE
-          - condition: device
-            domain: cover
+          - condition: state
             entity_id: cover.garage_door
-            type: is_open
+            state: open
         sequence:
-          - domain: cover
-            entity_id: cover.garage_door
-            type: close
+          - service: cover.close_cover
+            target:
+              entity_id: cover.garage_door
     default: []

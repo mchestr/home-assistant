@@ -12,10 +12,10 @@ condition:
     state: home
 action:
   - wait_for_trigger:
-      - type: motion
-        platform: device
-        entity_id: binary_sensor.master_bathroom_motion_detector_occupancy
-        domain: binary_sensor
+      - platform: state
+        entity_id:
+          - binary_sensor.master_bathroom_motion_detector_occupancy
+        to: "on"
     timeout: '1800'
     continue_on_timeout: false
   - service: homeassistant.turn_on
@@ -28,15 +28,15 @@ action:
       milliseconds: 0
   - service: homeassistant.turn_on
     target:
-      entity_id: light.master_bedroom_lights
+      entity_id: light.master_bedroom_light
   - service: homeassistant.turn_on
     target:
       area_id: hallway
   - wait_for_trigger:
-      - platform: device
-        type: turned_off
-        entity_id: light.master_bedroom_light
-        domain: light
+      - platform: state
+        entity_id:
+          - light.master_bedroom_light
+        to: "on"
     timeout: '600'
     continue_on_timeout: false
   - delay:

@@ -3,15 +3,14 @@ id: d3e91c77-8ef1-4cc7-b110-86cd9eccdfae
 description: motion detected in garage
 mode: single
 trigger:
-  - type: motion
-    platform: device
-    entity_id: binary_sensor.garage_motion_detector_occupancy
-    domain: binary_sensor
+  - platform: state
+    entity_id:
+      - binary_sensor.garage_motion_detector_occupancy
+    to: "on"
 condition:
-  - condition: device
-    type: is_off
+  - condition: state
     entity_id: light.garage_light
-    domain: light
+    state: "off"
 action:
   - service: homeassistant.turn_on
     target:

@@ -12,30 +12,32 @@ action:
           - condition: template
             value_template: '{{ trigger.to_state.state == "On" }}'
         sequence:
-          - type: turn_on
-            entity_id: light.hue_go
-            domain: light
+          - service: light.turn_on
+            target:
+              entity_id: light.hue_go
       - conditions:
           - condition: template
             value_template: '{{ trigger.to_state.state == "Off" }}'
         sequence:
-          - type: turn_off
-            entity_id: light.hue_go
-            domain: light
+          - service: light.turn_off
+            target:
+              entity_id: light.hue_go
       - conditions:
           - condition: template
             value_template: '{{ trigger.to_state.state == "Dimmed" }}'
         sequence:
-          - type: turn_on
-            entity_id: light.hue_go
-            domain: light
-            brightness_pct: 100
+          - service: light.turn_on
+            data:
+              brightness_pct: 50
+            target:
+              entity_id: light.hue_go
       - conditions:
           - condition: template
             value_template: '{{ trigger.to_state.state == "Night Light" }}'
         sequence:
-          - type: turn_on
-            entity_id: light.hue_go
-            domain: light
-            brightness_pct: 50
+          - service: light.turn_on
+            data:
+              brightness_pct: 10
+            target:
+              entity_id: light.hue_go
     default: []

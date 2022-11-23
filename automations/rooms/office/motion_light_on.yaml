@@ -7,10 +7,9 @@ trigger:
     entity_id: binary_sensor.entry_motion_detector_occupancy
     to: 'on'
 condition:
-  - condition: device
-    type: is_off
-    entity_id: switch.office_light
-    domain: switch
+  - condition: state
+    entity_id: light.office_lights
+    state: "off"
   - condition: time
     before: '21:00:00'
     after: '06:00:00'

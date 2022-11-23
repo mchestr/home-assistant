@@ -3,10 +3,10 @@ id: 8f7cfdac-7bed-49bd-8f0d-11f0562ddb69
 description: Auto lock front door after 5 minutes
 mode: single
 trigger:
-  - platform: device
-    domain: lock
-    entity_id: lock.front_door_lock
-    type: unlocked
+  - platform: state
+    entity_id:
+      - lock.front_door_lock
+    to: unlocked
     for:
       hours: 0
       minutes: 5
@@ -20,11 +20,10 @@ trigger:
     zone: zone.home
     event: leave
 condition:
-- condition: device
-  domain: lock
-  entity_id: lock.front_door_lock
-  type: is_unlocked
-action:
-  - domain: lock
+  - condition: state
     entity_id: lock.front_door_lock
-    type: lock
+    state: unlocked
+action:
+  - service: lock.lock
+    target:
+      entity_id: lock.front_door_lock

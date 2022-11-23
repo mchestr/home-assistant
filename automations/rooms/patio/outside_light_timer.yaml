@@ -3,19 +3,19 @@ id: 5c104d0a-ab51-4db9-8f46-50a701202c98
 description: Door light timer
 mode: single
 trigger:
-  - type: not_opened
-    platform: device
-    entity_id: binary_sensor.patio_door_contact
-    domain: binary_sensor
+  - platform: state
+    entity_id:
+      - binary_sensor.patio_door_contact
+    to: "on"
     for:
       hours: 1
       minutes: 0
       seconds: 0
 condition:
-  - condition: device
-    type: is_on
-    entity_id: light.patio_lights
-    domain: light
+  - condition: state
+    entity_id: 
+      - light.patio_lights
+    state: "on"
 action:
   - service: homeassistant.turn_off
     target:
