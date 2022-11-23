@@ -14,20 +14,17 @@ condition:
     before_offset: "-01:00:00"
   - condition: device
     type: is_off
-    device_id: 4bc821401b94267779ef1fa10014ddf3
     entity_id: switch.entry_light
     domain: switch
 action:
-  - type: turn_on
-    device_id: 4bc821401b94267779ef1fa10014ddf3
-    entity_id: switch.entry_light
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      entity_id: light.entry_light
   - delay:
       hours: 0
       minutes: 10
       seconds: 0
       milliseconds: 0
-  - type: turn_off
-    device_id: 4bc821401b94267779ef1fa10014ddf3
-    entity_id: switch.entry_light
-    domain: switch
+  - service: homeassistant.turn_off
+    target:
+      entity_id: light.entry_light

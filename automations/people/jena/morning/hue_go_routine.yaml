@@ -29,6 +29,5 @@ action:
       seconds: 0
       milliseconds: 0
   - type: turn_off
-    device_id: f8b9d484dab31131366d85f1fc5c1dee
     entity_id: light.hue_go
     domain: light

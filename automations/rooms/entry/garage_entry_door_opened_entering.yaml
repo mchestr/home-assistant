@@ -5,13 +5,11 @@ mode: single
 trigger:
   - type: opened
     platform: device
-    device_id: 13949f7021b2e651a86ea6a5077473ab
     entity_id: binary_sensor.garage_entry_contact
     domain: binary_sensor
 condition:
   - type: is_motion
     condition: device
-    device_id: 3b5c0fd10dac7d134497b220b6411b9e
     entity_id: binary_sensor.garage_motion_detector_occupancy
     domain: binary_sensor
   - condition: sun
@@ -20,11 +18,9 @@ condition:
     after_offset: '-00:45:00'
   - condition: device
     type: is_off
-    device_id: fd0b2233736eaaac5d731d5f56e5b26c
-    entity_id: switch.entry_stairs_lights
-    domain: switch
+    entity_id: light.entry_stairs_light
+    domain: light
 action:
-  - type: turn_on
-    device_id: fd0b2233736eaaac5d731d5f56e5b26c
-    entity_id: switch.entry_stairs_lights
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      entity_id: light.entry_stairs_light

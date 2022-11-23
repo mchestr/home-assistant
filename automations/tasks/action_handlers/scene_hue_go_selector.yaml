@@ -13,7 +13,6 @@ action:
             value_template: '{{ trigger.to_state.state == "On" }}'
         sequence:
           - type: turn_on
-            device_id: f8b9d484dab31131366d85f1fc5c1dee
             entity_id: light.hue_go
             domain: light
       - conditions:
@@ -21,7 +20,6 @@ action:
             value_template: '{{ trigger.to_state.state == "Off" }}'
         sequence:
           - type: turn_off
-            device_id: f8b9d484dab31131366d85f1fc5c1dee
             entity_id: light.hue_go
             domain: light
       - conditions:
@@ -29,7 +27,6 @@ action:
             value_template: '{{ trigger.to_state.state == "Dimmed" }}'
         sequence:
           - type: turn_on
-            device_id: f8b9d484dab31131366d85f1fc5c1dee
             entity_id: light.hue_go
             domain: light
             brightness_pct: 100
@@ -38,7 +35,6 @@ action:
             value_template: '{{ trigger.to_state.state == "Night Light" }}'
         sequence:
           - type: turn_on
-            device_id: f8b9d484dab31131366d85f1fc5c1dee
             entity_id: light.hue_go
             domain: light
             brightness_pct: 50

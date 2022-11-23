@@ -20,11 +20,10 @@ action:
         zone: zone.home
         event: leave
       - platform: device
-        device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
         domain: lock
         entity_id: lock.front_door_lock
         type: unlocked
-    timeout: '7200'
+    timeout: '1800'
   - service: homeassistant.turn_off
     target:
       area_id: 

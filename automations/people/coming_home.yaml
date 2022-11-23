@@ -34,16 +34,14 @@ action:
         event: enter
     timeout: "300"
     continue_on_timeout: false
-  - type: turn_on
-    device_id: fd0b2233736eaaac5d731d5f56e5b26c
-    entity_id: switch.entry_stairs_lights
-    domain: switch
+  - service: light.turn_on
+    target:
+      entity_id: light.entry_stairs_light
   - delay:
       hours: 0
       minutes: 0
       seconds: 15
       milliseconds: 0
-  - type: turn_on
-    device_id: 336fc12d0bcb111281c0e206490d1ce5
-    entity_id: switch.kitchen_lights
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      area_id: kitchen

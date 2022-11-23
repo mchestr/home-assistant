@@ -8,7 +8,6 @@ trigger:
     domain: nest
     type: doorbell_chime
   - platform: device
-    device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
     domain: lock
     entity_id: lock.front_door_lock
     type: unlocked

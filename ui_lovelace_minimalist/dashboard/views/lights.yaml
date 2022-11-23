@@ -124,9 +124,17 @@ cards:
             ulm_card_light_enable_horizontal_wide: true
             ulm_card_light_enable_color: true
             ulm_card_light_icon: mdi:lightbulb
+      - type: horizontal-stack
+        cards:
         - type: "custom:button-card"
           template: card_light
           entity: light.wled_livingroom
+          variables:
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_icon: mdi:lightbulb
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.christmas_twree
           variables:
             ulm_card_light_enable_horizontal_wide: true
             ulm_card_light_icon: mdi:lightbulb

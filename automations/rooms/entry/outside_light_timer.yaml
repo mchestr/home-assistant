@@ -20,4 +20,4 @@ action:
   - service: >
       homeassistant.{{ trigger.id }}
     target:
-      entity_id: switch.entry_light
+      entity_id: light.entry_light

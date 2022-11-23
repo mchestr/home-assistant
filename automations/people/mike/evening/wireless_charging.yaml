@@ -24,7 +24,7 @@ action:
             data:
               is_volume_muted: true
             target:
-              device_id: 72ddc2d2e821815e40172e1a34983401
+              entity_id: media_player.bedroom_display
           - service: cast.show_lovelace_view
             data:
               entity_id: media_player.bedroom_display
@@ -38,11 +38,11 @@ action:
             data:
               is_volume_muted: false
             target:
-              device_id: 72ddc2d2e821815e40172e1a34983401
+              entity_id: media_player.bedroom_display
           - service: media_player.turn_off
             data: {}
             target:
-              device_id: 72ddc2d2e821815e40172e1a34983401
+              entity_id: media_player.bedroom_display
   - alias: "Turn all lights off, check if Jena is awake to cancel"
     choose:
       - conditions:

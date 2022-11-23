@@ -4,7 +4,6 @@ description: Auto lock front door after 5 minutes
 mode: single
 trigger:
   - platform: device
-    device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
     domain: lock
     entity_id: lock.front_door_lock
     type: unlocked
@@ -22,12 +21,10 @@ trigger:
     event: leave
 condition:
 - condition: device
-  device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
   domain: lock
   entity_id: lock.front_door_lock
   type: is_unlocked
 action:
-  - device_id: c68533c16d9ddbe1b6f0e9a97a91cf46
-    domain: lock
+  - domain: lock
     entity_id: lock.front_door_lock
     type: lock

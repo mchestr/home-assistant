@@ -20,26 +20,22 @@ action:
           - condition: trigger
             id: OPEN
           - condition: device
-            device_id: 9028836a88eecad1538e42463c11dfb4
             domain: cover
             entity_id: cover.garage_door
             type: is_closed
         sequence:
-          - device_id: 9028836a88eecad1538e42463c11dfb4
-            domain: cover
+          - domain: cover
             entity_id: cover.garage_door
             type: open
       - conditions:
           - condition: trigger
             id: CLOSE
           - condition: device
-            device_id: 9028836a88eecad1538e42463c11dfb4
             domain: cover
             entity_id: cover.garage_door
             type: is_open
         sequence:
-          - device_id: 9028836a88eecad1538e42463c11dfb4
-            domain: cover
+          - domain: cover
             entity_id: cover.garage_door
             type: close
     default: []

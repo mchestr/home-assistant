@@ -4,30 +4,17 @@ description: Start vacuuming
 mode: single
 trigger:
   - platform: time
-    at: "12:00:00"
-    id: 12pm
-  - platform: time
     at: "15:00:00"
     id: 3pm
 condition:
-  - condition: or
+  - condition: and
     conditions:
-      - condition: and
-        conditions:
-          - condition: trigger
-            id: 12pm
-          - condition: state
-            entity_id: binary_sensor.workday
-            state: "on"
-      - condition: and
-        conditions:
-          - condition: trigger
-            id: 3pm
-          - condition: state
-            entity_id: binary_sensor.workday
-            state: "off"
+      - condition: trigger
+        id: 3pm
+      - condition: state
+        entity_id: binary_sensor.workday
+        state: "off"
 action:
-  - device_id: d9ece670eb913552aa94de7620cc25b7
     domain: vacuum
     entity_id: vacuum.zoomba
     type: clean

@@ -7,5 +7,5 @@
       remote_entity: sensor.jena_button_action
       light_entity:
         entity_id:
-        - light.couch_light
-        - light.tv_light
+        - light.christmas_twree
+        - light.wled_livingroom

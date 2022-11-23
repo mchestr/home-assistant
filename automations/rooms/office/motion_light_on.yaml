@@ -9,14 +9,12 @@ trigger:
 condition:
   - condition: device
     type: is_off
-    device_id: 81cfed92a781040d45804ac0c25bec36
     entity_id: switch.office_light
     domain: switch
   - condition: time
     before: '21:00:00'
     after: '06:00:00'
 action:
-  - type: turn_on
-    device_id: 81cfed92a781040d45804ac0c25bec36
-    entity_id: switch.office_light
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      area_id: office

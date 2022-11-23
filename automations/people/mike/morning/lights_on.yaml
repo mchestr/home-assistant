@@ -14,13 +14,11 @@ action:
   - wait_for_trigger:
       - type: motion
         platform: device
-        device_id: 8dee1b01f45a35760585a0fde943de25
         entity_id: binary_sensor.master_bathroom_motion_detector_occupancy
         domain: binary_sensor
     timeout: '1800'
     continue_on_timeout: false
   - service: homeassistant.turn_on
-    data: {}
     target:
       area_id: master_bathroom
   - delay:
@@ -29,25 +27,18 @@ action:
       seconds: 0
       milliseconds: 0
   - service: homeassistant.turn_on
-    data: {}
     target:
       entity_id: light.master_bedroom_lights
-  - type: turn_on
-    device_id: 940a8aee3ffe2cbdd02efb20fd4cf79c
-    entity_id: switch.hallway_lights
-    domain: switch
+  - service: homeassistant.turn_on
+    target:
+      area_id: hallway
   - wait_for_trigger:
       - platform: device
         type: turned_off
-        device_id: 8ad4f68449347d77f43b235d92ec5442
-        entity_id: switch.master_bedroom_lights
-        domain: switch
+        entity_id: light.master_bedroom_light
+        domain: light
     timeout: '600'
     continue_on_timeout: false
-  - type: turn_on
-    device_id: ec7b8e02f71c48db858daa22965c5ab9
-    entity_id: switch.second_floor_stairs_lights
-    domain: switch
   - delay:
       hours: 0
       minutes: 0
@@ -61,7 +52,6 @@ action:
   - service: homeassistant.turn_on
     target:
       area_id: kitchen
-  - type: turn_off
-    device_id: 940a8aee3ffe2cbdd02efb20fd4cf79c
-    entity_id: switch.hallway_lights
-    domain: switch
+  - service: homeassistant.turn_off
+    target:
+      area_id: hallway
