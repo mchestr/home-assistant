@@ -151,7 +151,7 @@ plant:
 waste_collection_schedule:
   sources:
     - name: ics
-      calendar_title: !secret waste_collection_schedule_calendar_title
+      calendar_title: Waste Collection
       args:
         url: !secret waste_collection_schedule_ics_url
       customize:
