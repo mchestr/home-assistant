@@ -1,0 +1,30 @@
+alias: rooms/garage/christmas_light_timer.yaml
+id: e65a23fa-63b7-4caf-bcf6-26ccc9ffabde
+description: Outdoor christmas lights timer
+mode: single
+trigger:
+  - platform: sun
+    event: sunset
+    offset: "-00:45:00"
+    id: "turn_on"
+  - platform: sun
+    event: sunset
+    offset: "+06:00:00"
+    id: "turn_off"
+condition: 
+  - condition: or
+    conditions:
+      # Greater than November 20th
+      - condition: template
+        value_template: "{{ now().month == 11 and now().day > 20 }}"
+      # In December
+      - condition: template
+        value_template: "{{ now().month == 12 }}"
+      # Less than or equal to January 5th
+      - condition: template
+        value_template: "{{ now().month == 1 and now().day <= 5 }}"
+action:
+  - service: >
+      homeassistant.{{ trigger.id }}
+    target:
+      entity_id: light.christmas_lights
