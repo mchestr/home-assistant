@@ -6,12 +6,27 @@ trigger:
   - platform: state
     entity_id:
       - binary_sensor.garage_motion_detector_occupancy
+    to: "off"
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  - platform: state
+    entity_id:
+      - light.garage_light
     to: "on"
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+condition:
+  - condition: state
+    entity_id: binary_sensor.garage_motion_detector_occupancy
+    state: "off"
     for:
       hours: 0
       minutes: 10
       seconds: 0
-condition:
   - condition: state
     entity_id: light.garage_light
     state: "on"

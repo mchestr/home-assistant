@@ -1,18 +1,6 @@
 - id: '1641612617855'
   name: Living Room On
   entities:
-    switch.sonoff_1000bff832:
-      manufacturer: SONOFF
-      model: S31
-      sw_version: PSC-B67-GL v3.5.0
-      cloud: online
-      rssi: -42
-      power: 18.46
-      current: 0.15
-      voltage: 123.62
-      local: online
-      friendly_name: Bookshelf Lights
-      state: 'on'
     input_select.living_room:
       options:
       - 'On'
@@ -65,18 +53,6 @@
 - id: '1641612665205'
   name: Living Room Off
   entities:
-    switch.sonoff_1000bff832:
-      manufacturer: SONOFF
-      model: S31
-      sw_version: PSC-B67-GL v3.5.0
-      cloud: online
-      rssi: -42
-      power: 0
-      current: 0
-      voltage: 123.62
-      local: online
-      friendly_name: Bookshelf Lights
-      state: 'off'
     input_select.living_room:
       options:
       - 'On'
@@ -125,18 +101,6 @@
 - id: '1641612726113'
   name: Living Room Dimmed
   entities:
-    switch.sonoff_1000bff832:
-      manufacturer: SONOFF
-      model: S31
-      sw_version: PSC-B67-GL v3.5.0
-      cloud: online
-      rssi: -42
-      power: 0
-      current: 0
-      voltage: 123.62
-      local: online
-      friendly_name: Bookshelf Lights
-      state: 'off'
     input_select.living_room:
       options:
       - 'On'
@@ -189,18 +153,6 @@
 - id: '1641612772884'
   name: Living Room Night Light
   entities:
-    switch.sonoff_1000bff832:
-      manufacturer: SONOFF
-      model: S31
-      sw_version: PSC-B67-GL v3.5.0
-      cloud: online
-      rssi: -42
-      power: 0
-      current: 0
-      voltage: 123.62
-      local: online
-      friendly_name: Bookshelf Lights
-      state: 'off'
     input_select.living_room:
       options:
       - 'On'

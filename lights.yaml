@@ -15,16 +15,18 @@
   entities:
     - light.couch_light
     - light.tv_light
-    - light.sonoff_1000bff832
     - light.wled_livingroom
+    - light.christmas_twree
+    - light.wled_bookshelf
 
 - platform: group
   name: Living Room Lights
   entities:
     - light.couch_light
     - light.tv_light
-    - light.sonoff_1000bff832
     - light.wled_livingroom
+    - light.christmas_twree
+    - light.wled_bookshelf
 
 - platform: group
   name: Kitchen Lights

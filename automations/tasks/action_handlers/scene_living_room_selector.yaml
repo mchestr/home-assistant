@@ -18,7 +18,13 @@ trigger:
     entity_id: light.tv_lamp
     id: entity
   - platform: state
-    entity_id: switch.sonoff_1000bff832
+    entity_id: light.wled_bookshelf
+    id: entity
+  - platform: state
+    entity_id: light.christmas_twree
+    id: entity
+  - platform: state
+    entity_id: light.wled_livingroom
     id: entity
 condition: []
 action:
@@ -36,7 +42,7 @@ action:
           - choose:
               - conditions:
                   - condition: state
-                    entity_id: group.living_room_lights
+                    entity_id: light.living_room_lights
                     state: 'off'
                 sequence:
                   - service: input_select.select_option
@@ -46,7 +52,7 @@ action:
                       entity_id: input_select.living_room
               - conditions:
                   - condition: state
-                    entity_id: group.living_room_lights_all
+                    entity_id: light.living_room_lights_all
                     state: 'on'
                 sequence:
                   - service: input_select.select_option

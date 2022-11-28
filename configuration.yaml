@@ -52,29 +52,8 @@ sensor:
       - "time_date"
       - "time_utc"
       - "beat"
-  - platform: integration
-    source: sensor.sonoff_1000bff7b5_power
-    name: eBike Power
-    unit_prefix: k
-    round: 2
-  - platform: integration
-    source: sensor.sonoff_1000bff832_power
-    name: Bookshelf Power
-    unit_prefix: k
-    round: 2
 
-template:
-  - sensor:
-      - name: sonoff_1000bff832_power
-        state: >
-          {{ state_attr('switch.sonoff_1000bff832', 'power') }}
-        device_class: power
-        unit_of_measurement: "W"
-      - name: sonoff_1000bff7b5_power
-        state: >
-          {{ state_attr('switch.sonoff_1000bff7b5', 'power') }}
-        device_class: power
-        unit_of_measurement: "W"
+template: {}
 
 notify:
   - name: ALL_DEVICES
@@ -111,17 +90,6 @@ camera:
     name: Cat Camera
     stream_source: !secret cat_camera_stream_source
     still_image_url: /local/loading.gif
-
-sonoff:
-  username: !secret sonoff_username
-  password: !secret sonoff_password
-  devices:
-    1000bff832:
-      name: Bookshelf Light
-      host: 10.0.10.216
-    1000bff7b5:
-      name: eBike
-
 
 prometheus:
   namespace: homeassistant

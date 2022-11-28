@@ -118,7 +118,7 @@ cards:
         cards:
         - type: "custom:button-card"
           template: card_light
-          entity: light.sonoff_1000bff832
+          entity: light.wled_bookshelf
           variables:
             ulm_card_light_force_background_color: true
             ulm_card_light_enable_horizontal_wide: true

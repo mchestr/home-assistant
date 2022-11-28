@@ -19,7 +19,7 @@ A few more complex automations are done via [AppDaemon](https://appdaemon.readth
 | Aqara Vibration Sensor | 4 | Zigbee Vibration Sensor | [link](https://amzn.to/3LEMBID) | 〰️ (have not found a good use for them yet...) |
 | SONOFF SNZB-03 Motion Sensor | 2 | Zigbee Motion Sensor | [link](https://amzn.to/3yUrWgS) | 〰️ (prefer aqara) |
 | SONOFF SNZB-02 Temperature/Humidity Sensor | 1 | Zigbee Temp/Humidity Sensor | [link](https://amzn.to/39GZSD8) | ✅ |
-| SONOFF S31 Smart Plug | 2 | Wi-Fi Smart Plug | [link](https://amzn.to/3lxf5JJ) | ✅ |
+| SONOFF S31 Smart Plug | 2 | Wi-Fi Smart Plug | [link](https://amzn.to/3lxf5JJ) | ✅ Flashed with [Tasmota](https://tasmota.github.io/docs/)|
 | August Smart Lock Pro | 1 | Wi-Fi/Z-Wave Door Lock | [link](https://amzn.to/3G9ejvI) | ✅ |
 | Zooz ZEN76 | 3 | Z-Wave Light Switch | [link](https://amzn.to/3MCMVsw) | ✅ |
 | Zooz ZEN71 | 11 | Z-Wave Light Switch | [link](https://amzn.to/3LEMYmv) | ✅ |
