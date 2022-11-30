@@ -1,0 +1,16 @@
+alias: tasks/octoprint/print_finished.yaml
+id: 75205dc0-69e5-4502-a89d-4895b45547de
+description: Notify when print is finished
+mode: single
+trigger:
+  - platform: state
+    entity_id:
+      - binary_sensor.octoprint_printing
+    from: "on"
+condition: []
+action:
+  - service: notify.mike_phone
+    data:
+      title: Printing complete!
+      message: |
+        {{ states('sensor.octoprint_print_file') }} finished after {{ states('sensor.octoprint_print_time') }}

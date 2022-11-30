@@ -16,14 +16,11 @@ condition:
     entity_id: light.entry_light
     state: "off"
 action:
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     target:
       entity_id: light.entry_light
   - delay:
-      hours: 0
       minutes: 10
-      seconds: 0
-      milliseconds: 0
-  - service: homeassistant.turn_off
+  - service: light.turn_off
     target:
       entity_id: light.entry_light

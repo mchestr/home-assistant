@@ -8,4 +8,4 @@
       light_entity:
         entity_id:
         - light.christmas_twree
-        - light.wled_livingroom
+        - light.wled_livingroom_master

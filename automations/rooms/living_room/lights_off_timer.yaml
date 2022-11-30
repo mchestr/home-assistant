@@ -39,6 +39,6 @@ condition:
                 entity_id: binary_sensor.workday_tomorrow
                 state: "off"
 action:
-  - service: homeassistant.turn_off
+  - service: light.turn_off
     target:
       area_id: living_room

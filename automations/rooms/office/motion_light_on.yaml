@@ -14,6 +14,6 @@ condition:
     before: '21:00:00'
     after: '06:00:00'
 action:
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     target:
       area_id: office

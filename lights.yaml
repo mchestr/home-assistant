@@ -15,18 +15,18 @@
   entities:
     - light.couch_light
     - light.tv_light
-    - light.wled_livingroom
+    - light.wled_livingroom_master
     - light.christmas_twree
-    - light.wled_bookshelf
+    - light.wled_bookshelf_master
 
 - platform: group
   name: Living Room Lights
   entities:
     - light.couch_light
     - light.tv_light
-    - light.wled_livingroom
+    - light.wled_livingroom_master
     - light.christmas_twree
-    - light.wled_bookshelf
+    - light.wled_bookshelf_master
 
 - platform: group
   name: Kitchen Lights
@@ -60,7 +60,6 @@
   name: Office Lights
   entities:
     - light.office_light
-    - light.wled_office_master
 
 - platform: group
   name: Guest Bathroom Lights

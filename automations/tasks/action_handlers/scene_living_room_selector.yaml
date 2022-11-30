@@ -18,13 +18,13 @@ trigger:
     entity_id: light.tv_lamp
     id: entity
   - platform: state
-    entity_id: light.wled_bookshelf
+    entity_id: light.wled_bookshelf_master
     id: entity
   - platform: state
     entity_id: light.christmas_twree
     id: entity
   - platform: state
-    entity_id: light.wled_livingroom
+    entity_id: light.wled_livingroom_master
     id: entity
 condition: []
 action:

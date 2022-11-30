@@ -1,6 +1,6 @@
 alias: people/jena/morning/main_floor_lights_on.yaml
 id: 6e066124-4353-4461-8dd9-7f80bc59a817
-description: Turn Hue Go on in the morning
+description: Turn on living room lights in the morning
 mode: single
 trigger:
   - platform: template
@@ -23,7 +23,6 @@ action:
     data:
       brightness_pct: 100
     target:
-      area_id: living_room
-  - service: homeassistant.turn_on
-    target:
-      area_id: kitchen
+      area_id:
+        - kitchen
+        - living_room

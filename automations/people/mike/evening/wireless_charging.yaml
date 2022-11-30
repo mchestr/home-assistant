@@ -33,7 +33,8 @@ action:
           - wait_for_trigger:
               - platform: state
                 entity_id: alarm_control_panel.home_alarm
-            timeout: "300"
+            timeout:
+              minutes: 5
           - service: media_player.volume_mute
             data:
               is_volume_muted: false
@@ -81,16 +82,17 @@ action:
                 event_type: mobile_app_notification_action
                 event_data:
                   action: "{{ action_no }}"
-            timeout: "60"
+            timeout:
+              minutes: 1
           - alias: "Perform the action"
             choose:
               - conditions: "{{ wait.trigger.event.data.action == action_no }}"
                 sequence: []
             default:
-              - service: homeassistant.turn_off
+              - service: light.turn_off
                 target:
-                  entity_id: group.all_lights
+                  entity_id: light.all_lights
     default:
-      - service: homeassistant.turn_off
+      - service: light.turn_off
         target:
-          entity_id: group.all_lights
+          entity_id: light.all_lights

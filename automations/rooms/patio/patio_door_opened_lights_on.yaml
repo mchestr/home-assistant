@@ -16,6 +16,6 @@ condition:
     after: sunset
     after_offset: '-00:45:00'
 action:
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     target:
       area_id: patio

@@ -18,7 +18,7 @@ action:
         to: "on"
     timeout: '1800'
     continue_on_timeout: false
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     target:
       area_id: master_bathroom
   - delay:
@@ -26,10 +26,10 @@ action:
       minutes: 20
       seconds: 0
       milliseconds: 0
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     target:
       entity_id: light.master_bedroom_light
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     target:
       area_id: hallway
   - wait_for_trigger:
@@ -49,9 +49,9 @@ action:
       brightness_pct: 100
     target:
       area_id: living_room
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     target:
       area_id: kitchen
-  - service: homeassistant.turn_off
+  - service: light.turn_off
     target:
       area_id: hallway

@@ -7,9 +7,8 @@ trigger:
     event: sunset
     offset: "+00:20:00"
     id: "turn_on"
-  - platform: sun
-    event: sunset
-    offset: "02:00:00"
+  - platform: time
+    at: "20:30:00"
     id: "turn_off"
   - platform: sun
     event: sunrise
@@ -18,6 +17,6 @@ trigger:
 condition: []
 action:
   - service: >
-      homeassistant.{{ trigger.id }}
+      light.{{ trigger.id }}
     target:
       entity_id: light.entry_light

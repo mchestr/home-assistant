@@ -28,6 +28,6 @@ action:
       minutes: 25
       seconds: 0
       milliseconds: 0
-  - service: homeassistant.turn_off
+  - service: light.turn_off
     target:
       entity_id: light.hue_go

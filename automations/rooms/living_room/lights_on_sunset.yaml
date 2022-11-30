@@ -19,6 +19,6 @@ condition:
         entity_id: person.mike
         state: home
 action:
-  - service: homeassistant.turn_on
+  - service: light.turn_on
     target:
       area_id: living_room

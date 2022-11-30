@@ -6,7 +6,7 @@ trigger:
   - platform: state
     entity_id:
       - binary_sensor.patio_door_contact
-    to: "on"
+    to: "off"
     for:
       hours: 1
       minutes: 0
@@ -17,6 +17,6 @@ condition:
       - light.patio_lights
     state: "on"
 action:
-  - service: homeassistant.turn_off
+  - service: light.turn_off
     target:
       area_id: patio

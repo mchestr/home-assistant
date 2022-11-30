@@ -20,7 +20,7 @@ condition:
 action:
   - service: alarm_control_panel.alarm_disarm
     data:
-      code: '5362'
+      code: !secret alarm_control_panel_code 
     target:
       entity_id: alarm_control_panel.home_alarm
 mode: single

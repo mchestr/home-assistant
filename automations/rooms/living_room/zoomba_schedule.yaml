@@ -16,6 +16,5 @@ condition:
         state: "off"
 action:
   - service: vacuum.start
-    data: {}
     target:
       entity_id: vacuum.zoomba

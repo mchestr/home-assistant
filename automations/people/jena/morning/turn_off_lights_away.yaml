@@ -23,8 +23,9 @@ action:
         entity_id:
           - lock.front_door_lock
         to: unlocked
-    timeout: '1800'
-  - service: homeassistant.turn_off
+    timeout: 
+      hours: 2
+  - service: light.turn_off
     target:
       area_id: 
         - kitchen

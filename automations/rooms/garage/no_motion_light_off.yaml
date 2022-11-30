@@ -31,6 +31,6 @@ condition:
     entity_id: light.garage_light
     state: "on"
 action:
-  - service: homeassistant.turn_off
+  - service: light.turn_off
     target:
       entity_id: light.garage_light

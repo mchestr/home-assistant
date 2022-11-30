@@ -25,6 +25,6 @@ condition:
         value_template: "{{ now().month == 1 and now().day <= 5 }}"
 action:
   - service: >
-      homeassistant.{{ trigger.id }}
+      light.{{ trigger.id }}
     target:
       entity_id: light.christmas_lights
