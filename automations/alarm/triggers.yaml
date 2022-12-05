@@ -1,34 +1,50 @@
 alias: alarm/triggers.yaml
 id: 62e21db5-25b7-4319-bf89-fe8aaa9840ac
+
 description: "Sensors that trigger the alarm"
+
+# The following are the triggers for this automation
+# When any of the following conditions are met, the automation will be triggered
 trigger:
+  # The binary sensor for the office window is opened
   - platform: state
     entity_id: binary_sensor.office_window_contact
     to: "on"
+  # The binary sensor for the guest bedroom window is opened
   - platform: state
     entity_id: binary_sensor.guest_bedroom_window_contact
     to: "on"
+  # The binary sensor for the patio door is opened
   - platform: state
     entity_id: binary_sensor.patio_door_contact
     to: "on"
+  # The binary sensor for the balcony door is opened
   - platform: state
     entity_id: binary_sensor.balcony_door_contact
     to: "on"
+  # The binary sensor for the kitchen window is opened
   - platform: state
     entity_id: binary_sensor.kitchen_window_contact
     to: "on"
+  # The front door lock is unlocked
   - platform: state
     entity_id: lock.front_door_lock
     to: "unlocked"
+  # The front door lock is in the process of being unlocked
   - platform: state
     entity_id: lock.front_door_lock
     to: "unlocking"
+  # The garage door is open
   - platform: state
     entity_id: cover.garage_door
     to: "open"
+  # The garage door is in the process of being opened
   - platform: state
     entity_id: cover.garage_door
     to: "opening"
+
+# The following are the conditions that must be met for the automation to be executed
+# This automation will only be executed if the alarm is either in armed_home or armed_away mode
 condition:
   - condition: or
     conditions:
@@ -38,9 +54,12 @@ condition:
       - condition: state
         state: armed_away
         entity_id: alarm_control_panel.home_alarm
+
+# The following are the actions that will be executed when the automation is triggered
+# This automation will trigger the alarm when any of the sensors specified in the "trigger" section are activated
+# while the alarm is in armed_home or armed_away mode
+mode: single
 action:
   - service: alarm_control_panel.alarm_trigger
-    data: {}
     target:
       entity_id: alarm_control_panel.home_alarm
-mode: single

@@ -1,24 +1,31 @@
 alias: rooms/living_room/lights_on_sunset.yaml
 id: e7c600ee-6fcb-492f-8a16-5a4da2a4b01c
-description: "Turn living room lights on at sunset"
+description: Turn living room lights on at sunset
 mode: single
+
+# Define the trigger for this automation
 trigger:
+  # This trigger will fire when the sun sets
   - platform: sun
     event: sunset
     id: sunset
     offset: "-00:30:00"
+
+# Define the conditions that must be met for the automation to run
 condition:
+  # The automation will run if either Jena or Mike is home
   - condition: or
     conditions:
-      - alias: "Jena is home"
-        condition: state
+      - condition: state
         entity_id: person.jena
         state: home
-      - alias: "Mike is home"
-        condition: state
+      - condition: state
         entity_id: person.mike
         state: home
+
+# Define the action to take when the automation runs
 action:
+  # Turn on the living room lights
   - service: light.turn_on
     target:
       area_id: living_room

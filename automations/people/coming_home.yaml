@@ -1,7 +1,9 @@
 alias: people/coming_home.yaml
 id: 0a465eb3-3489-4354-aff3-b73f1c210b4f
-description: "Coming home automation"
+description: Coming home automation
 mode: single
+
+# Triggers when Jena or Mike enters the home zone
 trigger:
   - platform: zone
     entity_id: person.jena
@@ -13,15 +15,17 @@ trigger:
     zone: zone.home
     event: enter
     id: jena
+
+# Only run this automation if guest mode is off and the sun is set or setting soon
 condition:
-  - alias: "Guest Mode Off"
-    condition: state
+  - condition: state
     entity_id: input_boolean.guest_mode
     state: "off"
-  # Sun is set/setting soon
   - condition: sun
     after: sunset
     after_offset: "-00:45:00"
+
+# Wait for both Jena and Mike to come home, then turn on the entry stairs light and kitchen lights
 action:
   - wait_for_trigger:
       - platform: zone
@@ -32,7 +36,7 @@ action:
         entity_id: person.jena
         zone: zone.home
         event: enter
-    timeout: "300"
+    timeout: "300" # seconds
     continue_on_timeout: false
   - service: light.turn_on
     target:

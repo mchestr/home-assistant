@@ -1,6 +1,7 @@
 alias: alarm/leaving_home.yaml
 id: 40587902-cef5-435e-8b42-15b2059d4b33
-description: 'Arm alarm when leaving home'
+description: Arm alarm when leaving home
+
 trigger:
   - platform: zone
     entity_id: person.jena
@@ -10,6 +11,7 @@ trigger:
     entity_id: person.mike
     zone: zone.home
     event: leave
+
 condition:
   - condition: not
     conditions:
@@ -21,9 +23,10 @@ condition:
           - condition: zone
             entity_id: person.mike
             zone: zone.home
+
 action:
   - service: alarm_control_panel.alarm_arm_away
-    data: {}
     target:
       entity_id: alarm_control_panel.home_alarm
+
 mode: single

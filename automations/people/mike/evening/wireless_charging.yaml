@@ -1,66 +1,63 @@
 alias: people/mike/evening/wireless_charging.yaml
 id: f3cd99ed-0141-4fde-8e25-dbecfc93e64b
-description: "Evening Routine, wireless charging trigger"
-mode: single
+
+description: Evening Routine, wireless charging trigger
+
+# The following is the trigger for this automation
+# When the following condition is met, the automation will be triggered
 trigger:
+  # The automation is triggered when Mike's phone charger type changes to wireless
   - platform: state
     entity_id: sensor.mike_phone_charger_type
     to: wireless
+
+# The following are the conditions that must be met for the automation to be executed
+# This automation will only be executed if Mike is home and it's between 9pm and 4am
 condition:
+  # The time must be between 9pm and 4am
   - condition: time
     before: "04:00:00"
     after: "21:00:00"
+  # Mike must be home
   - condition: zone
     entity_id: person.mike
     zone: zone.home
+
+# The following are the actions that will be executed when the automation is triggered
+# This automation will arm the home alarm, then check if Jena is home and it's Friday or Saturday
+# If those conditions are met, Jena will be asked if she wants to turn off the lights.
+# If Jena is not home or it is not Friday or Saturday, the lights will be turned off automatically.
+mode: single
+
+# Arm the home alarm
 action:
-  - choose:
-      - conditions:
-          - condition: state
-            entity_id: alarm_control_panel.home_alarm
-            state: disarmed
-        sequence:
-          - service: media_player.volume_mute
-            data:
-              is_volume_muted: true
-            target:
-              entity_id: media_player.bedroom_display
-          - service: cast.show_lovelace_view
-            data:
-              entity_id: media_player.bedroom_display
-              dashboard_path: alarm-control-panel
-              view_path: alarm
-          - wait_for_trigger:
-              - platform: state
-                entity_id: alarm_control_panel.home_alarm
-            timeout:
-              minutes: 5
-          - service: media_player.volume_mute
-            data:
-              is_volume_muted: false
-            target:
-              entity_id: media_player.bedroom_display
-          - service: media_player.turn_off
-            target:
-              entity_id: media_player.bedroom_display
+  - service: alarm_control_panel.alarm_arm_home
+    target:
+      entity_id: alarm_control_panel.home_alarm
+
+  # If Jena is home and it's Friday or Saturday, ask her if she wants
+  # to turn off the lights. Otherwise, turn off the lights.
   - alias: "Turn all lights off, check if Jena is awake to cancel"
     choose:
       - conditions:
+          # Jena is home
           - condition: zone
             entity_id: person.jena
             zone: zone.home
+          # It is Friday or Saturday
           - condition: time
             weekday:
               - fri
               - sat
         sequence:
-          # inside a automation actions or script sequence
-          - alias: "Set up variables for the actions"
+          # Set up variables for the actions
+          - alias: Set up variables for the actions
             variables:
               # Including an id in the action allows us to identify this script run
               # and not accidentally trigger for other notification actions
               action_yes: "{{ 'YES_' ~ context.id }}"
               action_no: "{{ 'NO_' ~ context.id }}"
+          # Ask to cancel lights off
           - alias: "Ask to cancel lights off"
             service: notify.jena_phone
             data:
@@ -72,6 +69,7 @@ action:
                     title: "Yes, lights off"
                   - action: "{{ action_no }}"
                     title: "No, keep them on"
+          # Wait for a response
           - alias: "Wait for a response"
             wait_for_trigger:
               - platform: event
@@ -84,15 +82,18 @@ action:
                   action: "{{ action_no }}"
             timeout:
               minutes: 1
+          # Perform the action
           - alias: "Perform the action"
             choose:
               - conditions: "{{ wait.trigger.event.data.action == action_no }}"
                 sequence: []
             default:
+              # Turn off the lights
               - service: light.turn_off
                 target:
-                  entity_id: light.all_lights
+                  entity_id: light.all
     default:
+      # Turn off the lights
       - service: light.turn_off
         target:
           entity_id: light.all_lights

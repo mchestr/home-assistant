@@ -1,35 +1,32 @@
 alias: rooms/garage/no_motion_light_off.yaml
 id: 24602d24-0843-414d-93d8-dc6f750de31f
-description: turn light off after 15 minutes
+description: Turn off light in garage after 15 minutes of no motion
 mode: single
+
+# Trigger when there is no motion in the garage for 15 minutes and the light is on
 trigger:
   - platform: state
     entity_id:
       - binary_sensor.garage_motion_detector_occupancy
     to: "off"
-    for:
-      hours: 0
-      minutes: 15
-      seconds: 0
+    for: "00:15:00"
   - platform: state
     entity_id:
       - light.garage_light
     to: "on"
-    for:
-      hours: 0
-      minutes: 15
-      seconds: 0
+    for: "00:15:00"
+
+# Only run the automation if there has been no motion in the garage for at least 10 minutes
 condition:
   - condition: state
     entity_id: binary_sensor.garage_motion_detector_occupancy
     state: "off"
-    for:
-      hours: 0
-      minutes: 10
-      seconds: 0
+    for: "00:10:00"
   - condition: state
     entity_id: light.garage_light
     state: "on"
+
+# Turn off the garage light
 action:
   - service: light.turn_off
     target:

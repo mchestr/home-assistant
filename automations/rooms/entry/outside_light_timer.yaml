@@ -2,11 +2,16 @@ alias: rooms/entry/outside_light_timer.yaml
 id: e65a23fa-63b7-4caf-bcf6-26ccc9ffabbe
 description: Door light timer
 mode: single
+
+# Turn on light at sunset + 20 minutes
 trigger:
   - platform: sun
     event: sunset
     offset: "+00:20:00"
     id: "turn_on"
+
+# Turn off light at 20:30 or at sunrise
+trigger:
   - platform: time
     at: "20:30:00"
     id: "turn_off"
@@ -14,9 +19,12 @@ trigger:
     event: sunrise
     offset: 0
     id: "turn_off"
+
+# No conditions for this automation
 condition: []
+
+# Turn on or off the entry light based on the trigger ID
 action:
-  - service: >
-      light.{{ trigger.id }}
+  - service: light.{{ trigger.id }}
     target:
       entity_id: light.entry_light

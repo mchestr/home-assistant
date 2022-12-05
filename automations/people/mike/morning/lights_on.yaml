@@ -2,56 +2,70 @@ alias: people/mike/morning/lights_on.yaml
 id: 6204876b-18e5-4bc2-b6ee-8b8f54d97829
 description: Turn on heated floors in the morning
 mode: single
+
+# Trigger the automation at a specific time based on Mike's next alarm time
 trigger:
   - platform: template
     value_template: >-
       {{now().strftime('%a %h %d %H:%M %Z %Y') == (((state_attr('sensor.mike_phone_next_alarm', 'Time in Milliseconds') | int / 1000) - 1*60 ) | timestamp_custom('%a %h %d %H:%M %Z %Y'))}}
+
+# Only run the automation if Mike is home
 condition:
   - condition: state
     entity_id: person.mike
     state: home
+
+# Turn on the lights in the master bathroom, hallway, master bedroom, living room, and kitchen
 action:
+  # Wait until motion is detected in the master bathroom
   - wait_for_trigger:
       - platform: state
-        entity_id:
-          - binary_sensor.master_bathroom_motion_detector_occupancy
+        entity_id: binary_sensor.master_bathroom_motion_detector_occupancy
         to: "on"
-    timeout: '1800'
+    timeout: 1800
     continue_on_timeout: false
+
+  # Turn on the lights in the master bathroom and hallway
   - service: light.turn_on
     target:
       area_id: master_bathroom
+  - service: light.turn_on
+    target:
+      area_id: hallway
+
+  # Wait for 20 minutes
   - delay:
       hours: 0
       minutes: 20
       seconds: 0
       milliseconds: 0
+
+  # Turn on the light in the master bedroom and turn on the hallway lights
   - service: light.turn_on
     target:
       entity_id: light.master_bedroom_light
   - service: light.turn_on
     target:
       area_id: hallway
+
+  # Wait until the light in the master bedroom is turned off
   - wait_for_trigger:
       - platform: state
-        entity_id:
-          - light.master_bedroom_light
-        to: "on"
-    timeout: '600'
+        entity_id: light.master_bedroom_light
+        to: "off"
+    timeout: 600
     continue_on_timeout: false
+
+  # Wait for 10 seconds
   - delay:
       hours: 0
       minutes: 0
       seconds: 10
       milliseconds: 0
+
+  # Turn on the lights in the living room and kitchen
   - service: light.turn_on
     data:
       brightness_pct: 100
     target:
       area_id: living_room
-  - service: light.turn_on
-    target:
-      area_id: kitchen
-  - service: light.turn_off
-    target:
-      area_id: hallway

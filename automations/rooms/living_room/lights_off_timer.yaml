@@ -1,43 +1,50 @@
-alias: rooms/living_room/lights_off_timer.yaml
+alias: rooms/living_room/lights_off_timer
 id: 6e261c90-0a39-472a-a064-98aa766f1510
-description: ""
+description: Automation to turn off living room lights at a specified time
 mode: single
+
+# Set the trigger to go off at two specific times: 10:30 PM and 12:00 AM
 trigger:
   - platform: time
     at: "22:30:00"
-    id: 10:30pm
+    id: "10:30pm"
   - platform: time
     at: "00:00:00"
-    id: 12am
+    id: "12am"
+
+# Set the conditions that must be met for the automation to run
 condition:
   - condition: and
     conditions:
+      # Either Jena or Mike must be home
       - condition: or
         conditions:
-          - alias: "Jena is home"
-            condition: state
+          - condition: state
             entity_id: person.jena
             state: home
-          - alias: "Mike is home"
-            condition: state
+          - condition: state
             entity_id: person.mike
             state: home
+
+      # Either tomorrow is a workday and it is 10:30 PM, or tomorrow is not a workday and it is 12:00 AM
       - condition: or
         conditions:
           - condition: and
             conditions:
               - condition: trigger
-                id: 10:30pm
+                id: "10:30pm"
               - condition: state
                 entity_id: binary_sensor.workday_tomorrow
                 state: "on"
           - condition: and
             conditions:
               - condition: trigger
-                id: 12am
+                id: "12am"
               - condition: state
                 entity_id: binary_sensor.workday_tomorrow
                 state: "off"
+
+# If the conditions are met, turn off the living room lights
 action:
   - service: light.turn_off
     target:

@@ -1,21 +1,26 @@
 alias: rooms/patio/outside_light_timer.yaml
+
 id: 5c104d0a-ab51-4db9-8f46-50a701202c98
 description: Door light timer
 mode: single
+
+# Trigger the automation when the patio door contact sensor is closed for 1 hour
 trigger:
   - platform: state
-    entity_id:
-      - binary_sensor.patio_door_contact
+    entity_id: binary_sensor.patio_door_contact
     to: "off"
     for:
       hours: 1
       minutes: 0
       seconds: 0
+
+# Condition for the automation to run is that the patio lights are currently on
 condition:
   - condition: state
-    entity_id: 
-      - light.patio_lights
+    entity_id: light.patio_lights
     state: "on"
+
+# Action to take is to turn off the patio lights
 action:
   - service: light.turn_off
     target:

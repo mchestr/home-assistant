@@ -1,11 +1,13 @@
 alias: alarm/front_door_auto_disarm.yaml
 id: acb1aa5e-98b9-416b-ae53-145a0e745874
-description: 'Disarm alarm if unlocked by known entity'
+description: Disarm alarm if unlocked by known entity
+
 trigger:
   - platform: state
     entity_id:
       - lock.front_door_lock
     to: unlocked
+
 condition:
   - condition: state
     entity_id: alarm_control_panel.home_alarm
@@ -14,13 +16,15 @@ condition:
       - armed_home
   - condition: state
     entity_id: sensor.front_door_lock_operator
-    state: 
+    state:
       - Jena Drysdale
       - Mike Chester
+
 action:
   - service: alarm_control_panel.alarm_disarm
     data:
-      code: !secret alarm_control_panel_code 
+      code: !secret alarm_control_panel_code
     target:
       entity_id: alarm_control_panel.home_alarm
+
 mode: single

@@ -2,17 +2,22 @@ alias: rooms/master_bathroom/heated_floors_off.yaml
 id: e152caab-f6a2-411f-b254-1d26118e6532
 description: Turn heated floors off after a while
 mode: single
+
+# The `for` parameter specifies that the trigger should only fire if the `heat` state is sustained for 2 hours
 trigger:
   - platform: state
-    entity_id: 
-      - climate.master_bathroom_heated_floors
+    entity_id: climate.master_bathroom_heated_floors
     to: heat
     for:
       hours: 2
       minutes: 0
       seconds: 0
+
+# The condition section is empty and does not need to be included
 condition: []
+
 action:
+  # The action simply turns off the climate entity with the ID `climate.master_bathroom_heated_floors`
   - service: climate.turn_off
     target:
       entity_id: climate.master_bathroom_heated_floors

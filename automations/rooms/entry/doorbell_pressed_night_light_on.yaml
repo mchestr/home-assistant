@@ -1,20 +1,28 @@
 alias: rooms/entry/doorbell_pressed_night_light_on.yaml
 id: ed7d6ab4-058a-4f1f-b91d-7032b0e191fd
 description: Turn on entry light if doorbell pressed at night
+
 mode: restart
+
+# Trigger when the doorbell is pressed
 trigger:
   - platform: device
     device_id: 2d2d34dd071c750e6af81b674f481d8e
     domain: nest
     type: doorbell_chime
+
+# Only run this automation if it's between sunset and sunrise
 condition:
   - condition: sun
     after: sunset
     before: sunrise
     before_offset: "-01:00:00"
+  # Only run if the entry light is off
   - condition: state
     entity_id: light.entry_light
     state: "off"
+
+# Turn on the entry light and turn it off after 10 minutes
 action:
   - service: light.turn_on
     target:

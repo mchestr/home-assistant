@@ -2,23 +2,33 @@ alias: rooms/master_bedroom/entry_display_night.yaml
 id: 149589f8-a2a5-40ea-9312-c425f05c73ce
 description: Display doorbell camera on bedside display if doorbell rings at night or door unlocked
 mode: restart
+
+# Events that will trigger this automation
 trigger:
   - platform: device
     device_id: 2d2d34dd071c750e6af81b674f481d8e
     domain: nest
     type: doorbell_chime
+
   - platform: state
     entity_id:
       - lock.front_door_lock
     to: unlocked
+
+# Conditions that must be satisfied for this automation to run
 condition:
+  # Only run between 11pm and 8am
   - condition: time
     before: '08:00:00'
     after: '23:00:00'
+
+  # Mike is home
   - alias: "Mike is home"
     condition: state
     entity_id: person.mike
     state: "home"
+
+# Actions to be performed when the automation runs
 action:
   - service: media_player.play_media
     target:

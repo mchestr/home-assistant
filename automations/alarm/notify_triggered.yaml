@@ -1,47 +1,65 @@
 alias: alarm/notify_triggered.yaml
 id: 62e21db5-25b7-4319-bf89-fe8aaa9840ad
 description: Notify when alarm is pending
+
+# The following are the triggers for this automation
+# When any of the following conditions are met, the automation will be triggered
 trigger:
+  # The binary sensor for the office window is opened
   - platform: state
     entity_id: binary_sensor.office_window_contact
     to: "on"
+  # The binary sensor for the guest bedroom window is opened
   - platform: state
     entity_id: binary_sensor.guest_bedroom_window_contact
     to: "on"
+  # The binary sensor for the patio door is opened
   - platform: state
     entity_id: binary_sensor.patio_door_contact
     to: "on"
+  # The binary sensor for the balcony door is opened
   - platform: state
     entity_id: binary_sensor.balcony_door_contact
     to: "on"
+  # The binary sensor for the kitchen window is opened
   - platform: state
     entity_id: binary_sensor.kitchen_window_contact
     to: "on"
+  # The front door lock is unlocked
   - platform: state
     entity_id: lock.front_door_lock
     to: "unlocked"
+  # The front door lock is in the process of being unlocked
   - platform: state
     entity_id: lock.front_door_lock
     to: "unlocking"
+  # The garage door is open
   - platform: state
     entity_id: cover.garage_door
     to: "open"
+  # The garage door is in the process of being opened
   - platform: state
     entity_id: cover.garage_door
     to: "opening"
+
+# The following are the actions that will be executed when the automation is triggered
+# These actions will be executed in parallel, meaning that they will run simultaneously
+mode: parallel
 action:
+  # Save which sensor triggered
   - alias: Save which sensor triggered
     variables:
       sensor_triggered: >-
         {{ trigger.from_state.attributes.friendly_name }}
+  # Wait for the alarm to be triggered
   - wait_for_trigger:
       - platform: state
         entity_id: alarm_control_panel.home_alarm
         to: triggered
     timeout: '120'
     continue_on_timeout: false
+  # Send a notification
   - service: notify.notify
     data:
       title: 'Home Alarm: Triggered!'
       message: '{{ sensor_triggered }} was opened!'
-mode: parallel

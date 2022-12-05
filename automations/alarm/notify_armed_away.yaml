@@ -1,17 +1,21 @@
 alias: alarm/notify_armed_away.yaml
 id: 9f31410a-5d8d-456c-86d4-c0fb3f58710e
-description: 'Notify when alarm is armed in away mode'
+description: Notify when alarm is armed in away mode
+
 trigger:
   - platform: state
     entity_id: alarm_control_panel.home_alarm
     to: armed_away
+
 condition:
   - condition: time
     before: '23:00:00'
     after: '07:00:00'
+
 action:
   - service: notify.notify
     data:
-      title: "Home Alarm: Armed"
+      title: 'Home Alarm: Armed'
       message: The alarm is armed in away mode {{ states('sensor.date_time') }}
+
 mode: single
