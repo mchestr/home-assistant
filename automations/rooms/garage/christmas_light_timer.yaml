@@ -4,14 +4,12 @@ description: Outdoor christmas lights timer
 mode: single
 
 # Turn on lights at sunset, 45 minutes before
+# Turn off lights at sunset + 6 hours
 trigger:
   - platform: sun
     event: sunset
     offset: "-00:45:00"
     id: "turn_on"
-
-# Turn off lights at sunset + 6 hours
-trigger:
   - platform: sun
     event: sunset
     offset: "+06:00:00"
