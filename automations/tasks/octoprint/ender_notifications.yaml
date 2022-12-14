@@ -1,0 +1,45 @@
+alias: tasks/octoprint/ender_update_notification.yaml
+id: 75205dc0-69e5-4502-a89d-4887a6786def
+description: Ender print notifications
+mode: single
+# Trigger a few times at the start, then every 10%
+trigger:
+  - platform: template
+    value_template: |
+      {{ states('sensor.ender_print_progress') | int in [2, 3, 5, 8, 10, 20, 30, 40, 50, 60, 70, 80, 90]}}
+    id: update
+  - platform: template
+    value_template: |
+      {{ states('sensor.ender_print_progress') | int == 100 }}
+    id: complete
+condition: []
+action:
+  - choose:
+      - conditions: "{{ trigger.id == update }}"
+        sequence:
+          - service: notify.mike_phone
+            data:
+              title: |
+                Ender Print: {{ states('sensor.ender_print_progress')}}% done!
+              message: |
+                print time {{ states('sensor.ender_print_progress') }}
+              data:
+                actions:
+                  - action: ENDER_CANCEL_PRINT
+                    title: CANCEL
+                  - action: ENDER_POWER_OFF
+                    title: POWER OFF
+                image: /api/camera_proxy/camera.192_168_1_190
+                clickAction: entityId:camera.192_168_1_190
+                url: entityId:camera.192_168_1_190
+      - conditions: "{{ trigger.id == update }}"
+        sequence:
+          - service: notify.mike_phone
+            data:
+              title: Printing complete!
+              message: |
+                {{ states('sensor.ender_print_file') }} finished in {{ states('sensor.ender_print_time') }}
+              data:
+                image: /api/camera_proxy/camera.192_168_1_190
+                clickAction: entityId:camera.192_168_1_190
+                url: entityId:camera.192_168_1_190

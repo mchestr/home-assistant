@@ -22,7 +22,7 @@ action:
       - platform: state
         entity_id: binary_sensor.master_bathroom_motion_detector_occupancy
         to: "on"
-    timeout: 1800
+    timeout: 3600
     continue_on_timeout: false
 
   # Turn on the lights in the master bathroom and hallway
@@ -53,7 +53,7 @@ action:
       - platform: state
         entity_id: light.master_bedroom_light
         to: "off"
-    timeout: 600
+    timeout: 1800
     continue_on_timeout: false
 
   # Wait for 10 seconds
@@ -68,4 +68,6 @@ action:
     data:
       brightness_pct: 100
     target:
-      area_id: living_room
+      area_id:
+        - living_room
+        - kitchen

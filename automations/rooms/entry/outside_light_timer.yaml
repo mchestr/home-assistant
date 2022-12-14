@@ -9,9 +9,6 @@ trigger:
     event: sunset
     offset: "+00:20:00"
     id: "turn_on"
-
-# Turn off light at 20:30 or at sunrise
-trigger:
   - platform: time
     at: "20:30:00"
     id: "turn_off"
@@ -21,7 +18,17 @@ trigger:
     id: "turn_off"
 
 # No conditions for this automation
-condition: []
+condition:
+  - condition: not
+    conditions:
+      - condition: and
+        conditions: 
+        - condition: template
+          value_template: "{{ now().month == 11 and now().day > 20 }}"
+        - condition: template
+          value_template: "{{ now().month == 12 }}"
+        - condition: template
+          value_template: "{{ now().month == 1 and now().day <= 5 }}"
 
 # Turn on or off the entry light based on the trigger ID
 action:

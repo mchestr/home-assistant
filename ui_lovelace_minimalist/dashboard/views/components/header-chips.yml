@@ -15,7 +15,7 @@ cards:
             entity: alarm_control_panel.home_alarm
             variables:
               ulm_translation_state: |-
-                [[[ return entity.state.includes('armed') ? 'Armed' : 'Disarmed' ]]]
+                [[[ return entity.state == 'disarmed' ? 'Disarmed' : 'Armed' ]]]
             tap_action:
               action: "navigate"
               navigation_path: "/lovelace/security"
