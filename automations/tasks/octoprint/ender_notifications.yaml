@@ -8,21 +8,27 @@ trigger:
     value_template: |
       {{ states('sensor.ender_print_progress') | int in [2, 3, 5, 8, 10, 20, 30, 40, 50, 60, 70, 80, 90]}}
     id: update
-  - platform: template
-    value_template: |
-      {{ states('sensor.ender_print_progress') | int == 100 }}
+  - platform: state
+    entity_id:
+      - sensor.ender_print_progress
+    to: "100"
     id: complete
+  - platform: state
+    entity_id: sensor.ender_print_status
+    from: Printing
+    to: Offline after error
+    id: error
 condition: []
 action:
   - choose:
-      - conditions: "{{ trigger.id == update }}"
+      - conditions: "{{ trigger.id == 'update' }}"
         sequence:
           - service: notify.mike_phone
             data:
               title: |
                 Ender Print: {{ states('sensor.ender_print_progress')}}% done!
               message: |
-                print time {{ states('sensor.ender_print_progress') }}
+                print time {{ states('sensor.ender_print_time') }}
               data:
                 actions:
                   - action: ENDER_CANCEL_PRINT
@@ -32,14 +38,28 @@ action:
                 image: /api/camera_proxy/camera.192_168_1_190
                 clickAction: entityId:camera.192_168_1_190
                 url: entityId:camera.192_168_1_190
-      - conditions: "{{ trigger.id == update }}"
+      - conditions: "{{ trigger.id == 'complete' }}"
         sequence:
           - service: notify.mike_phone
             data:
-              title: Printing complete!
+              title: "Ender: Printing complete!"
               message: |
                 {{ states('sensor.ender_print_file') }} finished in {{ states('sensor.ender_print_time') }}
               data:
                 image: /api/camera_proxy/camera.192_168_1_190
                 clickAction: entityId:camera.192_168_1_190
                 url: entityId:camera.192_168_1_190
+      - conditions: "{{ trigger.id == 'error' }}"
+        sequence:
+          - service: notify.mike_phone
+            data:
+              title: "Ender: Error!"
+              message: |
+                {{ states('sensor.ender_print_file') }} errored at {{ states('sensor.ender_current_z') }}mm, {{ states('sensor.ender_print_progress')}}% completion. {{ state_attr('sensor.ender_print_status', 'error') }}
+              data:
+                image: /api/camera_proxy/camera.192_168_1_190
+                clickAction: entityId:camera.192_168_1_190
+                url: entityId:camera.192_168_1_190
+                actions:
+                  - action: ENDER_POWER_OFF
+                    title: POWER OFF

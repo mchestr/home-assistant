@@ -21,7 +21,7 @@ trigger:
 condition:
   - condition: not
     conditions:
-      - condition: and
+      - condition: or
         conditions: 
         - condition: template
           value_template: "{{ now().month == 11 and now().day > 20 }}"

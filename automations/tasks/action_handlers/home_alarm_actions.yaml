@@ -1,0 +1,31 @@
+alias: tasks/action_handlers/home_alarm_actions.yaml
+id: f6045fd6-c2d7-4658-bb03-a7eed6556789
+description: 'Confirm action, then cancel print'
+mode: parallel
+trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: ALARM_DISARM
+    id: disarm
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: ALARM_ARM
+    id: arm
+condition: []
+action:
+  - alias: "Perform the action"
+    choose:
+      - conditions: 
+          - "{{ trigger.id == 'disarm' }}"
+        sequence:
+          - service: alarm_control_panel.alarm_disarm
+            target:
+              entity_id: alarm_control_panel.home_alarm
+      - conditions: 
+          - "{{ trigger.id == 'arm' }}"
+        sequence:
+          - service: alarm_control_panel.alarm_arm_home
+            target:
+              entity_id: alarm_control_panel.home_alarm

@@ -32,14 +32,14 @@ action:
     choose:
       - conditions: 
           - "{{ wait.trigger.event.data.action == action_confirm }}"
-          - "{{ trigger.id == cancel }}"
+          - "{{ trigger.id == 'cancel' }}"
         sequence:
           - service: button.press
             target:
               entity_id: button.ender_cancel_print
       - conditions: 
           - "{{ wait.trigger.event.data.action == action_confirm }}"
-          - "{{ trigger.id == power_off }}"
+          - "{{ trigger.id == 'power_off' }}"
         sequence:
           - service: switch.turn_off
             target:

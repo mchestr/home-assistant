@@ -63,3 +63,11 @@ action:
     data:
       title: 'Home Alarm: Triggered!'
       message: '{{ sensor_triggered }} was opened!'
+      data:
+        actions:
+          - action: ALARM_DISARM
+            title: Disarm
+          - action: ALARM_ARM
+            title: Re-Arm
+          - action: CALL_TA_AUTORITAYS
+            title: CALL TA AUTORITAYS
