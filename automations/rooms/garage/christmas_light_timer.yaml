@@ -30,4 +30,4 @@ condition:
 action:
   - service: light.{{ trigger.id }}
     target:
-      entity_id: light.outdoor_christmas_lights_dimmer
+      entity_id: light.outdoor_christmas_lights
