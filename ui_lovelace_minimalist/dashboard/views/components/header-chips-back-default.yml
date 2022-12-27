@@ -6,7 +6,9 @@ cards:
       ulm_chip_back_path: /lovelace/dashboard
   - !include header-chips.yml
   - type: custom:button-card
-    template: chip_navigate
+    template: chip_mdi_icon_only
     variables:
-      ulm_chip_back_path: /config/dashboard
-      ulm_chip_navigate_icon: mdi:cog
+      ulm_chip_mdi_icon_only_icon: mdi:cog
+    tap_action:
+      action: navigate
+      navigation_path: /config/dashboard

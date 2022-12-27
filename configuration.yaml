@@ -103,6 +103,8 @@ lovelace:
       type: module
     - url: /hacsfiles/lovelace-card-tools/card-tools.js
       type: module
+    - url: /hacsfiles/bar-card/bar-card.js
+      type: module
 
   # Add yaml dashboards
   dashboards:
