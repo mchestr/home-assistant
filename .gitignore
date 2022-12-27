@@ -3,6 +3,7 @@ tts/
 nest/
 image/
 rtsp2webrtc_v5_aarch64
+rtsp2webrtc_v5_amd64
 .storage/
 zigbee2mqtt/
 .sonoff.json

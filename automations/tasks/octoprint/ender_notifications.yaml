@@ -35,9 +35,9 @@ action:
                     title: CANCEL
                   - action: ENDER_POWER_OFF
                     title: POWER OFF
-                image: /api/camera_proxy/camera.192_168_1_190
-                clickAction: entityId:camera.192_168_1_190
-                url: entityId:camera.192_168_1_190
+                image: /api/camera_proxy/camera.ender
+                clickAction: entityId:camera.ender
+                url: entityId:camera.ender
       - conditions: "{{ trigger.id == 'complete' }}"
         sequence:
           - service: notify.mike_phone
@@ -46,9 +46,9 @@ action:
               message: |
                 {{ states('sensor.ender_print_file') }} finished in {{ states('sensor.ender_print_time') }}
               data:
-                image: /api/camera_proxy/camera.192_168_1_190
-                clickAction: entityId:camera.192_168_1_190
-                url: entityId:camera.192_168_1_190
+                image: /api/camera_proxy/camera.ender
+                clickAction: entityId:camera.ender
+                url: entityId:camera.ender
       - conditions: "{{ trigger.id == 'error' }}"
         sequence:
           - service: notify.mike_phone
@@ -57,9 +57,9 @@ action:
               message: |
                 {{ states('sensor.ender_print_file') }} errored at {{ states('sensor.ender_current_z') }}mm, {{ states('sensor.ender_print_progress')}}% completion. {{ state_attr('sensor.ender_print_status', 'error') }}
               data:
-                image: /api/camera_proxy/camera.192_168_1_190
-                clickAction: entityId:camera.192_168_1_190
-                url: entityId:camera.192_168_1_190
+                image: /api/camera_proxy/camera.ender
+                clickAction: entityId:camera.ender
+                url: entityId:camera.ender
                 actions:
                   - action: ENDER_POWER_OFF
                     title: POWER OFF
