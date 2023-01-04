@@ -161,9 +161,3 @@ cards:
             entity: input_select.hue_go
             variables:
               state: "Night Light"
-      - type: custom:button-card
-        template: card_title
-        name: Utilities
-      - type: custom:button-card
-        entity: vacuum.zoomba
-        template: card_vacuum
