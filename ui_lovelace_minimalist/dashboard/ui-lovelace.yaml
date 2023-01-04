@@ -11,4 +11,3 @@ views:
   - !include views/security.yaml
   - !include views/health.yaml
   - !include views/nas.yaml
-  - !include views/ender.yaml
