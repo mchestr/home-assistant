@@ -57,22 +57,22 @@ cards:
       - type: horizontal-stack
         cards:
           - type: "custom:button-card"
-            template: card_vertical_button_groups
+            template: card_vertical_button
             entity: light.all_lights
             icon: mdi:lightbulb
             name: All
           - type: "custom:button-card"
-            template: card_vertical_button_groups
+            template: card_vertical_button
             entity: light.first_floor_lights
             icon: mdi:lightbulb
             name: First Floor
           - type: "custom:button-card"
-            template: card_vertical_button_groups
+            template: card_vertical_button
             entity: light.main_floor_lights
             icon: mdi:lightbulb
             name: Main Floor
           - type: "custom:button-card"
-            template: card_vertical_button_groups
+            template: card_vertical_button
             entity: light.second_floor_lights
             icon: mdi:lightbulb
             name: Second Floor
