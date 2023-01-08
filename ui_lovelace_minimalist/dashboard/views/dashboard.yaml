@@ -125,20 +125,13 @@ cards:
         name: Bedroom
       - type: "custom:button-card"
         template: card_graph
-        entity: sensor.master_bathroom_heated_floors_local_temperature
+        entity: climate.master_bathroom_heated_floors
         variables:
           ulm_card_graph_color: "var(--google-blue)"
           ulm_card_graph_name: Temperature Heated Floors
-          ulm_card_graph_entity: sensor.master_bathroom_heated_floors_local_temperature
-      - type: "custom:button-card"
-        template: card_thermostat
-        entity: climate.master_bathroom_heated_floors
-        variables:
-          ulm_card_thermostat_enable_background_color: true
-          ulm_card_thermostat_enable_controls: true
-          ulm_card_thermostat_enable_collapse: true
-          ulm_card_thermostat_enable_display_temperature: true
-          ulm_card_thermostat_enable_popup: true
+          ulm_card_graph_entity: 
+            entity: climate.master_bathroom_heated_floors
+            attribute: current_temperature
       - type: horizontal-stack
         cards:
           - type: "custom:button-card"
