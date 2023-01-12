@@ -17,18 +17,11 @@ trigger:
     offset: 0
     id: "turn_off"
 
-# No conditions for this automation
 condition:
-  - condition: not
-    conditions:
-      - condition: or
-        conditions: 
-        - condition: template
-          value_template: "{{ now().month == 11 and now().day > 20 }}"
-        - condition: template
-          value_template: "{{ now().month == 12 }}"
-        - condition: template
-          value_template: "{{ now().month == 1 and now().day <= 5 }}"
+  # Disable entry liht cause christmas lights on
+  - condition: state
+    entity_id: binary_sensor.is_christmas_ish_time
+    state: "off"
 
 # Turn on or off the entry light based on the trigger ID
 action:

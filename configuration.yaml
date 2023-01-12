@@ -50,7 +50,13 @@ sensor:
       - "time_utc"
       - "beat"
 
-template: {}
+template:
+  binary_sensor:
+    - name: Is Christmas-ish time
+      state: >
+        {{ now().month == 11 and now().day > 20 
+           or now().month == 12 and now().month == 1
+           or now().day <= 2 }}
 
 notify:
   - name: ALL_DEVICES
