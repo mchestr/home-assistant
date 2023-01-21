@@ -4,18 +4,28 @@ cards:
     cards:
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
-            template: chip_temperature
+          - type: 'custom:button-card'
+            template: chip_mdi_icon_only
             variables:
-              ulm_chip_temperature_inside: sensor.nest_thermostat_temperature
-              ulm_chip_temperature_outside: sensor.pitt_meadows_temperature
-              ulm_chip_temperature_weather: weather.pitt_meadows
+              ulm_chip_mdi_icon_only_entity: camera.catcam_main
+              ulm_chip_mdi_icon_only_icon: mdi:cctv
+          - type: 'custom:button-card'
+            template: chip_mdi_icon_only
+            variables:
+              ulm_chip_mdi_icon_only_entity: camera.doorbell
+              ulm_chip_mdi_icon_only_icon: mdi:doorbell-video
           - type: "custom:button-card"
             template: chip_alarm
             entity: alarm_control_panel.home_alarm
             variables:
               ulm_translation_state: |-
-                [[[ return entity.state.charAt(0).toUpperCase() + entity.state.slice(1) ]]]
+                [[[ 
+                  var name = 'Armed';
+                  if (entity.state.includes('disarmed')) {
+                    name = 'Disarmed';
+                  }
+                  return name; 
+                ]]]
             tap_action:
               action: "navigate"
               navigation_path: "/lovelace/security"
