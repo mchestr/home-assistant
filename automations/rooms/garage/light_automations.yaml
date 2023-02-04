@@ -1,0 +1,46 @@
+alias: rooms/garage/light_automations.yaml
+id: d3e91c77-8ef1-4cc7-b110-86cd9eccdfae
+description: Control the garage light
+mode: single
+
+# Trigger the automation when motion is detected in the garage
+trigger:
+  - platform: state
+    entity_id: binary_sensor.garage_motion_detector_occupancy
+    to: "on"
+    id: turn_on
+  - platform: state
+    entity_id: binary_sensor.garage_entry_contact
+    to: "on"
+    id: turn_on
+
+  - platform: state
+    entity_id: binary_sensor.garage_motion_detector_occupancy
+    to: "off"
+    for:
+      minutes: 30
+    id: turn_off
+
+# Turn on the garage light when the trigger and conditions are met
+action:
+  - choose:
+      - conditions:
+        - condition: trigger
+          id: turn_on
+        sequence: 
+          - service: light.{{ trigger.id }}
+            target:
+              entity_id: light.garage_light
+
+      - conditions:
+        - condition: trigger
+          id: turn_off
+        - condition: state
+          entity_id: light.garage_lights
+          state: "on"
+          for:
+            minutes: 10
+        sequence: 
+          - service: light.{{ trigger.id }}
+            target:
+              entity_id: light.garage_light
