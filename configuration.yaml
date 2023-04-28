@@ -35,6 +35,7 @@ group: !include groups.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 light: !include lights.yaml
+input_boolean: !include input_boolean.yaml
 
 sensor:
   - platform: waste_collection_schedule

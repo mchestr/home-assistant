@@ -1,0 +1,27 @@
+alias: rooms/living_room/fire_tv_paused_lights_up.yaml
+id: 6e261c90-0a39-472a-a064-a8bb766f1515
+mode: single
+trigger:
+  - platform: state
+    entity_id:
+      - media_player.fire_tv_192_168_1_59
+    from: playing
+condition:
+  - condition: sun
+    after: sunset
+    after_offset: "+03:00:00"
+  - condition: state
+    entity_id: input_boolean.theatre_mode
+    state: "on"
+action:
+  - service: light.turn_on
+    data:
+      transition: 5
+      brightness_pct: 100
+    target:
+      entity_id: light.living_room_lights
+  - service: select.select_option
+    data:
+      option: Bright
+    target:
+      entity_id: select.wled_livingroom_preset

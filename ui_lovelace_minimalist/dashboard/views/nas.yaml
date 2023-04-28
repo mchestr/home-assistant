@@ -16,12 +16,12 @@ cards:
           - type: 'custom:button-card'
             template: card_generic
             entity: sensor.lochnas_last_boot
-      - type: horizontal-stack
-        cards:
-          - type: 'custom:button-card'
-            template: card_generic
-            entity: sensor.lochnas_volume_used
-            name: Volume Usage
+      # - type: horizontal-stack
+      #   cards:
+      #     - type: 'custom:button-card'
+      #       template: card_generic
+      #       entity: sensor.lochnas_volume_used
+      #       name: Volume Usage
       - type: custom:button-card
         template: card_title
         label: Space

@@ -134,6 +134,11 @@ cards:
           variables:
             ulm_card_light_enable_horizontal_wide: true
             ulm_card_light_icon: mdi:lightbulb
+      - type: 'custom:button-card'
+        template: card_input_boolean
+        entity: input_boolean.theatre_mode
+        variables:
+          ulm_card_input_boolean_name: Theatre Mode
       - type: custom:button-card
         template: card_title
         label: Kitchen

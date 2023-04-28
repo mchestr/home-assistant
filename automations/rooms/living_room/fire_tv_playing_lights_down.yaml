@@ -1,0 +1,39 @@
+description: FireTV Theatre Mode
+alias: rooms/living_room/fire_tv_paused_lights_down.yaml
+id: 6e261c90-0a39-472a-a064-9bcbe66f1611
+mode: single
+trigger:
+  - platform: state
+    entity_id:
+      - media_player.fire_tv_192_168_1_59
+    to: playing
+condition:
+  - condition: sun
+    after: sunset
+    after_offset: "+03:00:00"
+  - condition: state
+    entity_id: input_boolean.theatre_mode
+    state: "on"
+action:
+  - service: light.turn_off
+    data:
+      transition: 5
+    target:
+      entity_id: 
+        - light.entry_stairs_light
+        - light.kitchen_lights
+        - light.tv_light
+        - light.couch_light
+        - light.second_floor_stairs_light
+  - service: light.turn_on
+    data:
+      brightness: 100
+      transition: 5
+    target:
+      entity_id: 
+        - light.wled_livingroom
+  - service: select.select_option
+    data:
+      option: Theatre
+    target:
+      entity_id: select.wled_livingroom_preset

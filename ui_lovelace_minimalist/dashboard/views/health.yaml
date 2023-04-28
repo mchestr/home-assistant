@@ -168,13 +168,13 @@ cards:
               ulm_card_battery_battery_level_danger: 30
               ulm_card_battery_battery_level_warning: 50
             name: Living Room Right Window Contact
-          - type: "custom:button-card"
-            template: card_battery
-            entity: sensor.zoomba_battery_level
-            variables:
-              ulm_card_battery_battery_level_danger: 30
-              ulm_card_battery_battery_level_warning: 50
-            name: Zoomba
+          # - type: "custom:button-card"
+          #   template: card_battery
+          #   entity: sensor.zoomba_battery_level
+          #   variables:
+          #     ulm_card_battery_battery_level_danger: 30
+          #     ulm_card_battery_battery_level_warning: 50
+          #   name: Zoomba
       - type: horizontal-stack
         cards:
           - type: "custom:button-card"
@@ -289,13 +289,13 @@ cards:
             name: Vibration Detector 1
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
-            template: card_battery
-            entity: sensor.office_closet_battery
-            variables:
-              ulm_card_battery_battery_level_danger: 30
-              ulm_card_battery_battery_level_warning: 50
-            name: Office Closet Temperature
+          # - type: "custom:button-card"
+          #   template: card_battery
+          #   entity: sensor.office_closet_battery
+          #   variables:
+          #     ulm_card_battery_battery_level_danger: 30
+          #     ulm_card_battery_battery_level_warning: 50
+          #   name: Office Closet Temperature
           - type: "custom:button-card"
             template: card_battery
             entity: sensor.master_bedroom_window_battery
