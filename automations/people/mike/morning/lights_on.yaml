@@ -25,25 +25,34 @@ action:
     timeout: 3600
     continue_on_timeout: false
 
-  # Turn on the lights in the master bathroom and hallway
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: person.jena
+            state: home
+        sequence:
+          - delay:
+              seconds: 5
+
+  # Turn on the lights in the master bathroom
   - service: light.turn_on
     target:
       area_id: master_bathroom
-  - service: light.turn_on
-    target:
-      area_id: hallway
 
   # Wait for 20 minutes
   - delay:
-      hours: 0
       minutes: 20
-      seconds: 0
-      milliseconds: 0
 
   # Turn on the light in the master bedroom and turn on the hallway lights
-  - service: light.turn_on
-    target:
-      entity_id: light.master_bedroom_light
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: person.jena
+            state: away
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.master_bedroom_light
   - service: light.turn_on
     target:
       area_id: hallway
@@ -53,15 +62,15 @@ action:
       - platform: state
         entity_id: light.master_bedroom_light
         to: "off"
+      - platform: state
+        entity_id: light.master_bathroom_lights
+        to: "off"
     timeout: 1800
     continue_on_timeout: false
 
   # Wait for 10 seconds
   - delay:
-      hours: 0
-      minutes: 0
       seconds: 10
-      milliseconds: 0
 
   # Turn on the lights in the living room and kitchen
   - service: light.turn_on
