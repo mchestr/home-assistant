@@ -7,13 +7,8 @@ cards:
           - type: 'custom:button-card'
             template: chip_mdi_icon_only
             variables:
-              ulm_chip_mdi_icon_only_entity: camera.catcam_main
-              ulm_chip_mdi_icon_only_icon: mdi:cctv
-          - type: 'custom:button-card'
-            template: chip_mdi_icon_only
-            variables:
               ulm_chip_mdi_icon_only_entity: camera.doorbell
-              ulm_chip_mdi_icon_only_icon: mdi:doorbell-video
+              ulm_chip_mdi_icon_only_icon: mdi:cctv
           - type: "custom:button-card"
             template: chip_alarm
             entity: alarm_control_panel.home_alarm

@@ -1,0 +1,92 @@
+alias: rooms/entry/doorbell_pressed.yaml
+id: 5d061c50-2f2b-4cad-8ef4-d6d5081f0108
+description: Doorbell Ring Notification
+
+mode: parallel
+
+trigger:
+  - entity_id: binary_sensor.front_door_button_pressed
+    platform: state
+    from: 'off'
+    to: 'on'
+
+variables:
+  button: binary_sensor.front_door_button_pressed
+  dashboard_uri: /lovelace/default_view
+  app_uri_android: app://com.mm.android.amcrestsmarthome
+  app_uri_iphone: shortcuts://run-shortcut?name=Open AmcrestSmartHome
+  image_file: /local/doorbell/{{ expand(button)[0].last_changed | as_timestamp  |
+    timestamp_custom("%Y-%m-%d_%H-%M-%S") }}.jpg
+
+condition: []
+
+action:
+  - alias: Set up variables for the actions
+    variables:
+      action_1: '{{ ''UNLOCK'' ~ context.id }}'
+  - data_template:
+      entity_id: camera.doorbell
+      filename: /config/www/doorbell/{{ expand(button)[0].last_changed | as_timestamp  |
+        timestamp_custom("%Y-%m-%d_%H-%M-%S") }}.jpg
+    service: camera.snapshot
+
+  # Notify Android
+  - service: notify.mike_phone
+    data:
+      title: Doorbell Ring!
+      message: '{{ as_timestamp(now()) | timestamp_custom(''%d:%m %H:%M'', true) }}'
+      data:
+        ttl: 0
+        priority: high
+        image: '{{ image_file }}'
+        actions:
+          - action: URI
+            title: Dashboard
+            uri: '{{ dashboard_uri }}'
+          - action: URI
+            title: App
+            uri: '{{ app_uri_android }}'
+          - action: '{{ action_1 }}'
+            title: 'Unlock'
+
+  # Notify iPhone
+  - service: notify.jena_phone
+    data:
+      title: Doorbell Ring!
+      message: '{{ as_timestamp(now()) | timestamp_custom(''%d:%m %H:%M'', true) }}'
+      data:
+        push:
+          sound: US-EN-Morgan-Freeman-Someone-Is-Arriving.wav
+        ttl: 0
+        priority: high
+        image: '{{ image_file }}'
+        actions:
+          - action: URI
+            title: Dashboard
+            uri: '{{ dashboard_uri }}'
+          - action: URI
+            title: App
+            uri: '{{ app_uri_iphone }}'
+          - action: '{{ action_1 }}'
+            title: 'Unlock'
+
+  - alias: Wait for a response
+    wait_for_trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: '{{ action_1 }}'
+    timeout:
+      seconds: 30
+    continue_on_timeout: true
+
+  - alias: Perform the action
+    choose:
+      - conditions:
+        - condition: template
+          value_template: '{{ wait.trigger.event.data.action == action_1 }}'
+        sequence: 
+          - service: lock.unlock
+            data: {}
+            target:
+              entity_id: lock.front_door_lock

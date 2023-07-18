@@ -1,1 +1,7 @@
-[]
+- id: '1689712795986'
+  alias: teststs
+  description: ''
+  trigger: []
+  condition: []
+  action: []
+  mode: single

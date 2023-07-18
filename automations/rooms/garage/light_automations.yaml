@@ -13,12 +13,17 @@ trigger:
     entity_id: binary_sensor.garage_entry_contact
     to: "on"
     id: turn_on
-
   - platform: state
     entity_id: binary_sensor.garage_motion_detector_occupancy
     to: "off"
     for:
       minutes: 30
+    id: turn_off
+  - platform: state
+    entity_id: light.garage_light
+    to: "on"
+    for:
+      hours: 2
     id: turn_off
 
 # Turn on the garage light when the trigger and conditions are met

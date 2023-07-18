@@ -1,0 +1,24 @@
+alias: rooms/entry/doorbell_offline.yaml
+id: 2089511a-9994-47e3-ba65-a0b31aa9d76c
+description: Notify if doorbell offline for 10 minutes
+mode: single
+
+trigger:
+  - platform: state
+    entity_id:
+      - camera.doorbell
+      - binary_sensor.front_door_button_pressed
+    to: unavailable
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+condition: []
+action:
+  - service: notify.mike_phone
+    data:
+      title: Doorbell Offline!
+      image: '{{ state_attr(''camera.doorbell'', ''entity_picture'') }}'
+      message: >-
+        since {{ as_timestamp(trigger.from_state.last_changed) |
+        timestamp_custom('%y-%m-%d %H:%M', true) }}

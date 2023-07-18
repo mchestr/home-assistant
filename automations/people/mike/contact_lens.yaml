@@ -1,0 +1,36 @@
+alias: people/mike/contact_lens.yaml
+id: 6204876b-18e5-4bc2-b6ee-8c6f54e97849
+description: "Contact Lens Notification Reminder"
+mode: single
+trigger:
+  - platform: time
+    at: "09:00:00"
+condition:
+  - condition: template
+    value_template: >-
+      -> {{ now().timestamp() | timestamp_custom('%Y-%m-%d') >=
+      (state_attr('input_datetime.contact_lens_changed', 'timestamp') +
+      30*24*60*60) | timestamp_custom('%Y-%m-%d', false) }}
+action:
+  - alias: Set up variables for the actions
+    variables:
+      action_changed: "{{ 'OPEN_' ~ context.id }}"
+  - service: notify.mike_phone
+    data:
+      message: Contact change reminder
+      title: Time to change Contacts!
+      actions:
+        - action: "{{ action_changed }}"
+          title: Changed
+  - alias: Wait for a response
+    wait_for_trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: "{{ action_changed }}"
+    continue_on_timeout: false
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: "{{ now().timestamp() }}"
+    target:
+      entity_id: input_datetime.contact_lens_changed

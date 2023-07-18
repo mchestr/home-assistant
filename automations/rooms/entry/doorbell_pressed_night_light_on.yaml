@@ -6,10 +6,9 @@ mode: restart
 
 # Trigger when the doorbell is pressed
 trigger:
-  - platform: device
-    device_id: 2d2d34dd071c750e6af81b674f481d8e
-    domain: nest
-    type: doorbell_chime
+  - platform: state
+    entity_id: binary_sensor.front_door_button_pressed
+    to: "on"
 
 # Only run this automation if it's between sunset and sunrise
 condition:

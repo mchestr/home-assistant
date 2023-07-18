@@ -1,0 +1,17 @@
+alias: rooms/entry/doorbell_notifications.yaml
+id: ed7d6ab4-058a-4f9f-b94d-7032b0e191fe
+# https://github.com/SgtBatten/HA_blueprints
+description: Doorbell notifications blueprint
+
+use_blueprint:
+  path: SgtBatten/Stable.yaml
+  input:
+    camera: camera.doorbell
+    base_url: https://home-assistant.chestr.dev
+    message: "{{ label }} detected - Front Door"
+    critical: "{{'false' if now().hour in [8,9,10,11,12,13,14,15,16,17,18] else 'true'}}"
+    notify_device: 5f8785dad20db3d7c02c2d415541e0f6
+    ios_live_view: true
+    labels:
+      - person
+      - package
