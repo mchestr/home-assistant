@@ -23,7 +23,7 @@ condition: []
 action:
   - alias: Set up variables for the actions
     variables:
-      action_1: '{{ ''UNLOCK'' ~ context.id }}'
+      action_1: 'FRONT_DOOR_UNLOCK'
   - data_template:
       entity_id: camera.doorbell
       filename: /config/www/doorbell/{{ expand(button)[0].last_changed | as_timestamp  |
@@ -33,7 +33,7 @@ action:
   # Notify Android
   - service: notify.mike_phone
     data:
-      title: Doorbell Ring!
+      title: Someone's at the front door!
       message: '{{ as_timestamp(now()) | timestamp_custom(''%d:%m %H:%M'', true) }}'
       data:
         ttl: 0
@@ -52,7 +52,7 @@ action:
   # Notify iPhone
   - service: notify.jena_phone
     data:
-      title: Doorbell Ring!
+      title: Someone's at the front door!
       message: '{{ as_timestamp(now()) | timestamp_custom(''%d:%m %H:%M'', true) }}'
       data:
         push:
@@ -64,29 +64,5 @@ action:
           - action: URI
             title: Dashboard
             uri: '{{ dashboard_uri }}'
-          - action: URI
-            title: App
-            uri: '{{ app_uri_iphone }}'
           - action: '{{ action_1 }}'
             title: 'Unlock'
-
-  - alias: Wait for a response
-    wait_for_trigger:
-    - platform: event
-      event_type: mobile_app_notification_action
-      event_data:
-        action: '{{ action_1 }}'
-    timeout:
-      seconds: 30
-    continue_on_timeout: true
-
-  - alias: Perform the action
-    choose:
-      - conditions:
-        - condition: template
-          value_template: '{{ wait.trigger.event.data.action == action_1 }}'
-        sequence: 
-          - service: lock.unlock
-            data: {}
-            target:
-              entity_id: lock.front_door_lock

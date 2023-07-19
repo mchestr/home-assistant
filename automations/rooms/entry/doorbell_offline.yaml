@@ -6,8 +6,7 @@ mode: single
 trigger:
   - platform: state
     entity_id:
-      - camera.doorbell
-      - binary_sensor.front_door_button_pressed
+      - camera.front_door_main
     to: unavailable
     for:
       hours: 0
