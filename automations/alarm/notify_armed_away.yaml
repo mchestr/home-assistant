@@ -13,7 +13,7 @@ condition:
     after: '07:00:00'
 
 action:
-  - service: notify.notify
+  - service: notify.all_devices
     data:
       title: 'Home Alarm: Armed'
       message: The alarm is armed in away mode {{ states('sensor.date_time') }}

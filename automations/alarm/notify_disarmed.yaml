@@ -8,7 +8,7 @@ trigger:
     to: disarmed
 
 action:
-  - service: notify.notify
+  - service: notify.all_devices
     data:
       title: "Home Alarm: Disarmed"
       message: The alarm is disarmed at {{ states('sensor.date_time') }}

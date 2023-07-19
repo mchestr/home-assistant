@@ -59,7 +59,7 @@ action:
     timeout: '120'
     continue_on_timeout: false
   # Send a notification
-  - service: notify.notify
+  - service: notify.all_devices
     data:
       title: 'Home Alarm: Triggered!'
       message: '{{ sensor_triggered }} was opened!'
