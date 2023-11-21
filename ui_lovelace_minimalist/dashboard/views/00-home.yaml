@@ -68,7 +68,7 @@ cards:
             tap_action:
               action: navigate
               navigation_path: /lovelace/garage-entry
-            hold_action:
+            double_tap_action:
               action: call-service
               service: homeassistant.turn_off
               data:
@@ -107,7 +107,7 @@ cards:
             tap_action:
               action: navigate
               navigation_path: /lovelace/main-room
-            hold_action:
+            double_tap_action:
               action: call-service
               service: homeassistant.turn_off
               data:
@@ -160,7 +160,7 @@ cards:
             tap_action:
               action: navigate
               navigation_path: /lovelace/master-bed-bath
-            hold_action:
+            double_tap_action:
               action: call-service
               service: homeassistant.turn_off
               data:
@@ -203,7 +203,7 @@ cards:
             tap_action:
               action: navigate
               navigation_path: /lovelace/guest-bed-bath
-            hold_action:
+            double_tap_action:
               action: call-service
               service: homeassistant.turn_off
               data:
@@ -249,7 +249,7 @@ cards:
             tap_action:
               action: navigate
               navigation_path: /lovelace/powder-patio
-            hold_action:
+            double_tap_action:
               action: call-service
               service: homeassistant.turn_off
               data:
@@ -292,7 +292,7 @@ cards:
             tap_action:
               action: navigate
               navigation_path: /lovelace/office-hallway
-            hold_action:
+            double_tap_action:
               action: call-service
               service: homeassistant.turn_off
               data:
