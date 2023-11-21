@@ -38,62 +38,58 @@ action:
   # If Jena is home and it's Friday or Saturday, ask her if she wants
   # to turn off the lights. Otherwise, turn off the lights.
   - alias: "Turn all lights off, check if Jena is awake to cancel"
-    choose:
-      - conditions:
-          # Jena is home
-          - condition: zone
-            entity_id: person.jena
-            zone: zone.home
-          # It is Friday or Saturday
-          - condition: time
-            weekday:
-              - fri
-              - sat
-        sequence:
-          # Set up variables for the actions
-          - alias: Set up variables for the actions
-            variables:
-              # Including an id in the action allows us to identify this script run
-              # and not accidentally trigger for other notification actions
-              action_yes: "{{ 'YES_' ~ context.id }}"
-              action_no: "{{ 'NO_' ~ context.id }}"
-          # Ask to cancel lights off
-          - alias: "Ask to cancel lights off"
-            service: notify.jena_phone
-            data:
-              title: It is bedtime!
-              message: would you like to turn the lights off?
-              data:
-                actions:
-                  - action: "{{ action_yes }}"
-                    title: "Yes, lights off"
-                  - action: "{{ action_no }}"
-                    title: "No, keep them on"
-          # Wait for a response
-          - alias: "Wait for a response"
-            wait_for_trigger:
-              - platform: event
-                event_type: mobile_app_notification_action
-                event_data:
-                  action: "{{ action_yes }}"
-              - platform: event
-                event_type: mobile_app_notification_action
-                event_data:
-                  action: "{{ action_no }}"
-            timeout:
-              minutes: 1
-          # Perform the action
-          - alias: "Perform the action"
-            choose:
-              - conditions: "{{ wait.trigger.event.data.action == action_no }}"
-                sequence: []
-            default:
-              # Turn off the lights
-              - service: light.turn_off
-                target:
-                  entity_id: light.all
-    default:
-      # Turn off the lights
-      - service: light.turn_off
-        target:
-          entity_id: light.all_lights
+    if:
+      # Jena is home
+      - condition: zone
+        entity_id: person.jena
+        zone: zone.home
+      # It is Friday or Saturday
+      - condition: time
+        weekday:
+          - fri
+          - sat
+    then:
+      # Set up variables for the actions
+      - alias: Set up variables for the actions
+        variables:
+          # Including an id in the action allows us to identify this script run
+          # and not accidentally trigger for other notification actions
+          action_yes: "{{ 'YES_' ~ context.id }}"
+          action_no: "{{ 'NO_' ~ context.id }}"
+      # Ask to cancel lights off
+      - alias: "Ask to cancel lights off"
+        service: notify.jena_phone
+        data:
+          title: It is bedtime!
+          message: would you like to turn the lights off?
+          data:
+            actions:
+              - action: "{{ action_yes }}"
+                title: "Yes, lights off"
+              - action: "{{ action_no }}"
+                title: "No, keep them on"
+      # Wait for a response
+      - alias: "Wait for a response"
+        wait_for_trigger:
+          - platform: event
+            event_type: mobile_app_notification_action
+            event_data:
+              action: "{{ action_yes }}"
+          - platform: event
+            event_type: mobile_app_notification_action
+            event_data:
+              action: "{{ action_no }}"
+        timeout:
+          minutes: 1
+        continue_on_timeout: true
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ wait.trigger and wait.trigger.event.data.action == action_no }}'
+          sequence:
+            - stop: Jena said so
+
+  # Turn off the lights
+  - service: light.turn_off
+    target:
+      entity_id: light.all_lights

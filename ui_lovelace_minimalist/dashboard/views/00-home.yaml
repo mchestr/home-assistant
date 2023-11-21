@@ -1,0 +1,324 @@
+title: Home
+path: home
+cards:
+  - type: vertical-stack
+    cards:
+      - !include components/header-chips-back-menu.yml
+      - type: custom:button-card
+        color_type: blank-card
+
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_person
+            entity: person.mike
+            variables:
+              ulm_card_person_entity: person.mike
+              ulm_card_person_use_entity_picture: true
+              ulm_card_person_zone1: home
+              ulm_card_person_zone2: away
+          - type: "custom:button-card"
+            template: card_person
+            entity: person.jena
+            variables:
+              ulm_card_person_entity: person.jena
+              ulm_card_person_use_entity_picture: true
+              ulm_card_person_zone1: home
+              ulm_card_person_zone2: away
+            hold_action:
+              action: more-info
+              entity: input_datetime.jena_alarm
+
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_vertical_button
+            entity: light.all_lights
+            icon: mdi:lightbulb
+            name: All
+          - type: "custom:button-card"
+            template: card_vertical_button
+            entity: light.first_floor_lights
+            icon: mdi:lightbulb
+            name: First Floor
+          - type: "custom:button-card"
+            template: card_vertical_button
+            entity: light.main_floor_lights
+            icon: mdi:lightbulb
+            name: Main Floor
+          - type: "custom:button-card"
+            template: card_vertical_button
+            entity: light.second_floor_lights
+            icon: mdi:lightbulb
+            name: Second Floor
+
+      - type: custom:button-card
+        color_type: blank-card
+
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template:
+              - card_room
+              - red_on
+            name: Garage & Entry
+            entity: group.garage_entry
+            icon: mdi:home-floor-0
+            show_label: false
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/garage-entry
+            hold_action:
+              action: call-service
+              service: homeassistant.turn_off
+              data:
+                entity_id:
+                  - light.first_floor_lights
+            variables:
+              label_use_temperature: false
+              label_use_brightness: true
+              entity_1:
+                entity_id: light.first_floor_lights
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_2:
+                entity_id: lock.front_door_lock
+                templates:
+                  - green_locked
+                  - red_unlocked
+                tap_action:
+                  action: toggle
+              entity_4:
+                entity_id: binary_sensor.utility_closet_water_leak
+                templates:
+                  - red_on
+                tap_action:
+                  action: none
+          - type: custom:button-card
+            template:
+              - card_room
+              - red_on
+            name: Main Room
+            entity: sensor.living_room_and_kitchen
+            icon: mdi:home-floor-1
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/main-room
+            hold_action:
+              action: call-service
+              service: homeassistant.turn_off
+              data:
+                entity_id:
+                  - light.living_room_hue_lights
+                  - light.living_room_led_lights
+                  - light.stair_lights
+                  - light.kitchen_lights
+            variables:
+              label_use_temperature: true
+              label_use_brightness: false
+              entity_1:
+                entity_id: light.living_room_hue_lights
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_2:
+                entity_id: light.living_room_led_lights
+                templates:
+                  - pink_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_3:
+                entity_id: light.stair_lights
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_4:
+                entity_id: light.kitchen_lights
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template:
+              - card_room
+              - red_on
+            name: Master Bed & Bath
+            entity: sensor.master_bed_and_bathroom
+            icon: mdi:bed-king
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/master-bed-bath
+            hold_action:
+              action: call-service
+              service: homeassistant.turn_off
+              data:
+                entity_id:
+                  - light.master_bedroom_lights
+                  - light.master_bathroom_lights
+                  - fan.master_bathroom_fan
+            variables:
+              label_use_temperature: true
+              label_use_brightness: false
+              entity_1:
+                entity_id: light.master_bedroom_lights
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_3:
+                entity_id: light.master_bathroom_lights
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_4:
+                entity_id: fan.master_bathroom_fan
+                templates:
+                  - green_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+          - type: custom:button-card
+            template:
+              - card_room
+              - red_on
+            name: Guest Bed & Bath
+            entity: group.guest_bed_bathroom
+            icon: mdi:bed
+            show_label: false
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/guest-bed-bath
+            hold_action:
+              action: call-service
+              service: homeassistant.turn_off
+              data:
+                entity_id:
+                  - light.guest_bedroom_light
+                  - light.guest_bathroom_light
+                  - fan.guest_bathroom_fan
+            variables:
+              label_use_temperature: false
+              label_use_brightness: true
+              entity_1:
+                entity_id: light.guest_bedroom_light
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_3:
+                entity_id: light.guest_bathroom_light
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_4:
+                entity_id: fan.guest_bathroom_fan
+                templates:
+                  - green_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template:
+              - card_room
+              - red_on
+            name: Powder & Patio
+            entity: group.powder_patio
+            icon: mdi:faucet
+            show_label: false
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/powder-patio
+            hold_action:
+              action: call-service
+              service: homeassistant.turn_off
+              data:
+                entity_id:
+                  - light.powder_room_light
+                  - light.powder_room_fan
+                  - light.patio_lights
+            variables:
+              label_use_temperature: false
+              label_use_brightness: false
+              entity_1:
+                entity_id: light.powder_room_light
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_2:
+                entity_id: fan.powder_room_fan
+                templates:
+                  - green_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_4:
+                entity_id: light.patio_lights
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+          - type: custom:button-card
+            template:
+              - card_room
+              - red_on
+            name: Office & Hallway
+            entity: light.office_hallway_lights
+            icon: mdi:desk-lamp
+            show_label: false
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/office-hallway
+            hold_action:
+              action: call-service
+              service: homeassistant.turn_off
+              data:
+                entity_id:
+                  - light.office_light
+                  - light.hallway_light
+            variables:
+              label_use_temperature: false
+              label_use_brightness: true
+              entity_1:
+                entity_id: light.office_light
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_2:
+                entity_id: light.hallway_light
+                templates:
+                  - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_4:
+                entity_id: binary_sensor.washing_machine_leak_detector_water_leak
+                templates:
+                  - red_on
+                tap_action:
+                  action: none

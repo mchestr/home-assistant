@@ -116,16 +116,14 @@ cards:
           ulm_card_light_force_background_color: true
           ulm_card_light_enable_horizontal_wide: true
           ulm_card_light_enable_color: true
-      # - type: horizontal-stack
-      #   cards:
-      #   - type: "custom:button-card"
-      #     template: card_light
-      #     entity: light.wled_bookshelf
-      #     variables:
-      #       ulm_card_light_force_background_color: true
-      #       ulm_card_light_enable_horizontal_wide: true
-      #       ulm_card_light_enable_color: true
-      #       ulm_card_light_icon: mdi:lightbulb
+      - type: horizontal-stack
+        cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.wled_bookshelf
+          variables:
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_icon: mdi:lightbulb
       - type: horizontal-stack
         cards:
         - type: "custom:button-card"
@@ -133,6 +131,16 @@ cards:
           entity: light.wled_livingroom
           variables:
             ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_icon: mdi:lightbulb
+      - type: horizontal-stack
+        cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.christmas_tree
+          variables:
+            ulm_card_light_force_background_color: true
+            ulm_card_light_enable_horizontal_wide: true
+            ulm_card_light_enable_color: true
             ulm_card_light_icon: mdi:lightbulb
       - type: 'custom:button-card'
         template: card_input_boolean

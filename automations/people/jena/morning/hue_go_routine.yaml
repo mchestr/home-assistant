@@ -37,11 +37,13 @@ action:
     target:
       entity_id: light.hue_go
   # Wait 25 minutes
-  - delay:
-      hours: 0
+  - wait_for_trigger:
+      - platform: state
+        entity_id:
+          - light.guest_bedroom_light
+        to: "on"
+    timeout:
       minutes: 25
-      seconds: 0
-      milliseconds: 0
   # Turn off the Hue Go light
   - service: light.turn_off
     target:

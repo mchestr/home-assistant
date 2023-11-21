@@ -16,8 +16,8 @@
     - light.couch_light
     - light.tv_light
     - light.wled_livingroom
-    - light.christmas_twree
     - light.wled_bookshelf
+    - light.christmas_tree
 
 - platform: group
   name: Living Room Lights
@@ -26,6 +26,26 @@
     - light.tv_light
     - light.wled_livingroom
     - light.wled_bookshelf
+    - light.christmas_tree
+
+- platform: group
+  name: Living Room Hue Lights
+  entities:
+    - light.couch_light
+    - light.tv_light
+
+- platform: group
+  name: Living Room LED Lights
+  entities:
+    - light.wled_livingroom
+    - light.wled_bookshelf
+    - light.christmas_tree
+
+- platform: group
+  name: Stair Lights
+  entities:
+    - light.entry_stairs_light
+    - light.second_floor_stairs_light
 
 - platform: group
   name: Kitchen Lights
@@ -98,6 +118,12 @@
     - light.office_lights
     - light.guest_bathroom_lights
     - light.guest_bedroom_lights
+    - light.hallway_lights
+
+- platform: group
+  name: Office Hallway Lights
+  entities:
+    - light.office_lights
     - light.hallway_lights
 
 - platform: group

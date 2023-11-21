@@ -51,10 +51,19 @@ sensor:
       - "beat"
 
 template:
+  sensor:
+    - name: Living Room And Kitchen
+      state: "{{ states('group.living_room_kitchen') }}"
+      attributes:
+        current_temperature: "{{ state_attr('climate.nest_thermostat', 'current_temperature') }}"
+    - name: Master Bed And Bathroom
+      state: "{{ states('group.master_bed_bathroom') }}"
+      attributes:
+        current_temperature: "{{ state_attr('climate.master_bathroom_heated_floors', 'current_temperature') }}"
   binary_sensor:
     - name: Is Christmas-ish time
       state: >
-        {{ now().month == 11 and now().day > 20 
+        {{ now().month == 11 and now().day > 18 
            or now().month == 12 and now().month == 1
            or now().day <= 2 }}
 
@@ -122,6 +131,8 @@ lovelace:
     - url: /hacsfiles/my-cards/my-cards.js
       type: module
     - url: /hacsfiles/bar-card/bar-card.js
+      type: module
+    - url: /hacsfiles/frigate-hass-card/frigate-hass-card.js
       type: module
 
   # Add yaml dashboards

@@ -4,10 +4,4 @@ button_card_templates: !include_dir_merge_named ../../custom_components/ui_lovel
 title: "UI Lovelace Minimalist"
 theme: "minimalist-mobile-tapbar"
 background: "var(--background-image)"
-views: 
-  - !include views/dashboard.yaml
-  - !include views/lights.yaml
-  - !include views/jena_alarm.yaml
-  - !include views/security.yaml
-  - !include views/health.yaml
-  - !include views/nas.yaml
+views: !include_dir_list views/

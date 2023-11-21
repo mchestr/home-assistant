@@ -3,7 +3,7 @@ cards:
   - type: 'custom:button-card'
     template: chip_back
     variables:
-      ulm_chip_back_path: /lovelace/dashboard
+      ulm_chip_back_path: /lovelace/home
   - !include header-chips.yml
   - type: custom:button-card
     template: chip_mdi_icon_only

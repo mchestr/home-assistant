@@ -28,14 +28,15 @@ action:
   # Wait 13 minutes
   - delay:
       hours: 0
-      minutes: 13
+      minutes: 5
       seconds: 0
       milliseconds: 0
   # Turn on the lights in the kitchen and living room
   - service: light.turn_on
-    data:
-      brightness_pct: 100
     target:
+      entity_id:
+        - light.christmas_tree
+        - light.wled_bookshelf
+        - light.living_room_lights
       area_id:
         - kitchen
-        - living_room

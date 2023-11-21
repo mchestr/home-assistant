@@ -13,9 +13,9 @@ cards:
           - type: 'custom:button-card'
             template: card_generic
             entity: update.lochnas_dsm_update
-          - type: 'custom:button-card'
-            template: card_generic
-            entity: sensor.lochnas_last_boot
+          # - type: 'custom:button-card'
+          #   template: card_generic
+          #   entity: sensor.lochnas_last_boot
       # - type: horizontal-stack
       #   cards:
       #     - type: 'custom:button-card'

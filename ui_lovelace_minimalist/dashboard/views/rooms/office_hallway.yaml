@@ -1,0 +1,68 @@
+title: &title Office & Hallway
+path: office-hallway
+visible: false
+cards:
+  - type: vertical-stack
+    cards:
+      - !include ../components/header-chips-back-default.yml
+      - type: custom:button-card
+        template: card_title
+        name: *title
+
+      - type: "custom:button-card"
+        template: card_graph
+        entity: sensor.office_window_device_temperature
+        variables:
+          ulm_card_graph_color: "var(--google-blue)"
+          ulm_card_graph_name: Temperature Office Bedroom Window
+          ulm_card_graph_entity: sensor.office_window_device_temperature
+
+      - type: custom:button-card
+        template: card_title
+        label: Lights & Fans
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_light
+            entity: light.office_light
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_enable_horizontal_wide: true
+              ulm_card_light_enable_color: true
+              ulm_card_light_icon: mdi:lightbulb
+          - type: "custom:button-card"
+            template: card_light
+            entity: light.hallway_light
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_enable_horizontal_wide: true
+              ulm_card_light_enable_color: true
+              ulm_card_light_icon: mdi:lightbulb
+
+      - type: custom:button-card
+        template: card_title
+        label: Sensors
+      - type: custom:button-card
+        template: card_bar_card_binary_sensor
+        variables:
+          ulm_custom_card_bar_card_entity_binary_sensor: binary_sensor.office_window_contact
+          ulm_custom_card_bar_card_entity: sensor.office_window_battery
+          ulm_custom_card_bar_card_name: '[[[ return states[variables.ulm_custom_card_bar_card_entity_binary_sensor].attributes.friendly_name ]]]'
+          ulm_custom_card_bar_card_value: true
+          ulm_custom_card_bar_card_color: "var(--google-green)"
+      - type: custom:button-card
+        template: card_bar_card_binary_sensor
+        variables:
+          ulm_custom_card_bar_card_entity_binary_sensor: binary_sensor.washing_machine_leak_detector_water_leak
+          ulm_custom_card_bar_card_entity: sensor.washing_machine_leak_detector_battery
+          ulm_custom_card_bar_card_name: '[[[ return states[variables.ulm_custom_card_bar_card_entity_binary_sensor].attributes.friendly_name ]]]'
+          ulm_custom_card_bar_card_value: true
+          ulm_custom_card_bar_card_color: "var(--google-green)"
+      - type: custom:button-card
+        template: card_bar_card_binary_sensor
+        variables:
+          ulm_custom_card_bar_card_entity_binary_sensor: binary_sensor.washing_machine_vibration_vibration
+          ulm_custom_card_bar_card_entity: sensor.washing_machine_vibration_battery
+          ulm_custom_card_bar_card_name: '[[[ return states[variables.ulm_custom_card_bar_card_entity_binary_sensor].attributes.friendly_name ]]]'
+          ulm_custom_card_bar_card_value: true
+          ulm_custom_card_bar_card_color: "var(--google-green)"

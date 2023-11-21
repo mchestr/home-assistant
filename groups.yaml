@@ -27,3 +27,44 @@ all_alarm_sensors:
     - binary_sensor.kitchen_window_contact
     - lock.front_door_lock
     - cover.garage_door
+
+powder_patio:
+  name: Powder & Patio Group Entities
+  entities:
+    - fan.powder_room_fan
+    - light.patio_lights
+    - light.powder_room_lights
+
+living_room_kitchen:
+  name: Living Room & Kitchen Group Entities
+  entities:
+    - light.kitchen_lights
+    - light.entry_stairs_light
+    - light.second_floor_stairs_light
+    - light.couch_light
+    - light.tv_light
+    - light.wled_livingroom
+    - light.wled_bookshelf
+    - light.christmas_tree
+
+garage_entry:
+  name: Garage & Entry Group Entities
+  entities:
+    - light.garage_light
+    - light.entry_light
+    - binary_sensor.garage_entry_contact
+    - binary_sensor.utility_closet_water_leak
+
+guest_bed_bathroom:
+  name: Guest Bed & Bathroom Group Entities
+  entities:
+    - light.guest_bedroom_lights
+    - light.guest_bathroom_lights
+    - fan.guest_bathroom_fan
+
+master_bed_bathroom:
+  name: Guest Bed & Bathroom Group Entities
+  entities:
+    - light.master_bedroom_lights
+    - light.master_bathroom_lights
+    - fan.master_bathroom_fan

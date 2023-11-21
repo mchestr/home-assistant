@@ -1,0 +1,18 @@
+alias: rooms/powder_room/fan_off.yaml
+id: cf743409-ede9-4cbf-81ca-58525a995d5c
+description: Turn fan off after a while
+
+mode: single
+
+trigger:
+  - platform: state
+    entity_id:
+      - fan.powder_room_fan
+    to: "on"
+    for:
+      hours: 1
+
+action:
+  - service: fan.turn_off
+    target:
+      entity_id: fan.powder_room_fan

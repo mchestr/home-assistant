@@ -35,7 +35,7 @@ action:
               seconds: 5
 
   # Turn on the lights in the master bathroom
-  - service: light.turn_on
+  - service: homeassistant.turn_on
     target:
       area_id: master_bathroom
 
