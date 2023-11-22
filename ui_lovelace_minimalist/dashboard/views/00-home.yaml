@@ -61,6 +61,7 @@ cards:
             template:
               - card_room
               - red_on
+              - green_off
             name: Garage & Entry
             entity: group.garage_entry
             icon: mdi:home-floor-0
@@ -78,17 +79,25 @@ cards:
               label_use_temperature: false
               label_use_brightness: true
               entity_1:
-                entity_id: light.first_floor_lights
-                templates:
-                  - yellow_on
-                  - blue_off
-                tap_action:
-                  action: toggle
-              entity_2:
                 entity_id: lock.front_door_lock
                 templates:
                   - green_locked
                   - red_unlocked
+                tap_action:
+                  action: call-service
+                  service: lock.lock
+                  service_data:
+                    entity_id: lock.front_door_lock
+                hold_action:
+                  action: call-service
+                  service: lock.unlock
+                  service_data:
+                    entity_id: lock.front_door_lock
+              entity_2:
+                entity_id: light.first_floor_lights
+                templates:
+                  - yellow_on
+                  - blue_off
                 tap_action:
                   action: toggle
               entity_4:
@@ -100,7 +109,7 @@ cards:
           - type: custom:button-card
             template:
               - card_room
-              - red_on
+              - yellow_on
             name: Main Room
             entity: sensor.living_room_and_kitchen
             icon: mdi:home-floor-1
@@ -153,7 +162,7 @@ cards:
           - type: custom:button-card
             template:
               - card_room
-              - red_on
+              - yellow_on
             name: Master Bed & Bath
             entity: sensor.master_bed_and_bathroom
             icon: mdi:bed-king
@@ -195,7 +204,7 @@ cards:
           - type: custom:button-card
             template:
               - card_room
-              - red_on
+              - yellow_on
             name: Guest Bed & Bath
             entity: group.guest_bed_bathroom
             icon: mdi:bed
@@ -241,7 +250,7 @@ cards:
           - type: custom:button-card
             template:
               - card_room
-              - red_on
+              - yellow_on
             name: Powder & Patio
             entity: group.powder_patio
             icon: mdi:faucet
@@ -284,7 +293,7 @@ cards:
           - type: custom:button-card
             template:
               - card_room
-              - red_on
+              - yellow_on
             name: Office & Hallway
             entity: light.office_hallway_lights
             icon: mdi:desk-lamp

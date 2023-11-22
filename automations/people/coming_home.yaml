@@ -9,43 +9,28 @@ trigger:
     entity_id: person.jena
     zone: zone.home
     event: enter
-    id: mike
   - platform: zone
     entity_id: person.mike
     zone: zone.home
     event: enter
-    id: jena
 
 # Only run this automation if guest mode is off and the sun is set or setting soon
 condition:
-  - condition: state
-    entity_id: input_boolean.guest_mode
-    state: "off"
   - condition: sun
-    after: sunset
-    after_offset: "-00:45:00"
+    before: sunset
+    before_offset: "-02:00:00"
+    after: sunrise
+    after_offset: "02:00:00"
 
 # Wait for both Jena and Mike to come home, then turn on the entry stairs light and kitchen lights
 action:
   - wait_for_trigger:
-      - platform: zone
-        entity_id: person.mike
-        zone: zone.home
-        event: enter
-      - platform: zone
-        entity_id: person.jena
-        zone: zone.home
-        event: enter
-    timeout: "300" # seconds
-    continue_on_timeout: false
+      - platform: state
+        entity_id:
+          - lock.front_door_lock
+        to: unlocked
   - service: light.turn_on
     target:
-      entity_id: light.entry_stairs_light
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 15
-      milliseconds: 0
-  - service: light.turn_on
-    target:
-      area_id: kitchen
+      entity_id:
+        - light.entry_stairs_light
+        - light.kitchen_light

@@ -31,7 +31,8 @@ alert: !include alerts.yaml
 automation ui: !include automations.yaml
 automation yaml: !include_dir_list automations/
 group: !include groups.yaml
-script: !include scripts.yaml
+script ui: !include scripts.yaml
+script yaml: !include_dir_named scripts
 scene: !include scenes.yaml
 light: !include lights.yaml
 input_boolean: !include input_boolean.yaml
@@ -71,12 +72,12 @@ notify:
   - name: ALL_DEVICES
     platform: group
     services:
-      - service: mobile_app_mchestr
+      - service: mobile_app_mike_phone
       - service: mobile_app_iphone_210
   - name: mike_phone
     platform: group
     services:
-      - service: mobile_app_mchestr
+      - service: mobile_app_mike_phone
   - name: jena_phone
     platform: group
     services:

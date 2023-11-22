@@ -7,7 +7,6 @@
   name: Entry Lights
   entities:
     - light.entry_light
-    - light.entry_stairs_light
   
 - platform: group
   name: Living Room Lights All
@@ -109,6 +108,7 @@
     - light.kitchen_lights
     - light.powder_room_lights
     - light.patio_lights
+    - light.entry_stairs_light
 
 - platform: group
   name: Second Floor Lights

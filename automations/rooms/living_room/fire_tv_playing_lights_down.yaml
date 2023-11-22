@@ -5,7 +5,7 @@ mode: single
 trigger:
   - platform: state
     entity_id:
-      - media_player.fire_tv_192_168_1_59
+      - media_player.fire_tv
     to: playing
 condition:
   - condition: sun

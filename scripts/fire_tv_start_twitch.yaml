@@ -1,0 +1,17 @@
+alias: Twitch on FireTV
+sequence:
+  - if:
+      - condition: state
+        entity_id: media_player.fire_tv
+        state: 'off'
+    then:
+      - service: media_player.turn_on
+        target:
+          entity_id: media_player.fire_tv
+  - service: androidtv.adb_command
+    data:
+      command: am start -a android.intent.action.VIEW -n tv.twitch.android.viewer/tv.twitch.starshot64.app.StarshotActivity
+    target:
+      entity_id: media_player.fire_tv
+mode: single
+icon: mdi:plex

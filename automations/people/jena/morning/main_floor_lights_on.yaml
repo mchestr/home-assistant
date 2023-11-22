@@ -37,6 +37,6 @@ action:
       entity_id:
         - light.christmas_tree
         - light.wled_bookshelf
-        - light.living_room_lights
+        - light.wled_livingroom
       area_id:
         - kitchen

@@ -50,11 +50,14 @@ cards:
       - type: custom:button-card
         template: card_title
         label: Sensors
-      - type: custom:button-card
-        template: card_bar_card_binary_sensor
-        variables:
-          ulm_custom_card_bar_card_entity_binary_sensor: binary_sensor.guest_bedroom_window_contact
-          ulm_custom_card_bar_card_entity: sensor.guest_bedroom_window_battery
-          ulm_custom_card_bar_card_name: '[[[ return states[variables.ulm_custom_card_bar_card_entity_binary_sensor].attributes.friendly_name ]]]'
-          ulm_custom_card_bar_card_value: true
-          ulm_custom_card_bar_card_color: "var(--google-green)"
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template:
+              - card_binary_sensor
+              - battery_info
+            entity: binary_sensor.guest_bedroom_window_contact
+            variables:
+              ulm_show_last_changed: false
+          - type: "custom:button-card"
+            color_type: blank-card
