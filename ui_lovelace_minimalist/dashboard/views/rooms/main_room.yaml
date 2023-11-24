@@ -111,37 +111,41 @@ cards:
 
       - type: custom:button-card
         template: card_title
-        label: Devices
+        label: Media
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_vertical_button
+            entity: script.fire_tv_start_doorbell
+            icon: mdi:doorbell-video
+            name: Doorbell
+          - type: "custom:button-card"
+            template: card_vertical_button
+            entity: script.fire_tv_start_plex
+            icon: mdi:plex
+            name: Plex
+          - type: "custom:button-card"
+            template: card_vertical_button
+            entity: script.fire_tv_start_twitch
+            icon: mdi:twitch
+            name: Twitch
+          - type: "custom:button-card"
+            template: card_vertical_button
+            entity: script.fire_tv_start_youtube
+            icon: mdi:youtube
+            name: YouTube
       - type: "custom:button-card"
         template: card_media_player
         entity: media_player.fire_tv
         variables:
           ulm_card_media_player_name : FireTV
-          ulm_card_media_player_enable_popup: true
+          ulm_card_media_player_collapsible: true
           ulm_card_media_player_power_button: true
-      - type: "custom:button-card"
-        template: "card_scenes_welcome"
-        variables:
-          entity_1:
-            entity_id: script.fire_tv_start_doorbell
-            icon: mdi:doorbell-video
-            name: Doorbell
-            color: pink
-          entity_2:
-            entity_id: script.fire_tv_start_plex
-            icon: mdi:plex
-            name: Plex
-            color: red
-          entity_3:
-            entity_id: script.fire_tv_start_twitch
-            icon: mdi:twitch
-            name: Twitch
-            color: purple
-          entity_4:
-            entity_id: script.fire_tv_start_youtube
-            icon: mdi:youtube
-            name: YouTube
-            color: red
+          ulm_card_media_player_enable_controls: true
+
+      - type: custom:button-card
+        template: card_title
+        label: Devices
       - type: "custom:button-card"
         template: "card_vacuum"
         entity: vacuum.moomba
@@ -155,32 +159,20 @@ cards:
       - type: horizontal-stack
         cards:
           - type: custom:button-card
-            template:
-              - card_binary_sensor
-              - battery_info
-            entity: binary_sensor.balcony_door_contact
+            template: card_bar_card_binary_sensor
             variables:
-              ulm_show_last_changed: false
+              ulm_custom_card_bar_card_entity: binary_sensor.balcony_door_contact
           - type: custom:button-card
-            template:
-              - card_binary_sensor
-              - battery_info
-            entity: binary_sensor.kitchen_window_contact
+            template: card_bar_card_binary_sensor
             variables:
-              ulm_show_last_changed: false
+              ulm_custom_card_bar_card_entity: binary_sensor.kitchen_window_contact
       - type: horizontal-stack
         cards:
           - type: custom:button-card
-            template:
-              - card_binary_sensor
-              - battery_info
-            entity: binary_sensor.living_room_left_window_contact
+            template: card_bar_card_binary_sensor
             variables:
-              ulm_show_last_changed: false
+              ulm_custom_card_bar_card_entity: binary_sensor.living_room_left_window_contact
           - type: custom:button-card
-            template:
-              - card_binary_sensor
-              - battery_info
-            entity: binary_sensor.living_room_right_window_contact
+            template: card_bar_card_binary_sensor
             variables:
-              ulm_show_last_changed: false
+              ulm_custom_card_bar_card_entity: binary_sensor.living_room_right_window_contact

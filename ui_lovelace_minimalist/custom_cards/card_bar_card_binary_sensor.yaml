@@ -1,9 +1,10 @@
 ---
 card_bar_card_binary_sensor:
   variables:
-    ulm_custom_card_bar_card_color: "var(--google-blue)"
+    ulm_custom_card_bar_card_color: "var(--google-green)"
     ulm_custom_card_bar_card_min: "0"
     ulm_custom_card_bar_card_max: "100"
+    ulm_custom_card_bar_card_value: true
   triggers_update: "all"
   styles:
     grid:
@@ -25,26 +26,33 @@ card_bar_card_binary_sensor:
           - red_off
           - blue_on
         variables:
-          ulm_card_generic_name: "[[[ return variables.ulm_custom_card_bar_card_name != '' ? variables.ulm_custom_card_bar_card_name : '' ]]]"
+          ulm_card_generic_name: "[[[ return states[variables.ulm_custom_card_bar_card_entity].attributes.friendly_name ]]]"
           ulm_card_generic_icon: "[[[ return variables.ulm_custom_card_bar_card_icon != '' ? variables.ulm_custom_card_bar_card_icon : '' ]]]"
         styles:
           card:
             - box-shadow: "none"
             - border-radius: "var(--border-radius) var(--border-radius) 0px 0px"
             - padding: "12px"
-        entity: "[[[ return variables.ulm_custom_card_bar_card_entity_binary_sensor ]]]"
+        entity: "[[[ return variables.ulm_custom_card_bar_card_entity ]]]"
     item2:
       card:
         type: "custom:bar-card"
         entities:
-          - entity: "[[[ return variables.ulm_custom_card_bar_card_entity ]]]"
+          - entity: >
+              [[[ 
+                if(variables.ulm_custom_card_bar_card_battery_entity) {
+                  return variables.ulm_custom_card_bar_card_battery_entity;
+                } else {
+                  return 'sensor' + variables.ulm_custom_card_bar_card_entity.substring(variables.ulm_custom_card_bar_card_entity.indexOf('.'), variables.ulm_custom_card_bar_card_entity.lastIndexOf('_')) + '_battery'
+                }
+              ]]]
         color: "[[[ return variables.ulm_custom_card_bar_card_color ]]]"
         positions:
           icon: "off"
           indicator: "[[[ return variables.ulm_custom_card_bar_card_indicator == true ? 'inside' : 'off' ]]]"
           minmax: "off"
           title: "off"
-          value: "[[[ return variables.ulm_custom_card_bar_card_value == true ? 'inside' : 'off' ]]]"
+          value: "[[[ return variables.ulm_custom_card_bar_card_value == false ? 'off' : 'inside' ]]]"
           name: "off"
         min: "[[[ return variables.ulm_custom_card_bar_card_min ]]]"
         max: "[[[ return variables.ulm_custom_card_bar_card_max ]]]"

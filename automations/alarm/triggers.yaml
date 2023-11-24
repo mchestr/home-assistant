@@ -54,6 +54,9 @@ condition:
       - condition: state
         state: armed_away
         entity_id: alarm_control_panel.home_alarm
+      - condition: state
+        state: armed_night
+        entity_id: alarm_control_panel.home_alarm
 
 # The following are the actions that will be executed when the automation is triggered
 # This automation will trigger the alarm when any of the sensors specified in the "trigger" section are activated

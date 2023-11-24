@@ -40,7 +40,7 @@ zoomba_bin_full:
 washing_machine_water_detected:
   name: Washing machine water detected
   done_message: Washing machine is dry
-  entity_id: binary_sensor.washing_machine_water_leak
+  entity_id: binary_sensor.washing_machine_leak_detector_water_leak
   state: 'on'
   repeat: 5
   can_acknowledge: true

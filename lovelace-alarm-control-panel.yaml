@@ -11,6 +11,7 @@ views:
             states:
               - arm_home
               - arm_away
+              - arm_night
             entity: alarm_control_panel.home_alarm
             card_mod:
               style: |

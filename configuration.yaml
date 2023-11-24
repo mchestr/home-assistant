@@ -237,3 +237,5 @@ alarm_control_panel:
       trigger_time: 0
     armed_home:
       arming_time: 0
+    armed_night:
+      arming_time: 30

@@ -69,5 +69,3 @@ action:
             title: Disarm
           - action: ALARM_ARM
             title: Re-Arm
-          - action: CALL_TA_AUTORITAYS
-            title: CALL TA AUTORITAYS

@@ -64,7 +64,7 @@ cards:
               - green_off
             name: Garage & Entry
             entity: group.garage_entry
-            icon: mdi:home-floor-0
+            icon: mdi:shield-home-outline
             show_label: false
             tap_action:
               action: navigate
@@ -112,7 +112,7 @@ cards:
               - yellow_on
             name: Main Room
             entity: sensor.living_room_and_kitchen
-            icon: mdi:home-floor-1
+            icon: mdi:sofa
             tap_action:
               action: navigate
               navigation_path: /lovelace/main-room
