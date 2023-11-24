@@ -176,3 +176,12 @@ cards:
             template: card_bar_card_binary_sensor
             variables:
               ulm_custom_card_bar_card_entity: binary_sensor.living_room_right_window_contact
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template: card_bar_card_binary_sensor
+            variables:
+              ulm_custom_card_bar_card_entity: binary_sensor.living_room_motion
+              ulm_custom_card_bar_card_battery_entity: sensor.living_room_motion_battery
+          - type: "custom:button-card"
+            color_type: blank-card
