@@ -12,7 +12,7 @@ fields:
           - fan
   total_leds:
     description: Number of LEDs per switch
-    required: true
+    required: false
     selector:
       number:
         min: 1
@@ -45,7 +45,6 @@ fields:
       number:
         min: 0
         max: 100
-
   debug:
     description: Enable Debug
     required: false
@@ -54,6 +53,7 @@ sequence:
   - alias: Set Variables
     variables:
       entity_name: "{{ entity_id.replace('sensor.', '').replace('fan.', '') }}"
+      total_leds: "{{ total_leds | default(7) }}"
       debug: "{{ debug | default(false) }}"
 
   - alias: Debug
@@ -61,7 +61,15 @@ sequence:
     then:
       - service: persistent_notification.create
         data:
-          message: "LevelSet: entity_id={{entity_id}},duration={{duration}},on_color={{on_color}},on_intensity={{on_intensity}},off_color={{off_color}},off_intensity={{off_intensity}},interval_seconds={{interval_seconds}},step_duration={{step_duration}},entity_name={{entity_name}}"
+          message: >
+            inovelli_level_set 
+              entity_id={{entity_id}}
+              entity_name={{entity_name}}
+              total_leds={{total_leds}}
+              on_color={{on_color}}
+              on_intensity={{on_intensity}}
+              off_color={{off_color}}
+              off_intensity={{off_intensity}}
 
   - alias: Set Colour When On
     service: number.set_value

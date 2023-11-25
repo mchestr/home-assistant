@@ -11,12 +11,12 @@ fields:
           - light
           - fan
   led:
-    description: LED to apply effect on
+    description: LED to apply effect on. This is 0-index based.
     required: true
     selector:
       number:
-        min: 1
-        max: 7
+        min: 0
+        max: 6
   effect:
     description: Effect to use
     required: true
@@ -77,10 +77,9 @@ fields:
 sequence:
   - alias: Set Variables
     variables:
-      friendly_name: "{{ state_attr(entity_id, 'friendly_name') }}"
       debug: "{{ debug | default(false) }}"
-      topic_prefix: "{{ topic_prefix | default('z2m') }}"
-      topic: "{{ topic_prefix }}/{{ friendly_name }}/set"
+      friendly_name: "{{ state_attr(entity_id, 'friendly_name') }}"
+      topic: "{{ topic_prefix | default('z2m') }}/{{ friendly_name }}/set"
       payload: >
         {
           "individual_led_effect": {
@@ -97,7 +96,12 @@ sequence:
     then:
       - service: persistent_notification.create
         data:
-          message: "LevelSet: entity_id={{entity_id}},friendly_name={{friendly_name}},topic={{topic}},payload={{payload}}"
+          message: >
+            inovelli_individual_led_effect 
+              entity_id={{entity_id}}
+              friendly_name={{friendly_name}}
+              topic={{topic}}
+              payload={{payload}}
 
   - alias: Publish MQTT
     service: mqtt.publish

@@ -1,0 +1,36 @@
+alias: rooms/guest_bathroom/fan_aux_toggle.yaml
+id: 6066a602-c438-4c09-b708-a1f5599a8e4a
+description: Fan Aux Automations
+
+mode: restart
+trigger_variables:
+  entity_id: &entity_id fan.guest_bathroom_fan
+
+variables:
+  entity_id: *entity_id
+  intensity_min: 0
+  intensity_max: 25
+  debug: false
+
+trigger:
+  - platform: state
+    entity_id: *entity_id
+    attribute: action
+    to: config_single
+
+
+condition:
+  - condition: state
+    entity_id: *entity_id
+    state: "off"
+
+action:
+  - service: script.turn_on
+    target:
+      entity_id: script.inovelli_aux_toggle_led_brightness
+    data:
+      variables:
+        entity_id: "{{ entity_id }}"
+        intensity_min: "{{ intensity_min }}"
+        intensity_max: "{{ intensity_max }}"
+        debug: "{{ debug }}"

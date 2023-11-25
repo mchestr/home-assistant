@@ -89,7 +89,11 @@ sequence:
     then:
       - service: persistent_notification.create
         data:
-          message: "LevelSet: entity_id={{entity_id}},friendly_name={{friendly_name}},topic={{topic}},payload={{payload}}"
+          message: >
+            inovelli_led_effect 
+              entity_id={{entity_id}}
+              friendly_name={{friendly_name}}
+              topic={{topic}},payload={{payload}}
 
   - alias: Publish MQTT
     service: mqtt.publish

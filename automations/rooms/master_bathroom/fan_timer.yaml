@@ -12,9 +12,14 @@ variables:
   on_intensity: 100
   off_color: 160
   off_intensity: 25
-  total_leds: 7
   duration:
     minutes: 45
+  step_transition_color: 160
+  step_transition_effect: fast_blink
+  step_transition_duration: 30
+  step_transition_level: 100
+  step_transition_last_only: true
+  debug: false
 
 trigger:
   - platform: template
@@ -37,8 +42,13 @@ action:
               on_intensity: "{{ on_intensity }}"
               off_color: "{{ off_color }}"
               off_intensity: "{{ off_intensity }}"
-              total_leds: "{{ total_leds }}"
               duration: "{{ duration }}"
+              step_transition_color: "{{ step_transition_color }}"
+              step_transition_effect: "{{ step_transition_effect }}"
+              step_transition_duration: "{{ step_transition_duration }}"
+              step_transition_level: "{{ step_transition_level }}"
+              step_transition_last_only: "{{ step_transition_last_only }}"
+              debug: "{{ debug }}"
           - service: homeassistant.turn_off
             target:
               entity_id: "{{ entity_id }}"
@@ -58,4 +68,4 @@ action:
                 on_intensity: "{{ on_intensity }}"
                 off_color: "{{ off_color }}"
                 off_intensity: "{{ off_intensity }}"
-                total_leds: "{{ total_leds }}"
+                debug: "{{ debug }}"
