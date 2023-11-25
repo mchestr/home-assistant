@@ -18,7 +18,6 @@ trigger:
     attribute: action
     to: config_single
 
-
 condition:
   - condition: state
     entity_id: *entity_id
