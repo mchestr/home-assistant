@@ -63,8 +63,7 @@ sequence:
       entity_name: "{{ entity_id.replace('sensor.', '').replace('fan.', '') }}"
 
   - alias: Debug
-    if:
-      - "{{ debug }}"
+    if: "{{ debug }}"
     then:
       - service: persistent_notification.create
         data:

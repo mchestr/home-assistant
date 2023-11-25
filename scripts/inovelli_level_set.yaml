@@ -57,8 +57,7 @@ sequence:
       debug: "{{ debug | default(false) }}"
 
   - alias: Debug
-    if:
-      - "{{ debug }}"
+    if: "{{ debug }}"
     then:
       - service: persistent_notification.create
         data:
