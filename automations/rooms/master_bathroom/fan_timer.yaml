@@ -8,9 +8,9 @@ trigger_variables:
 
 variables:
   entity_id: *entity_id
-  on_colour: 80
+  on_color: 80
   on_intensity: 100
-  off_colour: 160
+  off_color: 160
   off_intensity: 25
   total_leds: 7
   duration:
@@ -33,9 +33,9 @@ action:
           - service: script.inovelli_falling_led
             data:
               entity_id: "{{ entity_id }}"
-              on_colour: "{{ on_colour }}"
+              on_color: "{{ on_color }}"
               on_intensity: "{{ on_intensity }}"
-              off_colour: "{{ off_colour }}"
+              off_color: "{{ off_color }}"
               off_intensity: "{{ off_intensity }}"
               total_leds: "{{ total_leds }}"
               duration: "{{ duration }}"
@@ -54,8 +54,8 @@ action:
             data:
               variables:
                 entity_id: "{{ entity_id }}"
-                on_colour: "{{ on_colour }}"
+                on_color: "{{ on_color }}"
                 on_intensity: "{{ on_intensity }}"
-                off_colour: "{{ off_colour }}"
+                off_color: "{{ off_color }}"
                 off_intensity: "{{ off_intensity }}"
                 total_leds: "{{ total_leds }}"

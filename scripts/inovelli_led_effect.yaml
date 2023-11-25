@@ -1,0 +1,99 @@
+alias: Inovelli LED Effect
+mode: parallel
+fields:
+  entity_id:
+    description: The Inovelli Switch
+    required: true
+    selector:
+      entity:
+        integration: mqtt
+        domain:
+          - light
+          - fan
+  effect:
+    description: Effect to use
+    required: true
+    selector:
+      select:
+        options:
+          - "off"
+          - solid
+          - fast_blink
+          - slow_blink
+          - pulse
+          - chase
+          - open_close
+          - small_to_big
+          - aurora
+          - slow_falling
+          - medium_falling
+          - fast_falling
+          - slow_rising
+          - medium_rising
+          - fast_rising
+          - medium_blink
+          - slow_chase
+          - fast_chase
+          - fast_siren
+          - slow_siren
+          - clear_effect
+  color:
+    description: Color of LEDs
+    required: true
+    selector:
+      number:
+        min: 0
+        max: 255
+  level:
+    description: Brightness of LEDs
+    required: true
+    selector:
+      number:
+        min: 0
+        max: 100
+  duration:
+    description: Duration of effect. 1-60 is seconds, 60-120 (VALUE-60) is minutes, 121-255 (VALUE-120) is hours.
+    required: true
+    selector:
+      number:
+        min: 0
+        max: 255
+  topic_prefix:
+    description: Override topic prefix. default=z2m
+    required: false
+  debug:
+    description: Enable Debug
+    required: false
+    selector:
+      boolean:
+  
+sequence:
+  - alias: Set Variables
+    variables:
+      friendly_name: "{{ state_attr(entity_id, 'friendly_name') }}"
+      debug: "{{ debug | default(false) }}"
+      topic_prefix: "{{ topic_prefix | default('z2m') }}"
+      topic: "{{ topic_prefix }}/{{ friendly_name }}/set"
+      payload: >
+        {
+          "led_effect": {
+            "effect": "{{ effect }}",
+            "color": "{{ color }}",
+            "level": "{{ level }}",
+            "duration": "{{ duration }}"
+          }
+        }
+
+  - alias: Debug
+    if:
+      - "{{ debug }}"
+    then:
+      - service: persistent_notification.create
+        data:
+          message: "LevelSet: entity_id={{entity_id}},friendly_name={{friendly_name}},topic={{topic}},payload={{payload}}"
+
+  - alias: Publish MQTT
+    service: mqtt.publish
+    data:
+      topic: "{{ topic }}"
+      payload: "{{ payload }}"
