@@ -1,1 +1,15 @@
-[]
+- id: '1700874285052'
+  alias: New automationtest
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: script.turn_on
+    data:
+      variables:
+        duration:
+          seconds: 35
+        entity_id: fan.guest_bathroom_fan
+    target:
+      entity_id: script.inovelli_falling_led
+  mode: single
