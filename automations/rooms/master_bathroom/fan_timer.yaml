@@ -9,14 +9,14 @@ trigger_variables:
 variables:
   entity_id: *entity_id
   on_color: 80
-  on_intensity: 100
+  on_intensity: 40
   off_color: 160
-  off_intensity: 25
+  off_intensity: 15
   duration:
     minutes: 45
   step_transition_color: 160
   step_transition_effect: fast_blink
-  step_transition_duration: 30
+  step_transition_duration: 15
   step_transition_level: 100
   step_transition_last_only: true
   debug: false
