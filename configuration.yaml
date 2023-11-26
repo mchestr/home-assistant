@@ -19,10 +19,6 @@ logger:
 frontend:
   themes: !include_dir_merge_named themes
 
-# Text to speech
-tts:
-  - platform: google_translate
-
 recorder:
   db_url: !secret database_url
   purge_keep_days: 14
@@ -140,29 +136,6 @@ lovelace:
     - url: /hacsfiles/lovelace-collapsable-cards/collapsable-cards.js
       type: module
 
-  # Add yaml dashboards
-  dashboards:
-    alarm-control-panel:
-      mode: yaml
-      title: Alarm
-      icon: mdi:shield-lock-outline
-      show_in_sidebar: false
-      filename: lovelace-alarm-control-panel.yaml
-
-plant:
-  clyde_junior:
-    sensors:
-      moisture: sensor.xiaomi_hhccjcy01_moisture
-      temperature: sensor.xiaomi_hhccjcy01_temperature
-      conductivity: sensor.xiaomi_hhccjcy01_soil_conductivity
-      brightness: sensor.xiaomi_hhccjcy01_illuminance
-  rubber_boi:
-    sensors:
-      moisture: sensor.xiaomi_hhccjcy03_moisture
-      temperature: sensor.xiaomi_hhccjcy03_temperature
-      conductivity: sensor.xiaomi_hhccjcy03_soil_conductivity
-      brightness: sensor.xiaomi_hhccjcy03_illuminance
-
 waste_collection_schedule:
   sources:
     - name: ics
@@ -182,45 +155,6 @@ waste_collection_schedule:
           alias: Recycling & Glass
         - type: Garbage, glass recycling, and green waste
           alias: Garbage & Glass
-
-google_assistant:
-  project_id: !secret google_assistant_project_id
-  service_account: !include service_account.json
-  expose_by_default: false
-  report_state: true
-  exposed_domains:
-    - alarm_control_panel
-    - switch
-    - light
-    - lock
-    - cover
-    - vacuum
-    - scene
-  entity_config:
-    light.leviton_plug:
-      expose: false
-      room: Living Room
-    camera.cat_camera:
-      expose: true
-    # Browser Mod Entities Disable
-    light.0ee2ae87_8a834cbe:
-      expose: false
-    light.4a9e20d9_0c14b343:
-      expose: false
-    light.6c47c805_ce28057a:
-      expose: false
-    light.82685850_62ac710b:
-      expose: false
-    light.832bbd12_83f6ad46:
-      expose: false
-    light.a55bf3e4_f3471891:
-      expose: false
-    light.77bb4e65_937efd82:
-      expose: false
-    light.f52bea16_415904fd:
-      expose: false
-    light.fe5d7ce9_80d4a018:
-      expose: false
 
 alarm_control_panel:
   - platform: manual

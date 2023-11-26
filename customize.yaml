@@ -62,4 +62,4 @@ light.master_bathroom_lights:
 group.living_room_kitchen:
   templates:
     current_temperature: >
-     return entities['climate.nest_thermostat'].state;
+      return entities['climate.nest_thermostat'].state;
