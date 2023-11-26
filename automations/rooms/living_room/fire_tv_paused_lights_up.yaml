@@ -25,3 +25,5 @@ action:
       option: Bright
     target:
       entity_id: select.wled_livingroom_preset
+  - delay:
+      minutes: 3

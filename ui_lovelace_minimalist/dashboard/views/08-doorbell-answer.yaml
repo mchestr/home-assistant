@@ -1,0 +1,80 @@
+title: Doorbell
+path: doorbell-answer
+icon: mdi:phone
+visible: false
+cards:
+  - type: vertical-stack
+    cards:
+      - !include components/header-chips-back-default.yml
+      - type: custom:frigate-card
+        live:
+          microphone:
+            always_connected: true
+            disconnect_seconds: 30
+        menu:
+          style: outside
+          position: bottom
+          button_size: 100
+          alignment: right
+          buttons:
+            frigate:
+              enabled: false
+            live:
+              enabled: false
+            cameras:
+              enabled: false
+            snapshots:
+              enabled: false
+            clips:
+              enabled: false
+            download:
+              enabled: false
+            timeline:
+              enabled: false
+            media_player:
+              enabled: false
+            fullscreen:
+              enabled: false
+            full_screen:
+              enabled: false
+            microphone:
+              enabled: true
+        cameras:
+          - id: audio
+            camera_entity: camera.doorbell
+            live_provider: go2rtc
+            go2rtc:
+              modes:
+                - webrtc
+              stream: doorbell_audio
+      - type: custom:button-card
+        template: card_navigate
+        variables:
+          ulm_card_navigate_path: /lovelace/doorbell
+          ulm_card_navigate_title: Hang Up
+          ulm_card_navigate_icon: mdi:phone-hangup
+      - type: custom:button-card
+        template: card_title
+        label: Security
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            entity: lock.front_door_lock
+            template: custom_card_eraycetinay_lock
+            name: Front Door
+            lock:
+              enabled: '[[[ return entity.state === "locked"; ]]]'
+              unlock: double_tap
+            variables:
+              ulm_custom_card_eraycetinay_lock_tap_control: true
+              ulm_custom_card_eraycetinay_lock_battery_level: sensor.front_door_lock_battery
+            triggers_update:
+              - sensor.front_door_lock_battery
+          - type: "custom:button-card"
+            template: card_light
+            entity: light.entry_light
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_enable_horizontal_wide: true
+              ulm_card_light_enable_color: true
+              ulm_card_light_icon: mdi:lightbulb

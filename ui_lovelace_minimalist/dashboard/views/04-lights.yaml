@@ -1,5 +1,6 @@
 title: Lights
 path: lights
+icon: mdi:lightbulb-group
 cards:
   - type: vertical-stack
     cards:

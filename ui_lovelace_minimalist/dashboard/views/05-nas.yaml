@@ -1,5 +1,6 @@
 title: LochNAS
 path: lochnas
+icon: mdi:nas
 visible:
   - user: f16d31d12892445fbe04fa47dcc767e1
 cards:

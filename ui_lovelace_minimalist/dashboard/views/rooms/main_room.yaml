@@ -9,6 +9,19 @@ cards:
         template: card_title
         name: *title
 
+      - type: custom:frigate-card
+        menu:
+          buttons:
+            microphone:
+              enabled: true
+        cameras:
+          - id: live
+            camera_entity: camera.living_room
+            live_provider: go2rtc
+            go2rtc:
+              modes:
+                - webrtc
+              stream: living_room_high
       - type: "custom:button-card"
         template: card_graph
         entity: sensor.nest_thermostat_temperature
@@ -153,35 +166,35 @@ cards:
           ulm_card_vacuum_camera: camera.moomba_map
           ulm_card_vacuum_camera_toggle: true
 
-      - type: custom:button-card
-        template: card_title
-        label: Sensors
-      - type: horizontal-stack
+      - type: 'custom:collapsable-cards'
+        title: Sensors
         cards:
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: binary_sensor.balcony_door_contact
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: binary_sensor.kitchen_window_contact
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: binary_sensor.living_room_left_window_contact
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: binary_sensor.living_room_right_window_contact
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: binary_sensor.living_room_motion
-              ulm_custom_card_bar_card_battery_entity: sensor.living_room_motion_battery
-          - type: "custom:button-card"
-            color_type: blank-card
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: binary_sensor.balcony_door_contact
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: binary_sensor.kitchen_window_contact
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: binary_sensor.living_room_left_window_contact
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: binary_sensor.living_room_right_window_contact
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: binary_sensor.living_room_motion
+                  ulm_custom_card_bar_card_battery_entity: sensor.living_room_motion_battery
+              - type: "custom:button-card"
+                color_type: blank-card

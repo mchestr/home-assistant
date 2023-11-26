@@ -13,8 +13,8 @@ trigger:
 variables:
   button: binary_sensor.front_door_button_pressed
   dashboard_uri: /lovelace/default_view
-  app_uri_android: app://com.mm.android.amcrestsmarthome
-  app_uri_iphone: shortcuts://run-shortcut?name=Open AmcrestSmartHome
+  view_uri: /lovelace/doorbell
+  answer_uri: /lovelace/doorbell-answer
   image_file: /local/doorbell/{{ expand(button)[0].last_changed | as_timestamp  |
     timestamp_custom("%Y-%m-%d_%H-%M-%S") }}.jpg
 
@@ -41,11 +41,11 @@ action:
         image: '{{ image_file }}'
         actions:
           - action: URI
-            title: Dashboard
-            uri: '{{ dashboard_uri }}'
+            title: View
+            uri: '{{ view_uri }}'
           - action: URI
-            title: App
-            uri: '{{ app_uri_android }}'
+            title: Answer
+            uri: '{{ answer_uri }}'
           - action: '{{ action_1 }}'
             title: 'Unlock'
 
@@ -62,7 +62,10 @@ action:
         image: '{{ image_file }}'
         actions:
           - action: URI
-            title: Dashboard
-            uri: '{{ dashboard_uri }}'
+            title: View
+            uri: '{{ view_uri }}'
+          - action: URI
+            title: Answer
+            uri: '{{ answer_uri }}'
           - action: '{{ action_1 }}'
             title: 'Unlock'

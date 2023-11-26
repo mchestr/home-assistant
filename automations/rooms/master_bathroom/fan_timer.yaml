@@ -11,7 +11,7 @@ variables:
   on_color: 80
   on_intensity: 40
   off_color: 160
-  off_intensity: 15
+  off_intensity: 25
   duration:
     minutes: 45
   step_transition_color: 160

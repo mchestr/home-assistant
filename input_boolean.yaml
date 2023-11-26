@@ -1,2 +1,5 @@
 theatre_mode:
   name: Theatre mode enabled
+doorbell_pressed_recently:
+  name: Doorbell Pressed Recently
+  initial: false

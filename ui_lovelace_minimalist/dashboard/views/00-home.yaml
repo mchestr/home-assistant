@@ -52,6 +52,29 @@ cards:
             icon: mdi:lightbulb
             name: Second Floor
 
+      - type: conditional
+        conditions:
+          - entity: input_boolean.doorbell_pressed_recently
+            state: 'on'
+        card:
+          type: custom:button-card
+          template: card_title
+          label: Someones at the Front Door!
+      - type: conditional
+        conditions:
+          - entity: input_boolean.doorbell_pressed_recently
+            state: 'on'
+        card:
+          type: custom:button-card
+          entity: input_boolean.doorbell_pressed_recently
+          template: 
+            - card_navigate
+            - alerter
+          variables:
+            ulm_card_navigate_path: /lovelace/doorbell-answer
+            ulm_card_navigate_title: Answer Doorbell
+            ulm_card_navigate_icon: mdi:phone
+
       - type: custom:button-card
         color_type: blank-card
 

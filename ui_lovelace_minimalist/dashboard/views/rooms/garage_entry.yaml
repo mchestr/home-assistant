@@ -9,6 +9,35 @@ cards:
         template: card_title
         name: *title
 
+      - type: custom:button-card
+        template: card_title
+        label: Security
+      - type: custom:frigate-card
+        menu:
+          buttons:
+            microphone:
+              enabled: true
+        cameras:
+          - id: live
+            camera_entity: camera.doorbell
+            live_provider: go2rtc
+            go2rtc:
+              modes:
+                - webrtc
+      - type: conditional
+        conditions:
+          - entity: input_boolean.doorbell_pressed_recently
+            state: 'on'
+        card:
+          type: custom:button-card
+          template: 
+            - card_navigate
+            - alerter
+          variables:
+            ulm_card_navigate_path: /lovelace/doorbell-answer
+            ulm_card_navigate_title: Answer Doorbell
+            ulm_card_navigate_icon: mdi:phone
+
       - type: "custom:button-card"
         template: card_graph
         entity: sensor.garage_temperature
@@ -17,9 +46,6 @@ cards:
           ulm_card_graph_name: Temperature Garage
           ulm_card_graph_entity: sensor.garage_temperature
 
-      - type: custom:button-card
-        template: card_title
-        label: Security
       - type: horizontal-stack
         cards:
           # - type: "custom:button-card"
@@ -94,28 +120,28 @@ cards:
               duration: 10
               unlock: hold
 
-      - type: custom:button-card
-        template: card_title
-        label: Sensors
-      - type: horizontal-stack
+      - type: 'custom:collapsable-cards'
+        title: Sensors
         cards:
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: binary_sensor.garage_motion_detector_occupancy
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: binary_sensor.garage_entry_contact
-      - type: horizontal-stack
-        cards:
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: binary_sensor.utility_closet_water_leak
-              ulm_custom_card_bar_card_battery_entity: sensor.utility_closet_battery
-          - type: custom:button-card
-            template: card_bar_card_binary_sensor
-            variables:
-              ulm_custom_card_bar_card_entity: sensor.garage_temperature
-              ulm_custom_card_bar_card_battery_entity: sensor.garage_temperature_battery
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: binary_sensor.garage_motion_detector_occupancy
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: binary_sensor.garage_entry_contact
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: binary_sensor.utility_closet_water_leak
+                  ulm_custom_card_bar_card_battery_entity: sensor.utility_closet_battery
+              - type: custom:button-card
+                template: card_bar_card_binary_sensor
+                variables:
+                  ulm_custom_card_bar_card_entity: sensor.garage_temperature
+                  ulm_custom_card_bar_card_battery_entity: sensor.garage_temperature_battery

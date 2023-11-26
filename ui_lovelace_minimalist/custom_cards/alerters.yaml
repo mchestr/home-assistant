@@ -1,0 +1,20 @@
+---
+alerter:
+  show_last_changed: true
+  color_type: icon
+  extra_styles: |
+    [[[ return `
+      @keyframes pulse {
+        20% {
+          background-color: ${variables.color};
+        }
+      }
+    `]]]
+  variables:
+    color: var(--color-red)
+  state:
+    - value: 'on'
+      id: value_on
+      styles:
+        card:
+          - animation: pulse 1s infinite
