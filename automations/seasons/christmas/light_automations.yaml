@@ -10,7 +10,7 @@ trigger:
     id: "turn_on"
   - platform: sun
     event: sunset
-    offset: "+06:00:00"
+    offset: "+07:30:00"
     id: "turn_off"
 
 condition: 
