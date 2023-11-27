@@ -1,0 +1,63 @@
+alias: rooms/living_room/vacuum_schedule.yaml
+id: 75205dc0-69e5-45cc-a89e-4bb5c45aa467b
+mode: single
+trigger:
+  - platform: time
+    at: "15:00:00"
+    id: afternoon
+  - platform: time
+    at: "01:00:00"
+    id: night
+action:
+  - choose:
+      - conditions:
+          - condition: time
+            weekday:
+              - mon
+              - wed
+              - fri
+          - condition: not
+            conditions:
+              - condition: or
+                conditions:
+                  - condition: zone
+                    entity_id: person.mike
+                    zone: zone.home
+                  - condition: zone
+                    entity_id: person.jena
+                    zone: zone.home
+          - condition: trigger
+            id: afternoon
+        sequence:
+          - service: select.select_option
+            entity_id: select.moomba_room_1_suction_level
+            data:
+              option: Turbo
+          - service: select.select_option
+            data:
+              option: 1x
+          - service: vacuum.start
+            target:
+              entity_id: vacuum.moomba
+
+      - conditions:
+          - condition: time
+            weekday:
+              - tue
+              - thu
+          - condition: state
+            entity_id: input_boolean.guest_mode
+            state: "off"
+          - condition: trigger
+            id: afternoon
+        sequence:
+          - service: select.select_option
+            entity_id: select.moomba_room_1_suction_level
+            data:
+              option: Quiet
+          - service: select.select_option
+            data:
+              option: 3x
+          - service: vacuum.start
+            target:
+              entity_id: vacuum.moomba

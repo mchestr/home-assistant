@@ -22,14 +22,14 @@ cards:
               modes:
                 - webrtc
               stream: living_room_high
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_graph
         entity: sensor.nest_thermostat_temperature
         variables:
           ulm_card_graph_color: "var(--google-blue)"
           ulm_card_graph_name: Temperature Living Room
           ulm_card_graph_entity: sensor.nest_thermostat_temperature
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_thermostat
         entity: climate.nest_thermostat
         variables:
@@ -43,7 +43,7 @@ cards:
         label: Lights
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.kitchen_light
             variables:
@@ -51,7 +51,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.kitchen_counter_light
             variables:
@@ -61,7 +61,7 @@ cards:
               ulm_card_light_icon: mdi:lightbulb
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.entry_stairs_light
             variables:
@@ -69,7 +69,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.second_floor_stairs_light
             variables:
@@ -79,7 +79,7 @@ cards:
               ulm_card_light_icon: mdi:lightbulb
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.tv_light
             variables:
@@ -87,7 +87,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.couch_light
             variables:
@@ -97,7 +97,7 @@ cards:
               ulm_card_light_icon: mdi:lightbulb
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.wled_bookshelf
             variables:
@@ -105,7 +105,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.wled_livingroom
             variables:
@@ -113,7 +113,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_light
         entity: light.christmas_tree
         variables:
@@ -127,27 +127,27 @@ cards:
         label: Media
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_vertical_button
             entity: script.fire_tv_start_doorbell
             icon: mdi:doorbell-video
             name: Doorbell
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_vertical_button
             entity: script.fire_tv_start_plex
             icon: mdi:plex
             name: Plex
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_vertical_button
             entity: script.fire_tv_start_twitch
             icon: mdi:twitch
             name: Twitch
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_vertical_button
-            entity: script.fire_tv_start_youtube
-            icon: mdi:youtube
-            name: YouTube
-      - type: "custom:button-card"
+            entity: input_boolean.theatre_mode
+            icon: mdi:movie
+            name: Theatre Mode
+      - type: custom:button-card
         template: card_media_player
         entity: media_player.fire_tv
         variables:
@@ -159,42 +159,64 @@ cards:
       - type: custom:button-card
         template: card_title
         label: Devices
-      - type: "custom:button-card"
-        template: "card_vacuum"
+      - type: custom:button-card
+        template: card_vacuum
         entity: vacuum.moomba
         variables:
           ulm_card_vacuum_camera: camera.moomba_map
           ulm_card_vacuum_camera_toggle: true
-
-      - type: 'custom:collapsable-cards'
-        title: Sensors
+      - type: horizontal-stack
         cards:
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                template: card_bar_card_binary_sensor
-                variables:
-                  ulm_custom_card_bar_card_entity: binary_sensor.balcony_door_contact
-              - type: custom:button-card
-                template: card_bar_card_binary_sensor
-                variables:
-                  ulm_custom_card_bar_card_entity: binary_sensor.kitchen_window_contact
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                template: card_bar_card_binary_sensor
-                variables:
-                  ulm_custom_card_bar_card_entity: binary_sensor.living_room_left_window_contact
-              - type: custom:button-card
-                template: card_bar_card_binary_sensor
-                variables:
-                  ulm_custom_card_bar_card_entity: binary_sensor.living_room_right_window_contact
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                template: card_bar_card_binary_sensor
-                variables:
-                  ulm_custom_card_bar_card_entity: binary_sensor.living_room_motion
-                  ulm_custom_card_bar_card_battery_entity: sensor.living_room_motion_battery
-              - type: "custom:button-card"
-                color_type: blank-card
+          - type: custom:button-card
+            template: card_vertical_button
+            entity: automation.rooms_living_room_vacuum_schedule_yaml
+            icon: mdi:calendar-month
+            name: "[[[ return 'Scheduling: ' + (entity.state == 'on' ? 'On' : 'Off'); ]]]"
+          - type: custom:button-card
+            color_type: blank-card
+          - type: custom:button-card
+            color_type: blank-card
+
+      - type: conditional
+        conditions:
+          - condition: user
+            users:
+              - f16d31d12892445fbe04fa47dcc767e1
+        card:
+          type: vertical-stack
+          cards:
+            - type: custom:button-card
+              template: card_title
+              label: Sensors
+            - type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  template: card_bar_card_binary_sensor
+                  variables:
+                    ulm_custom_card_bar_card_entity: binary_sensor.balcony_door_contact
+                - type: custom:button-card
+                  template: card_bar_card_binary_sensor
+                  variables:
+                    ulm_custom_card_bar_card_entity: binary_sensor.kitchen_window_contact
+            - type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  template: card_bar_card_binary_sensor
+                  variables:
+                    ulm_custom_card_bar_card_entity: binary_sensor.living_room_left_window_contact
+                - type: custom:button-card
+                  template: card_bar_card_binary_sensor
+                  variables:
+                    ulm_custom_card_bar_card_entity: binary_sensor.living_room_right_window_contact
+            - type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  template: card_bar_card_binary_sensor
+                  variables:
+                    ulm_custom_card_bar_card_entity: binary_sensor.living_room_motion
+                    ulm_custom_card_bar_card_battery_entity: sensor.living_room_motion_battery
+                - type: custom:button-card
+                  template: card_bar_card_binary_sensor
+                  variables:
+                    ulm_custom_card_bar_card_entity: sensor.jena_button_action
+                    ulm_custom_card_bar_card_battery_entity: sensor.jena_button_battery

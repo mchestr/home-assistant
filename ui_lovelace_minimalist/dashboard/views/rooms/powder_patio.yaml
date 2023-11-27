@@ -47,14 +47,22 @@ cards:
           ulm_card_fan_color: "blue"
           ulm_card_fan_force_background_color: true
 
-      - type: 'custom:collapsable-cards'
-        title: Sensors
-        cards:
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                template: card_bar_card_binary_sensor
-                variables:
-                  ulm_custom_card_bar_card_entity: binary_sensor.patio_door_contact
-              - type: "custom:button-card"
-                color_type: blank-card
+      - type: conditional
+        conditions:
+          - condition: user
+            users:
+              - f16d31d12892445fbe04fa47dcc767e1
+        card:
+          type: vertical-stack
+          cards:
+            - type: custom:button-card
+              template: card_title
+              label: Sensors
+            - type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  template: card_bar_card_binary_sensor
+                  variables:
+                    ulm_custom_card_bar_card_entity: binary_sensor.patio_door_contact
+                - type: "custom:button-card"
+                  color_type: blank-card
