@@ -18,7 +18,7 @@ trigger:
     id: "turn_off"
 
 condition:
-  # Disable entry liht cause christmas lights on
+  # Disable entry light cause christmas lights on
   - condition: state
     entity_id: binary_sensor.is_christmas_ish_time
     state: "off"

@@ -36,4 +36,5 @@ action:
     target:
       entity_id:
         - light.entry_stairs_light
+        - light.sonoff31_1
         - light.kitchen_light

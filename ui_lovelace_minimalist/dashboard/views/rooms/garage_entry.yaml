@@ -75,7 +75,7 @@ cards:
         label: Lights
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.entry_light
             variables:
@@ -83,9 +83,27 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.garage_light
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_enable_horizontal_wide: true
+              ulm_card_light_enable_color: true
+              ulm_card_light_icon: mdi:lightbulb
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template: card_light
+            entity: light.sonoff31_1
+            variables:
+              ulm_card_light_force_background_color: true
+              ulm_card_light_enable_horizontal_wide: true
+              ulm_card_light_enable_color: true
+              ulm_card_light_icon: mdi:lightbulb
+          - type: custom:button-card
+            template: card_light
+            entity: light.outdoor_christmas_lights
             variables:
               ulm_card_light_force_background_color: true
               ulm_card_light_enable_horizontal_wide: true
@@ -109,16 +127,7 @@ cards:
               duration: 10
               unlock: hold
           - type: custom:button-card
-            template: card_power_outlet
-            entity: switch.3d_printer
-            icon: printer-3d-nozzle
-            variables:
-              ulm_card_power_outlet_consumption_sensor: sensor.printer_energy_power
-              ulm_card_power_outlet_name: IIIP Printer
-            lock:
-              enabled: '[[[ return entity.state === "on"; ]]]'
-              duration: 10
-              unlock: hold
+            color_type: blank-card
 
       - type: 'custom:collapsable-cards'
         title: Sensors

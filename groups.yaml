@@ -52,6 +52,7 @@ garage_entry:
   entities:
     - light.garage_light
     - light.entry_light
+    - light.sonoff31_1
     - binary_sensor.garage_entry_contact
     - binary_sensor.utility_closet_water_leak
 
