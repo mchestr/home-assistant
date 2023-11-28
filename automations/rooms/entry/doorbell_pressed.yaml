@@ -31,7 +31,7 @@ action:
     service: camera.snapshot
 
   # Notify Android
-  - service: notify.mike_phone
+  - service: notify.all_devices
     data:
       title: Someone's at the front door!
       message: '{{ as_timestamp(now()) | timestamp_custom(''%d:%m %H:%M'', true) }}'
@@ -39,30 +39,11 @@ action:
         ttl: 0
         priority: high
         channel: alarm_stream
-        image: '{{ image_file }}'
-        actions:
-          - action: URI
-            title: View
-            uri: '{{ view_uri }}'
-          - action: URI
-            title: Answer
-            uri: '{{ answer_uri }}'
-          - action: '{{ action_1 }}'
-            title: 'Unlock'
-
-  # Notify iPhone
-  - service: notify.jena_phone
-    data:
-      title: Someone's at the front door!
-      message: '{{ as_timestamp(now()) | timestamp_custom(''%d:%m %H:%M'', true) }}'
-      data:
         push:
           sound:
             name: US-EN-Morgan-Freeman-Someone-Is-Arriving.wav
             critical: 1
             volume: 1.0
-        ttl: 0
-        priority: high
         image: '{{ image_file }}'
         actions:
           - action: URI
