@@ -8,6 +8,7 @@ cards:
       - !include components/header-chips-back-default.yml
       - type: custom:frigate-card
         live:
+          auto_unmute: all
           microphone:
             always_connected: true
             disconnect_seconds: 30
@@ -40,8 +41,7 @@ cards:
             microphone:
               enabled: true
         cameras:
-          - id: audio
-            camera_entity: camera.doorbell
+          - camera_entity: camera.doorbell
             live_provider: go2rtc
             go2rtc:
               modes:

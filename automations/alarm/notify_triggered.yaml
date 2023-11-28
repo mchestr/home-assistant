@@ -62,13 +62,38 @@ action:
     timeout: '120'
     continue_on_timeout: false
   # Send a notification
-  - service: notify.all_devices
-    data:
-      title: 'Home Alarm: Triggered!'
-      message: '{{ sensor_triggered }} was opened!'
-      data:
-        actions:
-          - action: ALARM_DISARM
-            title: Disarm
-          - action: ALARM_ARM
-            title: Re-Arm
+  - if:
+      - alias: Night Time Critical
+        condition: time
+        after: "12:30:00"
+        before: "06:00:00"
+    then:
+      - service: notify.all_devices
+        data:
+          title: 'Home Alarm: Triggered!'
+          message: '{{ sensor_triggered }} was opened!'
+          data:
+            actions:
+              - action: ALARM_DISARM
+                title: Disarm
+              - action: ALARM_ARM
+                title: Re-Arm
+            ttl: 0
+            priority: high
+            channel: alarm_stream
+            push:
+              sound:
+                name: default
+                critical: 1
+                volume: 1.0
+    else:
+      - service: notify.all_devices
+        data:
+          title: 'Home Alarm: Triggered!'
+          message: '{{ sensor_triggered }} was opened!'
+          data:
+            actions:
+              - action: ALARM_DISARM
+                title: Disarm
+              - action: ALARM_ARM
+                title: Re-Arm

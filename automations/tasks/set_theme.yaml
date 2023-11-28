@@ -9,5 +9,5 @@ condition: []
 action:
   - service: frontend.set_theme
     data:
-      name: minimalist-mobile
+      name: minimalist-ios-tapbar
       mode: dark

@@ -6,16 +6,12 @@ cards:
     cards:
       - !include components/header-chips-back-default.yml
       - type: custom:frigate-card
-        # menu:
-        #   style: none
         menu:
-          style: overlay
-          buttons:
-            microphone:
-              enabled: true
+          style: none
+        live:
+          auto_unmute: all
         cameras:
-          - id: live
-            camera_entity: camera.doorbell
+          - camera_entity: camera.doorbell
             live_provider: go2rtc
             go2rtc:
               modes:
