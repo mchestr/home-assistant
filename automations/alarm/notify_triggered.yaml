@@ -41,6 +41,9 @@ trigger:
   - platform: state
     entity_id: cover.garage_door
     to: "opening"
+  - platform: state
+    entity_id: binary_sensor.entry_door_window_vibration
+    to: "on"
 
 # The following are the actions that will be executed when the automation is triggered
 # These actions will be executed in parallel, meaning that they will run simultaneously

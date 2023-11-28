@@ -42,6 +42,9 @@ trigger:
   - platform: state
     entity_id: cover.garage_door
     to: "opening"
+  - platform: state
+    entity_id: binary_sensor.entry_door_window_vibration
+    to: "on"
 
 # The following are the conditions that must be met for the automation to be executed
 # This automation will only be executed if the alarm is either in armed_home or armed_away mode
