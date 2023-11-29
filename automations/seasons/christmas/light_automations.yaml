@@ -34,3 +34,7 @@ action:
       - service: select.select_option
         data:
           option: Christmas
+        target:
+          entity_id:
+            - select.wled_bookshelf_preset
+            - select.wled_livingroom_preset
