@@ -5,7 +5,9 @@ trigger:
   - platform: state
     entity_id:
       - media_player.fire_tv
-    from: playing
+    to: idle
+    for:
+      seconds: 5
 condition:
   - condition: sun
     after: sunset
@@ -26,4 +28,4 @@ action:
     target:
       entity_id: select.wled_livingroom_preset
   - delay:
-      minutes: 3
+      minutes: 5

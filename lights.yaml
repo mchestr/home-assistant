@@ -2,6 +2,7 @@
   name: Garage Lights
   entities:
     - light.garage_light
+    - light.outdoor_christmas_lights
 
 - platform: group
   name: Entry Lights
@@ -40,6 +41,12 @@
     - light.wled_livingroom
     - light.wled_bookshelf
     - light.christmas_tree
+
+- platform: group
+  name: Entry Seasonal Lights
+  entities:
+    - light.outdoor_christmas_lights
+    - light.sonoff31_1
 
 - platform: group
   name: Stair Lights

@@ -66,6 +66,14 @@ cards:
             state: 'on'
         card:
           type: custom:button-card
+          template: card_title
+          label: Someones at the Front Door!
+      - type: conditional
+        conditions:
+          - entity: input_boolean.doorbell_pressed_recently
+            state: 'on'
+        card:
+          type: custom:button-card
           entity: input_boolean.doorbell_pressed_recently
           template: 
             - card_navigate
@@ -117,9 +125,16 @@ cards:
                   service_data:
                     entity_id: lock.front_door_lock
               entity_2:
-                entity_id: light.first_floor_lights
+                entity_id: light.garage_entry_lights
                 templates:
                   - yellow_on
+                  - blue_off
+                tap_action:
+                  action: toggle
+              entity_3:
+                entity_id: light.entry_seasonal_lights
+                templates:
+                  - pink_on
                   - blue_off
                 tap_action:
                   action: toggle
@@ -159,16 +174,16 @@ cards:
                 tap_action:
                   action: toggle
               entity_2:
-                entity_id: light.living_room_led_lights
+                entity_id: light.stair_lights
                 templates:
-                  - pink_on
+                  - yellow_on
                   - blue_off
                 tap_action:
                   action: toggle
               entity_3:
-                entity_id: light.stair_lights
+                entity_id: light.living_room_led_lights
                 templates:
-                  - yellow_on
+                  - pink_on
                   - blue_off
                 tap_action:
                   action: toggle

@@ -44,6 +44,9 @@ sensor.magic_cube_battery:
 light.living_room_led_lights:
   icon: mdi:string-lights
 
+light.entry_seasonal_lights:
+  icon: mdi:string-lights
+
 light.living_room_hue_lights:
   icon: mdi:lamps
 

@@ -1,0 +1,21 @@
+alias: Reolink PTZ Control
+mode: single
+icon: mdi:camera-control
+
+fields:
+  entity_control:
+    description: The Reolink Camera Control
+    required: true
+  entity_stop:
+    description: The Reolink Camera Control to Stop
+    required: true
+
+sequence:
+  - service: button.press
+    target:
+      entity_id: "{{ entity_control }}"
+  - delay:
+      seconds: 1
+  - service: button.press
+    target:
+      entity_id: "{{ entity_stop }}"

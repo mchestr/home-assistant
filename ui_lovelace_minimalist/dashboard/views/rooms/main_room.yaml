@@ -10,6 +10,32 @@ cards:
         name: *title
 
       - type: custom:frigate-card
+        elements:
+          - type: custom:frigate-card-ptz
+            orientation: horizontal
+            style:
+              transform: none
+              right: 20px
+              top: 260px
+            service: script.reolink_ptz_control
+            data_left:
+              entity_control: button.living_room_ptz_left
+              entity_stop: button.living_room_ptz_stop
+            data_right:
+              entity_control: button.living_room_ptz_right
+              entity_stop: button.living_room_ptz_stop
+            data_up:
+              entity_control: button.living_room_ptz_up
+              entity_stop: button.living_room_ptz_stop
+            data_down:
+              entity_control: button.living_room_ptz_down
+              entity_stop: button.living_room_ptz_stop
+            data_zoom_in:
+              entity_control: button.living_room_ptz_zoom_in
+              entity_stop: button.living_room_ptz_stop
+            data_zoom_out:
+              entity_control: button.living_room_ptz_zoom_out
+              entity_stop: button.living_room_ptz_stop
         menu:
           buttons:
             microphone:

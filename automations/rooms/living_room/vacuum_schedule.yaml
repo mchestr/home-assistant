@@ -32,8 +32,9 @@ action:
           - service: select.select_option
             entity_id: select.moomba_room_1_suction_level
             data:
-              option: Turbo
+              option: turbo
           - service: select.select_option
+            entity_id: select.moomba_room_1_cleaning_times
             data:
               option: 1x
           - service: vacuum.start
@@ -54,10 +55,11 @@ action:
           - service: select.select_option
             entity_id: select.moomba_room_1_suction_level
             data:
-              option: Quiet
+              option: quiet
           - service: select.select_option
+            entity_id: select.moomba_room_1_cleaning_times
             data:
-              option: 3x
+              option: 2x
           - service: vacuum.start
             target:
               entity_id: vacuum.moomba

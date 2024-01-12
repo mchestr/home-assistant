@@ -1,0 +1,50 @@
+title: Transit
+path: transit
+icon: mdi:bus
+cards:
+  - type: vertical-stack
+    cards:
+      - !include components/header-chips-back-default.yml
+      - type: custom:button-card
+        color_type: blank-card
+
+      - type: map
+        aspect_ratio: 16:9
+        entities:
+          - person.mike
+          - person.jena
+          - sensor.bus_to_work
+          - sensor.bus_to_home
+
+      - type: horizontal-stack
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:button-card
+                template: card_title
+                name: To Work
+              - type: custom:button-card
+                template: card_generic
+                entity: sensor.bus_to_work
+          - type: vertical-stack
+            cards:
+              - type: custom:button-card
+                template: card_title
+                name: To Home
+              - type: custom:button-card
+                template: card_generic
+                entity: sensor.bus_to_home
+
+      - type: custom:button-card
+        template: card_title
+        name: Forecast
+      - type: custom:button-card
+        template: card_weather
+        entity: weather.home
+        variables:
+          ulm_card_weather_primary_info:
+            - wind_speed
+            - precipitation_probability
+      - type: custom:hourly-weather
+        entity: weather.home
+        name: ""
