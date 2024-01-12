@@ -103,14 +103,6 @@ nest:
   client_secret: !secret google_client_secret
   project_id: !secret google_project_id
 
-prometheus:
-  namespace: homeassistant
-  filter:
-    include_domains:
-      - alarm_control_panel
-      - light
-      - binary_sensor
-
 lovelace:
   mode: yaml
   resources:
