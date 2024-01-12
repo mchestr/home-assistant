@@ -31,7 +31,7 @@ mode: single
 
 # Arm the home alarm
 action:
-  - service: alarm_control_panel.alarm_arm_home
+  - service: alarm_control_panel.alarm_arm_night
     target:
       entity_id: alarm_control_panel.home_alarm
 
