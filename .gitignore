@@ -22,3 +22,6 @@ custom_components
 .bash_history
 .cache/
 .python_history
+*.db
+*.db-shm
+*.db-wal
