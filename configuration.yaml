@@ -73,9 +73,9 @@ template:
             or current.month == 12 or (current.month == 1
             and current.day <= 2) }}
       - name: Indoor Temperature Falling & Heating On
-        state: "{{ is_state('binary_sensor.indoor_temperature_falling', 'on') and is_state('climate.nest_thermostat.last_changed', 'heat') and (now() - states.climate.nest_thermostat.last_changed) > timedelta(minutes=30) }}"
+        state: "{{ is_state('binary_sensor.indoor_temperature_falling', 'on') and is_state_attr('climate.nest_thermostat', 'hvac_action', 'heating') and (now() - states.climate.nest_thermostat.last_changed) > timedelta(minutes=30) }}"
       - name: Indoor Temperature Rising & Cooling On
-        state: "{{ is_state('binary_sensor.indoor_temperature_rising', 'on') and is_state('climate.nest_thermostat.last_changed', 'cool') and (now() - states.climate.nest_thermostat.last_changed) > timedelta(minutes=30) }}"
+        state: "{{ is_state('binary_sensor.indoor_temperature_rising', 'on') and is_state_attr('climate.nest_thermostat', 'hvac_action', 'cooling') and (now() - states.climate.nest_thermostat.last_changed) > timedelta(minutes=30) }}"
 
 notify:
   - name: ALL_DEVICES
