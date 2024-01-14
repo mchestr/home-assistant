@@ -1,0 +1,10 @@
+name: Living Room & Kitchen Group Entities
+entities:
+  - light.kitchen_lights
+  - light.entry_stairs_light
+  - light.second_floor_stairs_light
+  - light.couch_light
+  - light.tv_light
+  - light.wled_livingroom
+  - light.wled_bookshelf
+  - light.christmas_tree

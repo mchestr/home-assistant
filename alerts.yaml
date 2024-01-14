@@ -1,18 +1,18 @@
 garage_door_open:
-    name: Garage door is open
-    done_message: Garage door is closed
-    entity_id: cover.garage_door
-    state: open
-    repeat: 15
-    can_acknowledge: true
-    skip_first: true
-    data:
-      actions:
-        - action: "GARAGE_DOOR_CLOSE"
-          title: "Close Door"
-          destructive: true
-    notifiers:
-      - ALL_DEVICES
+  name: Garage door is open
+  done_message: Garage door is closed
+  entity_id: cover.garage_door
+  state: open
+  repeat: 15
+  can_acknowledge: true
+  skip_first: true
+  data:
+    actions:
+      - action: "GARAGE_DOOR_CLOSE"
+        title: "Close Door"
+        destructive: true
+  notifiers:
+    - ALL_DEVICES
 front_door_unlocked:
   name: Front door is unlocked
   done_message: Front door is locked
@@ -32,7 +32,7 @@ zoomba_bin_full:
   name: Zoomba bin is full
   done_message: Zoomba bin is empty
   entity_id: binary_sensor.zoomba_bin_full
-  state: 'on'
+  state: "on"
   repeat: 1440
   can_acknowledge: true
   notifiers:
@@ -41,7 +41,7 @@ washing_machine_water_detected:
   name: Washing machine water detected
   done_message: Washing machine is dry
   entity_id: binary_sensor.washing_machine_leak_detector_water_leak
-  state: 'on'
+  state: "on"
   repeat: 5
   can_acknowledge: true
   notifiers:
@@ -50,8 +50,28 @@ utility_closet_water_detected:
   name: Utility closet water detected
   done_message: Utility closet is dry
   entity_id: binary_sensor.utility_closet_water_leak
-  state: 'on'
+  state: "on"
   repeat: 5
   can_acknowledge: true
   notifiers:
     - ALL_DEVICES
+indoor_heating_on_temp_falling:
+  name:  Indoor Temperature is Falling!
+  done_message: Temperature is rising
+  entity_id: binary_sensor.indoor_temperature_falling_heating_on
+  state: 'on'
+  repeat: 3
+  can_acknowledge: true
+  skip_first: true
+  notifiers:
+    - ALL_DEVICES
+indoor_cooling_on_temp_rising:
+  name: Indoor Temperature is Rising!
+  done_message: Temperature is falling
+  entity_id: binary_sensor.indoor_temperature_rising_cooling_on
+  state: 'on'
+  repeat: 3
+  can_acknowledge: true
+  skip_first: true
+  notifiers:
+    - mike_phone

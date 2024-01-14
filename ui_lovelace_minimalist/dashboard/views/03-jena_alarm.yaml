@@ -1,5 +1,6 @@
 title: Alarm Settings
 path: jena_alarm
+icon: mdi:alarm
 visible:
   - user: fbc547b64f1144539e99db2e21d47820
 cards:
@@ -9,6 +10,11 @@ cards:
       - type: custom:button-card
         template: card_title
         name: Alarm Settings
+      - type: 'custom:button-card'
+        template: card_input_boolean
+        entity: input_boolean.jena_alarm_enabled
+        variables:
+          ulm_card_input_boolean_name: Alarm Enabled
       - type: horizontal-stack
         cards:
           - type: 'custom:button-card'

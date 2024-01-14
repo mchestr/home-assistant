@@ -1,0 +1,5 @@
+name: Guest Bed & Bathroom Group Entities
+entities:
+  - light.guest_bedroom_lights
+  - light.guest_bathroom_lights
+  - fan.guest_bathroom_fan

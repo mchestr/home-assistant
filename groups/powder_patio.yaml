@@ -1,0 +1,5 @@
+name: Powder & Patio Group Entities
+entities:
+  - fan.powder_room_fan
+  - light.patio_lights
+  - light.powder_room_lights

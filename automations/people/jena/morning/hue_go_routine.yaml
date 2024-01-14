@@ -15,6 +15,9 @@ trigger:
 # This automation will only be executed if Jena is home, it is a workday, and the current month is between September and May
 condition:
   - condition: state
+    entity_id: input_boolean.jena_alarm_enabled
+    state: 'on'
+  - condition: state
     entity_id: person.jena
     state: home
   - condition: state

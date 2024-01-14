@@ -38,6 +38,9 @@ condition:
               state: "on"
             - condition: trigger
               id: jena
+            - condition: state
+              entity_id: input_boolean.jena_alarm_enabled
+              state: 'on'
 
 action:
   - service: climate.set_temperature

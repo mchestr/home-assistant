@@ -39,6 +39,9 @@ condition:
           id: jena
         - condition: template
           value_template: '{{ now().month >= 10 or now().month <= 4 }}'
+        - condition: state
+          entity_id: input_boolean.jena_alarm_enabled
+          state: 'on'
     - condition: and
       conditions:
         - condition: trigger

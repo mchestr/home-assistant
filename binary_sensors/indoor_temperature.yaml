@@ -1,0 +1,16 @@
+platform: trend
+sensors:
+  indoor_temperature_falling:
+    entity_id: sensor.nest_thermostat_temperature
+    sample_duration: 3600
+    max_samples: 15
+    min_samples: 2
+    min_gradient: -0.000277777777778
+    device_class: cold
+  indoor_temperature_rising:
+    entity_id: sensor.nest_thermostat_temperature
+    sample_duration: 3600
+    max_samples: 15
+    min_samples: 2
+    min_gradient: 0.000277777777778
+    device_class: heat

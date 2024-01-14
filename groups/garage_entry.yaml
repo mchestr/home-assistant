@@ -1,0 +1,6 @@
+name: Garage & Entry Group Entities
+entities:
+  - light.garage_light
+  - light.entry_light
+  - binary_sensor.garage_entry_contact
+  - binary_sensor.utility_closet_water_leak
