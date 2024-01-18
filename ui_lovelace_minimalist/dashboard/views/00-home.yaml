@@ -131,13 +131,13 @@ cards:
                   - blue_off
                 tap_action:
                   action: toggle
-              entity_3:
-                entity_id: light.entry_seasonal_lights
-                templates:
-                  - pink_on
-                  - blue_off
-                tap_action:
-                  action: toggle
+              # entity_3:
+              #   entity_id: light.entry_seasonal_lights
+              #   templates:
+              #     - pink_on
+              #     - blue_off
+              #   tap_action:
+              #     action: toggle
               entity_4:
                 entity_id: binary_sensor.utility_closet_water_leak
                 templates:

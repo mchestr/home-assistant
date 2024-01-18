@@ -50,14 +50,14 @@ cards:
               stream: living_room_high
       - type: custom:button-card
         template: card_graph
-        entity: sensor.nest_thermostat_temperature
+        entity: sensor.home_current_temperature
         variables:
           ulm_card_graph_color: "var(--google-blue)"
           ulm_card_graph_name: Temperature Living Room
-          ulm_card_graph_entity: sensor.nest_thermostat_temperature
+          ulm_card_graph_entity: sensor.home_current_temperature
       - type: custom:button-card
         template: card_thermostat
-        entity: climate.nest_thermostat
+        entity: climate.home
         variables:
           ulm_card_thermostat_enable_collapse: true
           ulm_card_thermostat_enable_controls: true
@@ -139,14 +139,14 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-      - type: custom:button-card
-        template: card_light
-        entity: light.christmas_tree
-        variables:
-          ulm_card_light_force_background_color: true
-          ulm_card_light_enable_horizontal_wide: true
-          ulm_card_light_enable_color: true
-          ulm_card_light_icon: mdi:lightbulb
+      # - type: custom:button-card
+      #   template: card_light
+      #   entity: light.christmas_tree
+      #   variables:
+      #     ulm_card_light_force_background_color: true
+      #     ulm_card_light_enable_horizontal_wide: true
+      #     ulm_card_light_enable_color: true
+      #     ulm_card_light_icon: mdi:lightbulb
 
       - type: custom:button-card
         template: card_title
