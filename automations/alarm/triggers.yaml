@@ -36,11 +36,11 @@ trigger:
     to: "unlocking"
   # The garage door is open
   - platform: state
-    entity_id: cover.garage_door
+    entity_id: cover.gdo_door
     to: "open"
   # The garage door is in the process of being opened
   - platform: state
-    entity_id: cover.garage_door
+    entity_id: cover.gdo_door
     to: "opening"
   - platform: state
     entity_id: binary_sensor.entry_door_window_vibration

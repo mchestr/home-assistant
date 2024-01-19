@@ -1,7 +1,7 @@
 garage_door_open:
   name: Garage door is open
   done_message: Garage door is closed
-  entity_id: cover.garage_door
+  entity_id: cover.gdo_door
   state: open
   repeat: 15
   can_acknowledge: true
