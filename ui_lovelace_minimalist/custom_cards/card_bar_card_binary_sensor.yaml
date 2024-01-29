@@ -19,7 +19,7 @@ card_bar_card_binary_sensor:
   custom_fields:
     item1:
       card:
-        type: "custom:button-card"
+        type: custom:button-card
         template:
           - "icon_info"
           - "card_generic"

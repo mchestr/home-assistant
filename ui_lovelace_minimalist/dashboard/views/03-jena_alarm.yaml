@@ -10,14 +10,14 @@ cards:
       - type: custom:button-card
         template: card_title
         name: Alarm Settings
-      - type: 'custom:button-card'
+      - type: custom:button-card
         template: card_input_boolean
         entity: input_boolean.jena_alarm_enabled
         variables:
           ulm_card_input_boolean_name: Alarm Enabled
       - type: horizontal-stack
         cards:
-          - type: 'custom:button-card'
+          - type: custom:button-card
             template: card_binary_sensor
             variables:
               ulm_card_binary_sensor_name: Hue Go Routine
@@ -25,7 +25,7 @@ cards:
             lock:
               enabled: true
               unlock: double_tap
-          - type: 'custom:button-card'
+          - type: custom:button-card
             template: card_binary_sensor
             variables:
               ulm_card_binary_sensor_name: Main Floor Lights
@@ -34,7 +34,7 @@ cards:
               enabled: true
               unlock: double_tap
 
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_input_datetime
         entity: input_datetime.jena_alarm
         variables:

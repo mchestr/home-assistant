@@ -9,7 +9,7 @@ cards:
         template: card_title
         name: *title
 
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_graph
         entity: sensor.office_window_device_temperature
         variables:
@@ -22,7 +22,7 @@ cards:
         label: Lights & Fans
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.office_light
             variables:
@@ -30,7 +30,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.hallway_light
             variables:
@@ -42,7 +42,7 @@ cards:
       - type: custom:button-card
         template: card_title
         label: Devices
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_cover
         entity: cover.desk
         variables:
@@ -89,19 +89,30 @@ cards:
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.office_window_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.office_window_contact
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.office_window_battery
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.washing_machine_leak_detector_water_leak
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.washing_machine_leak_detector_water_leak
-                    ulm_custom_card_bar_card_battery_entity: sensor.washing_machine_leak_detector_battery
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.washing_machine_leak_detector_battery
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.washing_machine_vibration_vibration
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.washing_machine_vibration_vibration
-                - type: "custom:button-card"
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.washing_machine_vibration_battery
+                - type: custom:button-card
                   color_type: blank-card

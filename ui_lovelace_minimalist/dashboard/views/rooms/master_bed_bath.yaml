@@ -9,16 +9,15 @@ cards:
         template: card_title
         name: *title
 
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_graph
-        entity: climate.master_bathroom_heated_floors
+        entity: sensor.upstairs_temperature
         variables:
           ulm_card_graph_color: "var(--google-blue)"
-          ulm_card_graph_name: Temperature Heated Floors
+          ulm_card_graph_name: Bedroom Temperature
           ulm_card_graph_entity: 
-            entity: climate.master_bathroom_heated_floors
-            attribute: current_temperature
-      - type: "custom:button-card"
+            entity: sensor.upstairs_temperature
+      - type: custom:button-card
         template: card_thermostat
         entity: climate.master_bathroom_heated_floors
         variables:
@@ -31,7 +30,7 @@ cards:
         label: Lights & Fans
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.master_bedroom_light
             variables:
@@ -39,7 +38,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.hue_go
             variables:
@@ -49,7 +48,7 @@ cards:
               ulm_card_light_icon: mdi:lightbulb
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.master_bathroom_light
             variables:
@@ -57,7 +56,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.master_bathroom_mirror_light
             variables:
@@ -65,7 +64,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_fan
         entity: fan.master_bathroom_fan
         variables:
@@ -88,10 +87,30 @@ cards:
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.master_bedroom_window_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.master_bedroom_window_contact
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.master_bedroom_window_battery
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.master_bathroom_motion_detector_occupancy
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.master_bathroom_motion_detector_occupancy
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.master_bathroom_motion_detector_battery
+            - type: horizontal-stack
+              cards:
+                - type: custom:button-card
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: sensor.master_bathroom_sensor_temperature
+                  variables:
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.master_bathroom_sensor_battery
+                - type: custom:button-card
+                  color_type: blank-card

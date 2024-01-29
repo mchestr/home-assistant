@@ -64,7 +64,15 @@ template:
       - name: Master Bed And Bathroom
         state: "{{ states('group.master_bed_bathroom') }}"
         attributes:
-          current_temperature: "{{ state_attr('climate.master_bathroom_heated_floors', 'current_temperature') }}"
+          current_temperature: "{{ states('sensor.master_bathroom_sensor_temperature') }}"
+      - name: Guest Bed And Bathroom
+        state: "{{ states('group.guest_bed_bathroom') }}"
+        attributes:
+          current_temperature: "{{ states('sensor.guest_bathroom_sensor_temperature') }}"
+      - name: Garage And Entry
+        state: "{{ states('group.garage_entry') }}"
+        attributes:
+          current_temperature: "{{ states('sensor.garage_temperature') }}"
   - binary_sensor:
       - name: Is Christmas-ish time
         state: >

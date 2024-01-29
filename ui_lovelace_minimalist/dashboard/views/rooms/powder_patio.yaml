@@ -9,7 +9,7 @@ cards:
         template: card_title
         name: *title
 
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_graph
         entity: sensor.patio_door_device_temperature
         variables:
@@ -22,7 +22,7 @@ cards:
         label: Lights & Fans
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.patio_light
             variables:
@@ -30,7 +30,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.powder_room_light
             variables:
@@ -38,7 +38,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_fan
         entity: fan.powder_room_fan
         variables:
@@ -61,8 +61,12 @@ cards:
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.patio_door_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.patio_door_contact
-                - type: "custom:button-card"
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.patio_door_battery
+                - type: custom:button-card
                   color_type: blank-card

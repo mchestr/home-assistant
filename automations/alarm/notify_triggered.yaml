@@ -65,7 +65,7 @@ action:
   - if:
       - alias: Night Time Critical
         condition: time
-        after: "12:30:00"
+        after: "23:00:00"
         before: "06:00:00"
     then:
       - service: notify.all_devices

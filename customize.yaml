@@ -61,8 +61,3 @@ light.patio_lights:
 
 light.master_bathroom_lights:
   icon: mdi:shower-head
-
-group.living_room_kitchen:
-  templates:
-    current_temperature: >
-      return entities['climate.home'].state;

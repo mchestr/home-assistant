@@ -7,7 +7,6 @@ mode: parallel
 trigger:
   - entity_id: binary_sensor.front_door_button_pressed
     platform: state
-    from: 'off'
     to: 'on'
 
 variables:

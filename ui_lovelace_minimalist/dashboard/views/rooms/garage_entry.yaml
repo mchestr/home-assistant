@@ -38,7 +38,7 @@ cards:
             ulm_card_navigate_title: Answer Doorbell
             ulm_card_navigate_icon: mdi:phone
 
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_graph
         entity: sensor.garage_temperature
         variables:
@@ -48,7 +48,7 @@ cards:
 
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: 
               - card_cover_custom
             lock:
@@ -57,7 +57,7 @@ cards:
             variables:
               ulm_card_cover_garage: true
             entity: cover.gdo_door
-          - type: "custom:button-card"
+          - type: custom:button-card
             entity: lock.front_door_lock
             template: custom_card_eraycetinay_lock
             name: Front Door
@@ -143,30 +143,48 @@ cards:
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.garage_motion_detector_occupancy
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.garage_motion_detector_occupancy
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.garage_motion_detector_battery
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.garage_entry_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.garage_entry_contact
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.garage_entry_battery
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.utility_closet_water_leak
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.utility_closet_water_leak
-                    ulm_custom_card_bar_card_battery_entity: sensor.utility_closet_battery
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.utility_closet_battery
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: sensor.garage_temperature
                   variables:
-                    ulm_custom_card_bar_card_entity: sensor.garage_temperature
-                    ulm_custom_card_bar_card_battery_entity: sensor.garage_temperature_battery
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.garage_temperature_battery
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.entry_door_window_vibration
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.entry_door_window_vibration
-                - type: "custom:button-card"
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.entry_door_window_battery
+                - type: custom:button-card
                   color_type: blank-card

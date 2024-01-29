@@ -4,12 +4,12 @@ cards:
     cards:
       - type: horizontal-stack
         cards:
-          - type: 'custom:button-card'
+          - type: custom:button-card
             template: chip_mdi_icon_only
             variables:
               ulm_chip_mdi_icon_only_entity: camera.doorbell
               ulm_chip_mdi_icon_only_icon: mdi:cctv
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: chip_alarm
             entity: alarm_control_panel.home_alarm
             variables:
@@ -24,7 +24,7 @@ cards:
             tap_action:
               action: "navigate"
               navigation_path: "/lovelace/security"
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: chip_icon_label
             entity: sensor.next_collection
             label: |

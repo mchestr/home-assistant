@@ -11,15 +11,15 @@ cards:
         name: LochNAS
       - type: horizontal-stack
         cards:
-          - type: 'custom:button-card'
+          - type: custom:button-card
             template: card_generic
             entity: update.lochnas_dsm_update
-          # - type: 'custom:button-card'
+          # - type: custom:button-card
           #   template: card_generic
           #   entity: sensor.lochnas_last_boot
       # - type: horizontal-stack
       #   cards:
-      #     - type: 'custom:button-card'
+      #     - type: custom:button-card
       #       template: card_generic
       #       entity: sensor.lochnas_volume_used
       #       name: Volume Usage

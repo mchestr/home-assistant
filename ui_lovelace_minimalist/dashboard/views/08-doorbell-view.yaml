@@ -27,7 +27,7 @@ cards:
         label: Security
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             entity: lock.front_door_lock
             template: custom_card_eraycetinay_lock
             name: Front Door
@@ -39,7 +39,7 @@ cards:
               ulm_custom_card_eraycetinay_lock_battery_level: sensor.front_door_lock_battery
             triggers_update:
               - sensor.front_door_lock_battery
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.entry_light
             variables:

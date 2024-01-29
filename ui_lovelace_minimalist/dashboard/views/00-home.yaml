@@ -9,7 +9,7 @@ cards:
 
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_person
             entity: person.mike
             variables:
@@ -17,7 +17,7 @@ cards:
               ulm_card_person_use_entity_picture: true
               ulm_card_person_zone1: home
               ulm_card_person_zone2: away
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_person
             entity: person.jena
             variables:
@@ -31,35 +31,27 @@ cards:
 
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_vertical_button
             entity: light.all_lights
             icon: mdi:lightbulb
             name: All
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_vertical_button
             entity: light.first_floor_lights
             icon: mdi:lightbulb
             name: First Floor
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_vertical_button
             entity: light.main_floor_lights
             icon: mdi:lightbulb
             name: Main Floor
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_vertical_button
             entity: light.second_floor_lights
             icon: mdi:lightbulb
             name: Second Floor
 
-      - type: conditional
-        conditions:
-          - entity: input_boolean.doorbell_pressed_recently
-            state: 'on'
-        card:
-          type: custom:button-card
-          template: card_title
-          label: Someones at the Front Door!
       - type: conditional
         conditions:
           - entity: input_boolean.doorbell_pressed_recently
@@ -94,9 +86,9 @@ cards:
               - red_on
               - green_off
             name: Garage & Entry
-            entity: group.garage_entry
+            entity: sensor.garage_and_entry
             icon: mdi:shield-home-outline
-            show_label: false
+            show_label: true
             tap_action:
               action: navigate
               navigation_path: /lovelace/garage-entry
@@ -107,8 +99,8 @@ cards:
                 entity_id:
                   - light.first_floor_lights
             variables:
-              label_use_temperature: false
-              label_use_brightness: true
+              label_use_temperature: true
+              label_use_brightness: false
               entity_1:
                 entity_id: lock.front_door_lock
                 templates:
@@ -244,9 +236,9 @@ cards:
               - card_room
               - yellow_on
             name: Guest Bed & Bath
-            entity: group.guest_bed_bathroom
+            entity: sensor.guest_bed_and_bathroom
             icon: mdi:bed
-            show_label: false
+            show_label: true
             tap_action:
               action: navigate
               navigation_path: /lovelace/guest-bed-bath
@@ -259,8 +251,8 @@ cards:
                   - light.guest_bathroom_light
                   - fan.guest_bathroom_fan
             variables:
-              label_use_temperature: false
-              label_use_brightness: true
+              label_use_temperature: true
+              label_use_brightness: false
               entity_1:
                 entity_id: light.guest_bedroom_light
                 templates:

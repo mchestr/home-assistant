@@ -61,7 +61,6 @@ cards:
         variables:
           ulm_card_thermostat_enable_collapse: true
           ulm_card_thermostat_enable_controls: true
-          ulm_card_thermostat_enable_hvac_modes: true
           ulm_card_thermostat_enable_popup: true
 
       - type: custom:button-card
@@ -217,32 +216,54 @@ cards:
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.balcony_door_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.balcony_door_contact
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.balcony_door_battery
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.kitchen_window_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.kitchen_window_contact
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.kitchen_window_battery
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.living_room_left_window_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.living_room_left_window_contact
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.living_room_left_window_battery
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.living_room_right_window_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.living_room_right_window_contact
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.living_room_right_window_battery
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.living_room_motion
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.living_room_motion
-                    ulm_custom_card_bar_card_battery_entity: sensor.living_room_motion_battery
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.living_room_motion_battery
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: sensor.jena_button_action
                   variables:
-                    ulm_custom_card_bar_card_entity: sensor.jena_button_action
-                    ulm_custom_card_bar_card_battery_entity: sensor.jena_button_battery
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.jena_button_battery

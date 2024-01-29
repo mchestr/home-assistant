@@ -9,20 +9,20 @@ cards:
         template: card_title
         name: *title
 
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_graph
-        entity: sensor.guest_bedroom_window_device_temperature
+        entity: sensor.guest_bathroom_sensor_temperature
         variables:
           ulm_card_graph_color: "var(--google-blue)"
-          ulm_card_graph_name: Temperature Guest Bedroom Window
-          ulm_card_graph_entity: sensor.guest_bedroom_window_device_temperature
+          ulm_card_graph_name: Bathroom Temperature
+          ulm_card_graph_entity: sensor.guest_bathroom_sensor_temperature
 
       - type: custom:button-card
         template: card_title
         label: Lights & Fans
       - type: horizontal-stack
         cards:
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.guest_bedroom_light
             variables:
@@ -30,7 +30,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-          - type: "custom:button-card"
+          - type: custom:button-card
             template: card_light
             entity: light.guest_bathroom_light
             variables:
@@ -38,7 +38,7 @@ cards:
               ulm_card_light_enable_horizontal_wide: true
               ulm_card_light_enable_color: true
               ulm_card_light_icon: mdi:lightbulb
-      - type: "custom:button-card"
+      - type: custom:button-card
         template: card_fan
         entity: fan.guest_bathroom_fan
         variables:
@@ -61,8 +61,18 @@ cards:
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  template: card_bar_card_binary_sensor
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: binary_sensor.guest_bedroom_window_contact
                   variables:
-                    ulm_custom_card_bar_card_entity: binary_sensor.guest_bedroom_window_contact
-                - type: "custom:button-card"
-                  color_type: blank-card
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.guest_bedroom_window_battery
+                - type: custom:button-card
+                  template:
+                    - card_binary_sensor
+                    - battery_info
+                  entity: sensor.guest_bathroom_sensor_temperature
+                  variables:
+                    ulm_show_last_changed: false
+                    ulm_battery_entity: sensor.guest_bathroom_sensor_battery

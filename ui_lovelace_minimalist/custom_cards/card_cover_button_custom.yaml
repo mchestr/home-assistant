@@ -85,11 +85,11 @@ card_cover_custom:
   custom_fields:
     item1:
       card:
-        type: "custom:button-card"
+        type: custom:button-card
         custom_fields:
           item1:
             card:
-              type: "custom:button-card"
+              type: custom:button-card
               entity: "[[[ return entity.entity_id ]]]"
               variables: >
                 [[[
@@ -181,7 +181,7 @@ card_cover_custom:
                       ]]]
           item2:
             card:
-              type: "custom:button-card"
+              type: custom:button-card
               entity: "[[[ return entity.entity_id ]]]"
               variables: >
                 [[[
@@ -216,12 +216,12 @@ card_cover_custom:
               show_last_changed: "[[[ return variables.ulm_show_last_changed; ]]]"
     item2:
       card:
-        type: "custom:button-card"
+        type: custom:button-card
         template: "list_3_items"
         custom_fields:
           item1:
             card:
-              type: "custom:button-card"
+              type: custom:button-card
               template: "widget_icon"
               state:
                 - operator: "template"
@@ -265,7 +265,7 @@ card_cover_custom:
                 ]]]
           item2:
             card:
-              type: "custom:button-card"
+              type: custom:button-card
               template: "widget_icon"
               tap_action:
                 action: "call-service"
@@ -275,7 +275,7 @@ card_cover_custom:
               icon: "mdi:stop"
           item3:
             card:
-              type: "custom:button-card"
+              type: custom:button-card
               template: "widget_icon"
               state:
                 - operator: "template"
