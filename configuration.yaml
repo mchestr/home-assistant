@@ -10,7 +10,7 @@ http:
   login_attempts_threshold: 5
   use_x_forwarded_for: true
   trusted_proxies:
-    - 10.0.0.0/8
+    - 10.244.0.0/16
 
 logger:
   default: error
@@ -30,6 +30,7 @@ light: !include lights.yaml
 group: !include_dir_named groups/
 input_boolean: !include_dir_merge_named input_booleans/
 binary_sensor: !include_dir_list binary_sensors/
+mqtt: !include mqtt.yaml
 
 sensor:
   - platform: waste_collection_schedule
@@ -43,7 +44,6 @@ sensor:
       - "date_time_iso"
       - "time_date"
       - "time_utc"
-      - "beat"
   - platform: gtfs_rt
     trip_update_url: !secret gtfs_trip_update_url
     vehicle_position_url: !secret gtfs_vehicle_position_url
@@ -54,6 +54,88 @@ sensor:
       - name: Bus To Home
         route: !secret gtfs_bus_route
         stopid: !secret gtfs_to_home_bus_stopid
+  - platform: template
+    sensors:
+      tesla_est_battery_range_mi:
+        friendly_name: Estimated Range (mi)
+        unit_of_measurement: mi
+        icon_template: mdi:gauge
+        value_template: >
+          {{ (states('sensor.tesla_est_battery_range_km') | float / 1.609344) | round(2) }}
+
+      tesla_rated_battery_range_mi:
+        friendly_name: Rated Range (mi)
+        unit_of_measurement: mi
+        icon_template: mdi:gauge
+        value_template: >
+          {{ (states('sensor.tesla_rated_battery_range_km') | float / 1.609344) | round(2) }}
+
+      tesla_ideal_battery_range_mi:
+        friendly_name: Ideal Range (mi)
+        unit_of_measurement: mi
+        icon_template: mdi:gauge
+        value_template: >
+          {{ (states('sensor.tesla_ideal_battery_range_km') | float / 1.609344) | round(2) }}
+
+      tesla_odometer_mi:
+        friendly_name: Odometer (mi)
+        unit_of_measurement: mi
+        icon_template: mdi:counter
+        value_template: >
+          {{ (states('sensor.tesla_odometer') | float / 1.609344) | round(2) }}
+
+      tesla_speed_mph:
+        friendly_name: Speed (MPH)
+        unit_of_measurement: mph
+        icon_template: mdi:speedometer
+        value_template: >
+          {{ (states('sensor.tesla_speed') | float / 1.609344) | round(2) }}
+
+      tesla_elevation_ft:
+        friendly_name: Elevation (ft)
+        unit_of_measurement: ft
+        icon_template: mdi:image-filter-hdr
+        value_template: >
+          {{ (states('sensor.tesla_elevation') | float * 3.2808 ) | round(2) }}
+
+      tesla_tpms_pressure_fl_psi:
+        friendly_name: Front Left Tire Pressure (psi)
+        unit_of_measurement: psi
+        icon_template: mdi:car-tire-alert
+        value_template: >
+          {{ (states('sensor.tesla_tpms_fl') | float * 14.50377) | round(2) }}
+
+      tesla_tpms_pressure_fr_psi:
+        friendly_name: Front Right Tire Pressure (psi)
+        unit_of_measurement: psi
+        icon_template: mdi:car-tire-alert
+        value_template: >
+          {{ (states('sensor.tesla_tpms_fr') | float * 14.50377) | round(2) }}
+
+      tesla_tpms_pressure_rl_psi:
+        friendly_name: Rear Left Tire Pressure (psi)
+        unit_of_measurement: psi
+        icon_template: mdi:car-tire-alert
+        value_template: >
+          {{ (states('sensor.tesla_tpms_rl') | float * 14.50377) | round(2) }}
+
+      tesla_tpms_pressure_rr_psi:
+        friendly_name: Rear Right Tire Pressure (psi)
+        unit_of_measurement: psi
+        icon_template: mdi:car-tire-alert
+        value_template: >
+          {{ (states('sensor.tesla_tpms_rr') | float * 14.50377) | round(2) }}
+  - platform: template
+    sensors:
+      tesla_park_brake:
+        friendly_name: Parking Brake
+        icon_template: mdi:car-brake-parking
+        value_template: >-
+          {% if is_state('sensor.tesla_shift_state', 'P') %}
+            ON
+          {% else %}
+            OFF
+          {% endif %}
 
 template:
   - sensor:
@@ -75,6 +157,7 @@ template:
           current_temperature: "{{ states('sensor.garage_temperature') }}"
       - name: Home HVAC Action
         state: "{{ state_attr('climate.home', 'hvac_action') }}"
+
   - binary_sensor:
       - name: Is Christmas-ish time
         state: >
@@ -101,16 +184,6 @@ notify:
     platform: group
     services:
       - service: mobile_app_iphone_210
-
-proximity:
-  mike_home:
-    devices:
-      - person.mike
-    tolerance: 10
-  jena_home:
-    devices:
-      - person.jena
-    tolerance: 10
 
 lovelace:
   mode: yaml
