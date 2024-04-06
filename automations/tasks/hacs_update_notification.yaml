@@ -1,4 +1,5 @@
-alias: tasks/hacs_update_notification.yaml
+alias: HACS Update Notification
+id: 787c69bd-327c-48b5-8b15-3277cf0c93b0
 description: Check for HACS updates at noon and send notification
 mode: single
 

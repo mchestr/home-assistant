@@ -1,4 +1,4 @@
-alias: tasks/ac_windows_reminder.yaml
+alias: AC Window Open Notification
 id: 75205dc0-69e5-5502-a80d-4895b45546dd
 description: AC Windows Reminder
 mode: single

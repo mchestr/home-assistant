@@ -1,4 +1,4 @@
-alias: tasks/set_theme.yaml
+alias: Set Lovelace Minimalist Theme
 id: 75205dc0-69e5-4502-a89d-4895b455467b
 description: 'Set theme on start'
 mode: single
