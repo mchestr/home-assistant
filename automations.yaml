@@ -1809,7 +1809,7 @@
   action:
   - service: alarm_control_panel.alarm_disarm
     data:
-      code: '!secret alarm_control_panel_code'
+      code: !secret alarm_control_panel_code
     target:
       entity_id: alarm_control_panel.home_alarm
 - id: 62e21db5-25b7-4319-bf89-fe8aaa9840ad
