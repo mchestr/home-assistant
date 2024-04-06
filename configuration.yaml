@@ -22,7 +22,6 @@ recorder:
 
 alert: !include alerts.yaml
 automation ui: !include automations.yaml
-automation yaml: !include_dir_list automations/
 script ui: !include scripts.yaml
 script yaml: !include_dir_named scripts/
 scene: !include scenes.yaml

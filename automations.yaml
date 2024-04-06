@@ -1,1 +1,1934 @@
-[]
+- id: 75205dc0-69e5-4502-a89d-4895b45546de
+  alias: Waste Collection Reminder
+  description: Waste collection reminder
+  mode: single
+  trigger:
+  - platform: calendar
+    event: start
+    offset: -06:00:00
+    entity_id: calendar.waste_collection
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.calendar_event.summary in ["Garbage", "Garbage
+          & Glass"] }}'
+      sequence:
+      - service: notify.jena_phone
+        data:
+          title: Waste Collection Reminder
+          message: '{{ trigger.calendar_event.summary }} pickup is tomorrow!
+
+            '
+    default:
+    - service: notify.mike_phone
+      data:
+        title: Waste Collection Reminder
+        message: '{{ trigger.calendar_event.summary }} pickup is tomorrow!'
+- id: 75205dc0-69e5-5502-a80d-4895b45546dd
+  alias: AC Window Open Notification
+  description: AC Windows Reminder
+  mode: single
+  trigger:
+  - platform: state
+    entity_id:
+    - climate.home
+    attribute: hvac_action
+    to: cooling
+    for:
+      minutes: 1
+  condition:
+  - condition: state
+    entity_id: group.window_sensors
+    state: 'on'
+  action:
+  - if:
+    - condition: state
+      entity_id: person.jena
+      state: home
+    then:
+    - service: notify.jena_phone
+      data:
+        title: Batten down the hatches!
+        message: '{{ states | selectattr(''entity_id'',''in'', state_attr(''group.window_sensors'',''entity_id''))
+          | selectattr(''state'',''eq'',''on'') | map(attribute=''name'') | join('',
+          '') }} are open!
+
+          '
+  - if:
+    - condition: state
+      entity_id: person.mike
+      state: home
+    then:
+    - service: notify.mike_phone
+      data:
+        title: Batten down the hatches!
+        message: '{{ states | selectattr(''entity_id'',''in'', state_attr(''group.window_sensors'',''entity_id''))
+          | selectattr(''state'',''eq'',''on'') | map(attribute=''name'') | join('',
+          '') }} are open!
+
+          '
+- id: 787c69bd-327c-48b5-8b15-3277cf0c93b0
+  alias: HACS Update Notification
+  description: Check for HACS updates at noon and send notification
+  mode: single
+  trigger:
+  - platform: time
+    at: '12:00:00'
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: sensor.hacs
+      state: '0'
+  action:
+  - service: notify.mike_phone
+    data:
+      title: HACS Updates Available!
+      message: '{{ states(''sensor.hacs'') }} HACS plugin update(s) available!
+
+        '
+      data:
+        url: /hacs/entry
+        clickAction: /hacs/entry
+- id: 75205dc0-69e5-4502-a89d-4895b455467b
+  alias: Set Lovelace Minimalist Theme
+  description: Set theme on start
+  mode: single
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: frontend.set_theme
+    data:
+      name: minimalist-ios-tapbar
+      mode: dark
+- id: 6d9fff5d-4dcb-4770-bfd8-3b8b527ef555
+  alias: tasks/tesla/location.yaml
+  trigger:
+  - platform: mqtt
+    topic: teslamate/cars/1/latitude
+  - platform: mqtt
+    topic: teslamate/cars/1/longitude
+  action:
+  - service: device_tracker.see
+    data_template:
+      dev_id: tesla_location
+      gps:
+      - '{{ states.sensor.tesla_latitude.state }}'
+      - '{{ states.sensor.tesla_longitude.state }}'
+  initial_state: true
+- id: 628caa03-f695-4ab8-9e56-a5c41c582788
+  alias: tasks/action_handlers/garage_door.yaml
+  description: ''
+  mode: single
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: GARAGE_DOOR_CLOSE
+    id: CLOSE
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: GARAGE_DOOR_OPEN
+    id: OPEN
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: OPEN
+      - condition: state
+        entity_id: cover.gdo_door
+        state: closed
+      sequence:
+      - service: cover.open_cover
+        target:
+          entity_id: cover.gdo_door
+    - conditions:
+      - condition: trigger
+        id: CLOSE
+      - condition: state
+        entity_id: cover.gdo_door
+        state: open
+      sequence:
+      - service: cover.close_cover
+        target:
+          entity_id: cover.gdo_door
+    default: []
+- id: 89f3da7a-2fce-49d8-a955-48c2d3f3321a
+  alias: tasks/action_handlers/scene_living_room_selector.yaml
+  description: automation for input_select.living_room
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: input_select.living_room
+  - platform: state
+    entity_id: group.living_room_lights_all
+    id: group_trigger_all
+  - platform: state
+    entity_id: group.living_room_lights
+    id: group_trigger
+  - platform: state
+    entity_id: light.jena_lamp
+    id: entity
+  - platform: state
+    entity_id: light.tv_lamp
+    id: entity
+  - platform: state
+    entity_id: light.wled_bookshelf_master
+    id: entity
+  - platform: state
+    entity_id: light.christmas_twree
+    id: entity
+  - platform: state
+    entity_id: light.wled_livingroom_master
+    id: entity
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: trigger
+          id: group_trigger_all
+        - condition: trigger
+          id: entity
+        - condition: trigger
+          id: group_trigger
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: light.living_room_lights
+            state: 'off'
+          sequence:
+          - service: input_select.select_option
+            data:
+              option: 'Off'
+            target:
+              entity_id: input_select.living_room
+        - conditions:
+          - condition: state
+            entity_id: light.living_room_lights_all
+            state: 'on'
+          sequence:
+          - service: input_select.select_option
+            data:
+              option: 'On'
+            target:
+              entity_id: input_select.living_room
+        default:
+        - service: input_select.select_option
+          data:
+            option: Unknown
+          target:
+            entity_id: input_select.living_room
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == "On" }}'
+      sequence:
+      - scene: scene.living_room_on
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == "Off" }}'
+      sequence:
+      - scene: scene.living_room_off
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == "Dimmed" }}'
+      sequence:
+      - scene: scene.living_room_dimmed_2
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == "Night Light" }}'
+      sequence:
+      - scene: scene.living_room_night_light
+    default: []
+- id: f6045fd6-c2d7-4658-bb03-e6eed8877718
+  alias: tasks/action_handlers/front_door.yaml
+  description: ''
+  mode: single
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: FRONT_DOOR_LOCK
+    id: LOCK
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: FRONT_DOOR_UNLOCK
+    id: UNLOCK
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: UNLOCK
+      - condition: state
+        entity_id: lock.front_door_lock
+        state: locked
+      sequence:
+      - service: lock.unlock
+        target:
+          entity_id: lock.front_door_lock
+    - conditions:
+      - condition: trigger
+        id: LOCK
+      - condition: state
+        entity_id: lock.front_door_lock
+        state: unlocked
+      sequence:
+      - service: lock.lock
+        target:
+          entity_id: lock.front_door_lock
+    default: []
+- id: 3d087255-fa9b-475a-a5f4-a347289d8e32
+  alias: tasks/action_handlers/scene_hue_go_selector.yaml
+  description: scene triggers for hue go
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: light.hue_go
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == "On" }}'
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.hue_go
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == "Off" }}'
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.hue_go
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == "Dimmed" }}'
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 50
+        target:
+          entity_id: light.hue_go
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.state == "Night Light" }}'
+      sequence:
+      - service: light.turn_on
+        data:
+          brightness_pct: 10
+        target:
+          entity_id: light.hue_go
+    default: []
+- id: f6045fd6-c2d7-4658-bb03-a7eed6556789
+  alias: tasks/action_handlers/home_alarm_actions.yaml
+  description: Confirm action, then cancel print
+  mode: parallel
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: ALARM_DISARM
+    id: disarm
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: ALARM_ARM
+    id: arm
+  condition: []
+  action:
+  - alias: Perform the action
+    choose:
+    - conditions:
+      - '{{ trigger.id == ''disarm'' }}'
+      sequence:
+      - service: alarm_control_panel.alarm_disarm
+        target:
+          entity_id: alarm_control_panel.home_alarm
+    - conditions:
+      - '{{ trigger.id == ''arm'' }}'
+      sequence:
+      - service: alarm_control_panel.alarm_arm_home
+        target:
+          entity_id: alarm_control_panel.home_alarm
+- id: 0a465eb3-3489-4354-aff3-b73f1c210b4f
+  alias: people/coming_home.yaml
+  description: Coming home automation
+  mode: single
+  trigger:
+  - platform: zone
+    entity_id: person.jena
+    zone: zone.home
+    event: enter
+  - platform: zone
+    entity_id: person.mike
+    zone: zone.home
+    event: enter
+  condition:
+  - condition: or
+    conditions:
+    - condition: sun
+      after: sunset
+      after_offset: -02:00:00
+    - condition: sun
+      before: sunrise
+      before_offset: 02:00:00
+  action:
+  - wait_for_trigger:
+    - platform: state
+      entity_id:
+      - lock.front_door_lock
+      to: unlocked
+  - service: light.turn_on
+    target:
+      entity_id:
+      - light.entry_stairs_light
+      - light.sonoff31_1
+      - light.kitchen_light
+- id: 6204876b-18e5-4bc2-b6ee-8c6f54e97849
+  alias: people/mike/contact_lens.yaml
+  description: Contact Lens Notification Reminder
+  mode: single
+  trigger:
+  - platform: time
+    at: 09:00:00
+  condition:
+  - condition: template
+    value_template: -> {{ now().timestamp() | timestamp_custom('%Y-%m-%d') >= (state_attr('input_datetime.contact_lens_changed',
+      'timestamp') + 30*24*60*60) | timestamp_custom('%Y-%m-%d', false) }}
+  action:
+  - alias: Set up variables for the actions
+    variables:
+      action_changed: '{{ ''OPEN_'' ~ context.id }}'
+  - service: notify.mike_phone
+    data:
+      message: Contact change reminder
+      title: Time to change Contacts!
+      actions:
+      - action: '{{ action_changed }}'
+        title: Changed
+  - alias: Wait for a response
+    wait_for_trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: '{{ action_changed }}'
+    continue_on_timeout: false
+  - service: input_datetime.set_datetime
+    data:
+      timestamp: '{{ now().timestamp() }}'
+    target:
+      entity_id: input_datetime.contact_lens_changed
+- id: 6204876b-18e5-4bc2-b6ee-8b8f54d97829
+  alias: people/mike/morning/lights_on.yaml
+  description: Turn on heated floors in the morning
+  mode: single
+  trigger:
+  - platform: template
+    value_template: '{{now().strftime(''%a %h %d %H:%M %Z %Y'') == (((state_attr(''sensor.mike_phone_next_alarm'',
+      ''Time in Milliseconds'') | int / 1000) - 1*60 ) | timestamp_custom(''%a %h
+      %d %H:%M %Z %Y''))}}'
+  condition:
+  - condition: state
+    entity_id: person.mike
+    state: home
+  action:
+  - wait_for_trigger:
+    - platform: state
+      entity_id: binary_sensor.master_bathroom_motion_detector_occupancy
+      to: 'on'
+    timeout: 3600
+    continue_on_timeout: false
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.jena
+        state: home
+      sequence:
+      - delay:
+          seconds: 5
+  - service: homeassistant.turn_on
+    target:
+      area_id: master_bathroom
+  - delay:
+      minutes: 20
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: person.jena
+        state: away
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.master_bedroom_light
+  - service: light.turn_on
+    target:
+      area_id: hallway
+  - wait_for_trigger:
+    - platform: state
+      entity_id: light.master_bedroom_light
+      to: 'off'
+    - platform: state
+      entity_id: light.master_bathroom_lights
+      to: 'off'
+    timeout: 1800
+    continue_on_timeout: false
+  - delay:
+      seconds: 10
+  - service: light.turn_on
+    data:
+      brightness_pct: 100
+    target:
+      area_id:
+      - living_room
+      - kitchen
+- id: f3cd99ed-0141-4fde-8e25-dbecfc93e64b
+  alias: people/mike/evening/wireless_charging.yaml
+  description: Evening Routine, wireless charging trigger
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: sensor.mike_phone_charger_type
+    to: wireless
+  condition:
+  - condition: time
+    before: 04:00:00
+    after: '21:00:00'
+  - condition: zone
+    entity_id: person.mike
+    zone: zone.home
+  action:
+  - service: alarm_control_panel.alarm_arm_night
+    target:
+      entity_id: alarm_control_panel.home_alarm
+  - alias: Turn all lights off, check if Jena is awake to cancel
+    if:
+    - condition: zone
+      entity_id: person.jena
+      zone: zone.home
+    - condition: time
+      weekday:
+      - fri
+      - sat
+    then:
+    - alias: Set up variables for the actions
+      variables:
+        action_yes: '{{ ''YES_'' ~ context.id }}'
+        action_no: '{{ ''NO_'' ~ context.id }}'
+    - alias: Ask to cancel lights off
+      service: notify.jena_phone
+      data:
+        title: It is bedtime!
+        message: would you like to turn the lights off?
+        data:
+          actions:
+          - action: '{{ action_yes }}'
+            title: Yes, lights off
+          - action: '{{ action_no }}'
+            title: No, keep them on
+    - alias: Wait for a response
+      wait_for_trigger:
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: '{{ action_yes }}'
+      - platform: event
+        event_type: mobile_app_notification_action
+        event_data:
+          action: '{{ action_no }}'
+      timeout:
+        minutes: 1
+      continue_on_timeout: true
+    - choose:
+      - conditions:
+        - condition: template
+          value_template: '{{ wait.trigger and wait.trigger.event.data.action == action_no
+            }}'
+        sequence:
+        - stop: Jena said so
+  - service: light.turn_off
+    target:
+      entity_id: light.all_lights
+- id: 5cc08cda-5ac8-4f24-80c9-869cb75ad7d7
+  alias: people/jena/morning/hue_go_routine.yaml
+  description: Turn Hue Go on in the morning
+  mode: single
+  trigger:
+  - platform: template
+    value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
+      ''timestamp'') - 5*60) | timestamp_custom(''%H:%M'', false) }}'
+  condition:
+  - condition: state
+    entity_id: input_boolean.jena_alarm_enabled
+    state: 'on'
+  - condition: state
+    entity_id: person.jena
+    state: home
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+  - condition: template
+    value_template: '{{ now().month >= 8 or now().month <= 4 }}'
+  action:
+  - service: light.turn_on
+    data:
+      transition: 300
+      brightness_step: 200
+      color_temp: 355
+    target:
+      entity_id: light.hue_go
+  - wait_for_trigger:
+    - platform: state
+      entity_id:
+      - light.guest_bedroom_light
+      to: 'on'
+    timeout:
+      minutes: 25
+  - service: light.turn_off
+    target:
+      entity_id: light.hue_go
+- id: c3526df7-9570-4c5e-97cc-84c16f59129a
+  alias: people/jena/morning/turn_off_lights_away.yaml
+  description: Turn on heated floors in the morning
+  mode: single
+  trigger:
+  - platform: template
+    value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
+      ''timestamp'') - 1*60) | timestamp_custom(''%H:%M'', false) }}'
+  condition:
+  - condition: state
+    entity_id: input_boolean.jena_alarm_enabled
+    state: 'on'
+  - condition: state
+    entity_id: person.jena
+    state: home
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+  action:
+  - wait_for_trigger:
+    - platform: zone
+      entity_id: person.jena
+      zone: zone.home
+      event: leave
+    - platform: state
+      entity_id:
+      - lock.front_door_lock
+      to: unlocked
+    timeout:
+      hours: 2
+  - service: light.turn_off
+    target:
+      area_id:
+      - kitchen
+      - living_room
+- id: 6e066124-4353-4461-8dd9-7f80bc59a817
+  alias: people/jena/morning/main_floor_lights_on.yaml
+  description: Turn on living room lights in the morning
+  mode: single
+  trigger:
+  - platform: template
+    value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
+      ''timestamp'') - 1*60) | timestamp_custom(''%H:%M'', false) }}'
+  condition:
+  - condition: state
+    entity_id: input_boolean.jena_alarm_enabled
+    state: 'on'
+  - condition: state
+    entity_id: person.jena
+    state: home
+  - condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+  action:
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - service: light.turn_on
+    target:
+      entity_id:
+      - light.christmas_tree
+      - light.wled_bookshelf
+      - light.wled_livingroom
+      area_id:
+      - kitchen
+- id: e65a23fa-63b7-4caf-bcf6-26ccc9ffabde
+  alias: seasons/christmas/christmas_lights_timer.yaml
+  description: Christmas lights timer
+  mode: single
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: -01:30:00
+    id: turn_on
+  - platform: sun
+    event: sunset
+    offset: +07:30:00
+    id: turn_off
+  condition:
+  - condition: state
+    entity_id: binary_sensor.is_christmas_ish_time
+    state: 'on'
+  action:
+  - service: light.{{ trigger.id }}
+    target:
+      entity_id:
+      - light.christmas_tree
+      - light.outdoor_christmas_lights
+      - light.sonoff31_1
+      - light.wled_bookshelf
+      - light.wled_livingroom
+  - if:
+    - condition: trigger
+      id: turn_on
+    then:
+    - service: select.select_option
+      data:
+        option: Christmas
+      target:
+        entity_id:
+        - select.wled_bookshelf_preset
+        - select.wled_livingroom_preset
+- id: a0f35bf5-ddb8-4ce7-b784-532141c39312
+  alias: rooms/office/motion_light_on.yaml
+  description: Turn light on when motion detected
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.entry_motion_detector_occupancy
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: light.office_lights
+    state: 'off'
+  - condition: time
+    before: '21:00:00'
+    after: 06:00:00
+  action:
+  - service: light.turn_on
+    target:
+      area_id: office
+- id: 2089511a-9994-47e3-ba65-a0b31aa9d76c
+  alias: rooms/entry/doorbell_offline.yaml
+  description: Notify if doorbell offline for 10 minutes
+  mode: single
+  trigger:
+  - platform: state
+    entity_id:
+    - camera.front_door_main
+    to: unavailable
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.mike_phone
+    data:
+      title: Doorbell Offline!
+      image: '{{ state_attr(''camera.doorbell'', ''entity_picture'') }}'
+      message: since {{ as_timestamp(trigger.from_state.last_changed) | timestamp_custom('%y-%m-%d
+        %H:%M', true) }}
+- id: e65a23fa-63b7-4caf-bcf6-26ccc9ffabbe
+  alias: rooms/entry/outside_light_timer.yaml
+  description: Door light timer
+  mode: single
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: +00:20:00
+    id: turn_on
+  - platform: time
+    at: '20:30:00'
+    id: turn_off
+  - platform: sun
+    event: sunrise
+    offset: 0
+    id: turn_off
+  condition:
+  - condition: state
+    entity_id: binary_sensor.is_christmas_ish_time
+    state: 'off'
+  action:
+  - service: light.{{ trigger.id }}
+    target:
+      entity_id: light.entry_light
+- id: 5d061c50-2f2b-4cad-8ef4-dda4fe1f0108
+  alias: rooms/entry/doorbell_pressed_recently.yaml
+  description: Doorbell Ring Notification
+  mode: restart
+  trigger:
+  - entity_id: binary_sensor.front_door_button_pressed
+    platform: state
+    to: 'on'
+    id: turn_on
+  - entity_id: binary_sensor.front_door_button_pressed
+    platform: state
+    to: 'on'
+    id: turn_off
+    for:
+      minutes: 5
+  - platform: time_pattern
+    minutes: /10
+    id: turn_off
+  action:
+  - if:
+    - condition: trigger
+      id: turn_off
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: input_boolean.doorbell_pressed_recently
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
+        state: 'on'
+    then:
+    - stop: was recently pressed
+  - service: input_boolean.{{ trigger.id }}
+    target:
+      entity_id: input_boolean.doorbell_pressed_recently
+- id: 524a1d6f-9419-425f-b674-89985bbab8a5
+  alias: rooms/entry/garage_entry_door_opened_entering.yaml
+  description: Automation triggered if entering entry from garage
+  mode: single
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.garage_entry_contact
+    to: 'on'
+    for:
+      minutes: 5
+  - platform: state
+    entity_id: binary_sensor.garage_motion_detector_occupancy
+    to: 'on'
+  condition:
+  - condition: sun
+    after: sunset
+    after_offset: -00:45:00
+  - condition: state
+    entity_id: light.entry_stairs_light
+    state: 'off'
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.entry_stairs_light
+- id: 8f7cfdac-7bed-49bd-8f0d-11f0562ddb69
+  alias: rooms/entry/front_door_autolock.yaml
+  description: Auto lock front door after 5 minutes
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: unlocked
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  - platform: zone
+    entity_id: person.jena
+    zone: zone.home
+    event: leave
+  - platform: zone
+    entity_id: person.mike
+    zone: zone.home
+    event: leave
+  condition:
+  - condition: state
+    entity_id: lock.front_door_lock
+    state: unlocked
+  action:
+  - service: lock.lock
+    target:
+      entity_id: lock.front_door_lock
+- id: 5d061c50-2f2b-4cad-8ef4-d6d5081f0108
+  alias: rooms/entry/doorbell_pressed.yaml
+  description: Doorbell Ring Notification
+  mode: parallel
+  trigger:
+  - entity_id: binary_sensor.front_door_button_pressed
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - alias: Set up variables for the actions
+    variables:
+      action_1: FRONT_DOOR_UNLOCK
+  - data_template:
+      entity_id: camera.doorbell
+      filename: /config/www/doorbell/{{ expand(button)[0].last_changed | as_timestamp  |
+        timestamp_custom("%Y-%m-%d_%H-%M-%S") }}.jpg
+    service: camera.snapshot
+  - service: notify.all_devices
+    data:
+      title: Someone's at the front door!
+      message: '{{ as_timestamp(now()) | timestamp_custom(''%d:%m %H:%M'', true) }}'
+      data:
+        ttl: 0
+        priority: high
+        channel: alarm_stream
+        push:
+          sound:
+            name: US-EN-Morgan-Freeman-Someone-Is-Arriving.wav
+            critical: 1
+            volume: 1.0
+        image: '{{ image_file }}'
+        actions:
+        - action: URI
+          title: View
+          uri: '{{ view_uri }}'
+        - action: URI
+          title: Answer
+          uri: '{{ answer_uri }}'
+        - action: '{{ action_1 }}'
+          title: Unlock
+  variables:
+    button: binary_sensor.front_door_button_pressed
+    dashboard_uri: /lovelace/default_view
+    view_uri: /lovelace/doorbell
+    answer_uri: /lovelace/doorbell-answer
+    image_file: /local/doorbell/{{ expand(button)[0].last_changed | as_timestamp  |
+      timestamp_custom("%Y-%m-%d_%H-%M-%S") }}.jpg
+- id: ed7d6ab4-058a-4f1f-b91d-7032b0e191fd
+  alias: rooms/entry/doorbell_pressed_night_light_on.yaml
+  description: Turn on entry light if doorbell pressed at night
+  mode: restart
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.front_door_button_pressed
+    to: 'on'
+  condition:
+  - condition: sun
+    after: sunset
+    before: sunrise
+    before_offset: -01:00:00
+  - condition: state
+    entity_id: light.entry_light
+    state: 'off'
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.entry_light
+  - delay:
+      minutes: 10
+  - service: light.turn_off
+    target:
+      entity_id: light.entry_light
+- id: ed7d6ab4-058a-4f9f-b94d-7032b0e191fe
+  alias: rooms/entry/doorbell_notifications.yaml
+  description: Doorbell notifications blueprint
+  use_blueprint:
+    path: SgtBatten/Stable.yaml
+    input:
+      camera: camera.doorbell
+      base_url: https://home-assistant.chestr.dev
+      message: '{{ label }} detected - Front Door'
+      critical: '{{''false'' if now().hour in [8,9,10,11,12,13,14,15,16,17,18] else
+        ''true''}}'
+      notify_device: 5f8785dad20db3d7c02c2d415541e0f6
+      ios_live_view: true
+      labels:
+      - person
+      - package
+      disable_times:
+      - '10'
+      - '11'
+      - '12'
+      - '13'
+      - '14'
+      - '15'
+      - '16'
+      - '17'
+- id: 75205dc0-69e5-4502-a89e-4895c455467b
+  alias: rooms/living_room/theatre_mode_reset.yaml
+  mode: single
+  trigger:
+  - platform: time
+    at: 03:00:00
+    id: turn_on
+  action:
+  - service: input_boolean.{{ trigger.id }}
+    target:
+      entity_id: input_boolean.theatre_mode
+- id: 6e261c90-0a39-472a-a064-98aa766f1510
+  alias: rooms/living_room/lights_off_timer
+  description: Automation to turn off living room lights at a specified time
+  mode: single
+  trigger:
+  - platform: time
+    at: 00:00:00
+    id: 12am
+  condition:
+  - condition: and
+    conditions:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: person.jena
+        state: home
+      - condition: state
+        entity_id: person.mike
+        state: home
+  action:
+  - service: light.turn_off
+    target:
+      area_id: living_room
+- id: 6e261c90-0a39-472a-a064-9bcbe66f1611
+  alias: rooms/living_room/fire_tv_paused_lights_down.yaml
+  description: FireTV Theatre Mode
+  mode: single
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.fire_tv
+    to: playing
+    for:
+      seconds: 10
+  condition:
+  - condition: sun
+    after: sunset
+    after_offset: +03:00:00
+  - condition: state
+    entity_id: input_boolean.theatre_mode
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data:
+      transition: 5
+    target:
+      entity_id:
+      - light.entry_stairs_light
+      - light.kitchen_lights
+      - light.tv_light
+      - light.couch_light
+      - light.second_floor_stairs_light
+  - service: light.turn_on
+    data:
+      brightness: 100
+      transition: 5
+    target:
+      entity_id:
+      - light.wled_livingroom
+  - service: select.select_option
+    data:
+      option: Theatre
+    target:
+      entity_id: select.wled_livingroom_preset
+  - delay:
+      minutes: 5
+- id: 6e261c90-0a39-472a-a064-a8bb766f1515
+  alias: rooms/living_room/fire_tv_paused_lights_up.yaml
+  mode: single
+  trigger:
+  - platform: state
+    entity_id:
+    - media_player.fire_tv
+    to: idle
+    for:
+      seconds: 5
+  condition:
+  - condition: sun
+    after: sunset
+    after_offset: +03:00:00
+  - condition: state
+    entity_id: input_boolean.theatre_mode
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      transition: 5
+      brightness_pct: 100
+    target:
+      entity_id: light.living_room_lights
+  - service: select.select_option
+    data:
+      option: Bright
+    target:
+      entity_id: select.wled_livingroom_preset
+  - delay:
+      minutes: 5
+- id: 75205dc0-69e5-45cc-a89e-4bb5c45aa467b
+  alias: rooms/living_room/vacuum_schedule.yaml
+  mode: single
+  trigger:
+  - platform: time
+    at: '15:00:00'
+    id: afternoon
+  - platform: time
+    at: 01:00:00
+    id: night
+  action:
+  - choose:
+    - conditions:
+      - condition: time
+        weekday:
+        - mon
+        - wed
+        - fri
+      - condition: not
+        conditions:
+        - condition: or
+          conditions:
+          - condition: zone
+            entity_id: person.mike
+            zone: zone.home
+          - condition: zone
+            entity_id: person.jena
+            zone: zone.home
+      - condition: trigger
+        id: afternoon
+      sequence:
+      - service: select.select_option
+        entity_id: select.moomba_room_1_suction_level
+        data:
+          option: turbo
+      - service: select.select_option
+        entity_id: select.moomba_room_1_cleaning_times
+        data:
+          option: 1x
+      - service: vacuum.start
+        target:
+          entity_id: vacuum.moomba
+    - conditions:
+      - condition: time
+        weekday:
+        - tue
+        - thu
+      - condition: state
+        entity_id: input_boolean.guest_mode
+        state: 'off'
+      - condition: trigger
+        id: afternoon
+      sequence:
+      - service: select.select_option
+        entity_id: select.moomba_room_1_suction_level
+        data:
+          option: quiet
+      - service: select.select_option
+        entity_id: select.moomba_room_1_cleaning_times
+        data:
+          option: 2x
+      - service: vacuum.start
+        target:
+          entity_id: vacuum.moomba
+- id: e7c600ee-6fcb-492f-8a16-5a4da2a4b01c
+  alias: rooms/living_room/lights_on_sunset.yaml
+  description: Turn living room lights on at sunset
+  mode: single
+  trigger:
+  - platform: sun
+    event: sunset
+    id: sunset
+    offset: -00:30:00
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: person.jena
+      state: home
+    - condition: state
+      entity_id: person.mike
+      state: home
+  action:
+  - service: light.turn_on
+    target:
+      area_id: living_room
+- id: 6c744410-869e-492b-86a6-7dc9e2213e37
+  alias: rooms/living_room/camera_record_armed.yaml
+  description: Living Room
+  mode: single
+  trigger:
+  - platform: state
+    entity_id:
+    - alarm_control_panel.home_alarm
+    to: armed_night
+    id: turn_on
+  - platform: state
+    entity_id:
+    - alarm_control_panel.home_alarm
+    to: armed_away
+    id: turn_on
+  - platform: state
+    entity_id:
+    - alarm_control_panel.home_alarm
+    to: disarmed
+    id: turn_off
+  action:
+  - service: homeassistant.{{ trigger.id }}
+    target:
+      entity_id:
+      - switch.living_room_detect
+      - switch.living_room_motion
+      - switch.living_room_recordings
+      - switch.living_room_snapshots
+- id: 6066a602-c438-4c09-b708-11f559978e4a
+  alias: rooms/powder_room/fan_aux_toggle.yaml
+  description: Fan Aux Automations
+  mode: restart
+  trigger:
+  - platform: state
+    entity_id: fan.powder_room_fan
+    attribute: action
+    to: config_single
+  condition:
+  - condition: state
+    entity_id: fan.powder_room_fan
+    state: 'off'
+  action:
+  - service: script.turn_on
+    target:
+      entity_id: script.inovelli_aux_toggle_led_brightness
+    data:
+      variables:
+        entity_id: '{{ entity_id }}'
+        intensity_min: '{{ intensity_min }}'
+        intensity_max: '{{ intensity_max }}'
+        debug: '{{ debug }}'
+  trigger_variables:
+    entity_id: fan.powder_room_fan
+  variables:
+    entity_id: fan.powder_room_fan
+    intensity_min: 0
+    intensity_max: 25
+    debug: false
+- id: 6066a602-c438-4c09-b708-11f559978e5a
+  alias: rooms/powder_room/fan_timer.yaml
+  description: Fan Timer Automations
+  mode: restart
+  trigger:
+  - platform: template
+    value_template: '{{ is_state(entity_id, ''on'') }}'
+    id: 'on'
+  - platform: template
+    value_template: '{{ is_state(entity_id, ''off'') }}'
+    id: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - service: script.inovelli_falling_led
+        data:
+          entity_id: '{{ entity_id }}'
+          on_color: '{{ on_color }}'
+          on_intensity: '{{ on_intensity }}'
+          off_color: '{{ off_color }}'
+          off_intensity: '{{ off_intensity }}'
+          duration: '{{ duration }}'
+          step_transition_color: '{{ step_transition_color }}'
+          step_transition_effect: '{{ step_transition_effect }}'
+          step_transition_duration: '{{ step_transition_duration }}'
+          step_transition_level: '{{ step_transition_level }}'
+          step_transition_last_only: '{{ step_transition_last_only }}'
+          debug: '{{ debug }}'
+      - service: homeassistant.turn_off
+        target:
+          entity_id: '{{ entity_id }}'
+    - conditions:
+      - condition: trigger
+        id: 'off'
+      sequence:
+      - alias: Level Set All LEDs
+        service: script.turn_on
+        target:
+          entity_id: script.inovelli_level_set
+        data:
+          variables:
+            entity_id: '{{ entity_id }}'
+            on_color: '{{ on_color }}'
+            on_intensity: '{{ on_intensity }}'
+            off_color: '{{ off_color }}'
+            off_intensity: '{{ off_intensity }}'
+            debug: '{{ debug }}'
+  trigger_variables:
+    entity_id: fan.powder_room_fan
+  variables:
+    entity_id: fan.powder_room_fan
+    on_color: 80
+    on_intensity: 40
+    off_color: 160
+    off_intensity: 15
+    duration:
+      minutes: 30
+    step_transition_color: 0
+    step_transition_effect: fast_blink
+    step_transition_duration: 15
+    step_transition_level: 100
+    step_transition_last_only: true
+    debug: false
+- id: 5c104d0a-ab51-4db9-8f46-50a701202c98
+  alias: rooms/patio/outside_light_timer.yaml
+  description: Door light timer
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.patio_door_contact
+    to: 'off'
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+  condition:
+  - condition: state
+    entity_id: light.patio_lights
+    state: 'on'
+  action:
+  - service: light.turn_off
+    target:
+      area_id: patio
+- id: 5004bc7f-7321-47f9-a883-e2346651a5bb
+  alias: rooms/patio/patio_door_opened_lights_on.yaml
+  description: Patio door opened, turn on light
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.patio_door_contact
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: light.patio_lights
+    state: 'off'
+  - condition: sun
+    after: sunset
+    after_offset: -00:45:00
+  action:
+  - service: light.turn_on
+    target:
+      area_id: patio
+- id: 6066a602-c438-4c10-b708-11f609980e60
+  alias: rooms/guest_bathroom/fan_humidity_high.yaml
+  description: Bathroom Humidity High
+  mode: single
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.guest_bathroom_sensor_humidity
+    above: 60
+    id: turn_on
+  - platform: numeric_state
+    entity_id: sensor.guest_bathroom_sensor_humidity
+    below: 50
+    for:
+      minutes: 10
+    id: turn_off
+  action:
+  - service: fan.{{ trigger.id }}
+    target:
+      entity_id: '{{ fan_entity_id }}'
+  variables:
+    entity_id: sensor.guest_bathroom_sensor_humidity
+    fan_entity_id: fan.guest_bathroom_fan
+    above_threshold: 60
+    below_threshold: 50
+- id: 6066a602-c438-4c09-b708-a1f5599a8e4a
+  alias: rooms/guest_bathroom/fan_aux_toggle.yaml
+  description: Fan Aux Automations
+  mode: restart
+  trigger:
+  - platform: state
+    entity_id: fan.guest_bathroom_fan
+    attribute: action
+    to: config_single
+  condition:
+  - condition: state
+    entity_id: fan.guest_bathroom_fan
+    state: 'off'
+  action:
+  - service: script.turn_on
+    target:
+      entity_id: script.inovelli_aux_toggle_led_brightness
+    data:
+      variables:
+        entity_id: '{{ entity_id }}'
+        intensity_min: '{{ intensity_min }}'
+        intensity_max: '{{ intensity_max }}'
+        debug: '{{ debug }}'
+  trigger_variables:
+    entity_id: fan.guest_bathroom_fan
+  variables:
+    entity_id: fan.guest_bathroom_fan
+    intensity_min: 0
+    intensity_max: 25
+    debug: false
+- id: 6066a602-c438-4c09-b708-11f559978e55
+  alias: rooms/guest_bathroom/fan_timer.yaml
+  description: Fan Timer Automations
+  mode: restart
+  trigger:
+  - platform: template
+    value_template: '{{ is_state(entity_id, ''on'') }}'
+    id: 'on'
+  - platform: template
+    value_template: '{{ is_state(entity_id, ''off'') }}'
+    id: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - service: script.inovelli_falling_led
+        data:
+          entity_id: '{{ entity_id }}'
+          on_color: '{{ on_color }}'
+          on_intensity: '{{ on_intensity }}'
+          off_color: '{{ off_color }}'
+          off_intensity: '{{ off_intensity }}'
+          duration: '{{ duration }}'
+          step_transition_color: '{{ step_transition_color }}'
+          step_transition_effect: '{{ step_transition_effect }}'
+          step_transition_duration: '{{ step_transition_duration }}'
+          step_transition_level: '{{ step_transition_level }}'
+          step_transition_last_only: '{{ step_transition_last_only }}'
+          debug: '{{ debug }}'
+      - service: homeassistant.turn_off
+        target:
+          entity_id: '{{ entity_id }}'
+    - conditions:
+      - condition: trigger
+        id: 'off'
+      sequence:
+      - alias: Level Set All LEDs
+        service: script.turn_on
+        target:
+          entity_id: script.inovelli_level_set
+        data:
+          variables:
+            entity_id: '{{ entity_id }}'
+            on_color: '{{ on_color }}'
+            on_intensity: '{{ on_intensity }}'
+            off_color: '{{ off_color }}'
+            off_intensity: '{{ off_intensity }}'
+            debug: '{{ debug }}'
+  trigger_variables:
+    entity_id: fan.guest_bathroom_fan
+  variables:
+    entity_id: fan.guest_bathroom_fan
+    on_color: 80
+    on_intensity: 40
+    off_color: 160
+    off_intensity: 15
+    duration:
+      minutes: 45
+    step_transition_color: 0
+    step_transition_effect: fast_blink
+    step_transition_duration: 15
+    step_transition_level: 100
+    step_transition_last_only: true
+    debug: false
+- id: d3e91c77-8ef1-4cc7-b110-86cd9eccdfae
+  alias: rooms/garage/light_automations.yaml
+  description: Control the garage light
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.garage_motion_detector_occupancy
+    to: 'on'
+    id: turn_on
+  - platform: state
+    entity_id: binary_sensor.garage_entry_contact
+    to: 'on'
+    id: turn_on
+  - platform: state
+    entity_id: binary_sensor.garage_motion_detector_occupancy
+    to: 'off'
+    for:
+      minutes: 30
+    id: turn_off
+  - platform: state
+    entity_id: light.garage_light
+    to: 'on'
+    for:
+      hours: 2
+    id: turn_off
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: turn_on
+      sequence:
+      - service: light.{{ trigger.id }}
+        target:
+          entity_id: light.garage_light
+    - conditions:
+      - condition: trigger
+        id: turn_off
+      - condition: state
+        entity_id: light.garage_lights
+        state: 'on'
+        for:
+          minutes: 10
+      sequence:
+      - service: light.{{ trigger.id }}
+        target:
+          entity_id: light.garage_light
+- id: e152caab-f6a2-411f-b254-1d26118e6532
+  alias: rooms/master_bathroom/heated_floors_off.yaml
+  description: Turn heated floors off after a while
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: climate.master_bathroom_heated_floors
+    to: heat
+    for:
+      hours: 2
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - service: climate.turn_off
+    target:
+      entity_id: climate.master_bathroom_heated_floors
+- id: 6066a602-c438-4c10-b708-11f559978e60
+  alias: rooms/master_bathroom/fan_humidity_high.yaml
+  description: Bathroom Humidity High
+  mode: single
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.master_bathroom_sensor_humidity
+    above: 60
+    id: turn_on
+  - platform: numeric_state
+    entity_id: sensor.master_bathroom_sensor_humidity
+    below: 50
+    for:
+      minutes: 10
+    id: turn_off
+  action:
+  - service: fan.{{ trigger.id }}
+    target:
+      entity_id: '{{ fan_entity_id }}'
+  variables:
+    entity_id: sensor.master_bathroom_sensor_humidity
+    fan_entity_id: fan.master_bathroom_fan
+    above_threshold: 60
+    below_threshold: 50
+- id: 6066a602-c438-4c09-b708-11f5599a8e4a
+  alias: rooms/master_bathroom/fan_aux_toggle.yaml
+  description: Fan Aux Automations
+  mode: restart
+  trigger:
+  - platform: state
+    entity_id: fan.master_bathroom_fan
+    attribute: action
+    to: config_single
+  condition:
+  - condition: state
+    entity_id: fan.master_bathroom_fan
+    state: 'off'
+  action:
+  - service: script.turn_on
+    target:
+      entity_id: script.inovelli_aux_toggle_led_brightness
+    data:
+      variables:
+        entity_id: '{{ entity_id }}'
+        intensity_min: '{{ intensity_min }}'
+        intensity_max: '{{ intensity_max }}'
+        debug: '{{ debug }}'
+  trigger_variables:
+    entity_id: fan.master_bathroom_fan
+  variables:
+    entity_id: fan.master_bathroom_fan
+    intensity_min: 0
+    intensity_max: 25
+    debug: false
+- id: 6fa2a044-c22a-43b2-9617-66f804e2ff69
+  alias: rooms/master_bathroom/heated_floors_on.yaml
+  description: Turn on heated floors in the morning
+  mode: single
+  trigger:
+  - platform: template
+    value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
+      ''timestamp'') - 60*60) | timestamp_custom(''%H:%M'', false) }}'
+    id: jena
+  - platform: template
+    value_template: '{{now().strftime(''%a %h %d %H:%M %Z %Y'') == (((state_attr(''sensor.mike_phone_next_alarm'',
+      ''Time in Milliseconds'') | int / 1000) - 60*60 ) | timestamp_custom(''%a %h
+      %d %H:%M %Z %Y''))}}'
+    id: mike
+  - platform: time
+    at: 07:30:00
+    id: weekend
+  condition:
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - alias: Mike is home
+        condition: state
+        entity_id: person.mike
+        state: home
+      - condition: trigger
+        id: mike
+    - condition: and
+      conditions:
+      - alias: Jena is Home
+        condition: state
+        entity_id: person.jena
+        state: home
+      - alias: Workday
+        condition: state
+        entity_id: binary_sensor.workday
+        state: 'on'
+      - condition: trigger
+        id: jena
+      - condition: template
+        value_template: '{{ now().month >= 10 or now().month <= 4 }}'
+      - condition: state
+        entity_id: input_boolean.jena_alarm_enabled
+        state: 'on'
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: weekend
+      - condition: or
+        conditions:
+        - alias: Jena is Home
+          condition: state
+          entity_id: person.jena
+          state: home
+        - alias: Mike is Home
+          condition: state
+          entity_id: person.mike
+          state: home
+      - alias: Not a workday
+        condition: state
+        entity_id: binary_sensor.workday
+        state: 'off'
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 27
+    target:
+      entity_id: climate.master_bathroom_heated_floors
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: heat
+    target:
+      entity_id: climate.master_bathroom_heated_floors
+- id: 6fa2a044-c22a-43b2-9617-66f804e2ff70
+  alias: rooms/master_bathroom/heated_floors_sync_time.yaml
+  description: Periodically sync the time on the thermostat
+  mode: single
+  trigger:
+  - platform: time
+    at: 04:00:00
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: zigbee2mqtt/Master Bathroom Heated Floors/set
+      payload: '{"thermostat_time":""}'
+- id: 6066a602-c438-4c09-b708-11f559978e52
+  alias: rooms/master_bathroom/fan_timer.yaml
+  description: Fan Timer Automations
+  mode: restart
+  trigger:
+  - platform: template
+    value_template: '{{ is_state(entity_id, ''on'') }}'
+    id: 'on'
+  - platform: template
+    value_template: '{{ is_state(entity_id, ''off'') }}'
+    id: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      sequence:
+      - service: script.inovelli_falling_led
+        data:
+          entity_id: '{{ entity_id }}'
+          on_color: '{{ on_color }}'
+          on_intensity: '{{ on_intensity }}'
+          off_color: '{{ off_color }}'
+          off_intensity: '{{ off_intensity }}'
+          duration: '{{ duration }}'
+          step_transition_color: '{{ step_transition_color }}'
+          step_transition_effect: '{{ step_transition_effect }}'
+          step_transition_duration: '{{ step_transition_duration }}'
+          step_transition_level: '{{ step_transition_level }}'
+          step_transition_last_only: '{{ step_transition_last_only }}'
+          debug: '{{ debug }}'
+      - service: homeassistant.turn_off
+        target:
+          entity_id: '{{ entity_id }}'
+    - conditions:
+      - condition: trigger
+        id: 'off'
+      sequence:
+      - alias: Level Set All LEDs
+        service: script.turn_on
+        target:
+          entity_id: script.inovelli_level_set
+        data:
+          variables:
+            entity_id: '{{ entity_id }}'
+            on_color: '{{ on_color }}'
+            on_intensity: '{{ on_intensity }}'
+            off_color: '{{ off_color }}'
+            off_intensity: '{{ off_intensity }}'
+            debug: '{{ debug }}'
+  trigger_variables:
+    entity_id: fan.master_bathroom_fan
+  variables:
+    entity_id: fan.master_bathroom_fan
+    on_color: 80
+    on_intensity: 40
+    off_color: 160
+    off_intensity: 25
+    duration:
+      minutes: 45
+    step_transition_color: 160
+    step_transition_effect: fast_blink
+    step_transition_duration: 15
+    step_transition_level: 100
+    step_transition_last_only: true
+    debug: false
+- id: 9f31410a-5d8d-456c-86d4-c0fb3f58710e
+  alias: alarm/notify_armed_away.yaml
+  description: Notify when alarm is armed in away mode
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.home_alarm
+    to: armed_away
+  condition:
+  - condition: time
+    before: '23:00:00'
+    after: 07:00:00
+  action:
+  - service: notify.all_devices
+    data:
+      title: 'Home Alarm: Armed'
+      message: The alarm is armed in away mode {{ states('sensor.date_time') }}
+- id: e86d5dea-8520-46fc-8ef7-e36d8b88b4fe
+  alias: alarm/notify_armed_home.yaml
+  description: Notify when alarm is armed in home mode
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.home_alarm
+    to: armed_home
+  condition:
+  - condition: time
+    before: '23:00:00'
+    after: 07:00:00
+  action:
+  - service: notify.all_devices
+    data:
+      title: 'Home Alarm: Armed'
+      message: 'The alarm is armed in home mode {{ states(''sensor.date_time'') }}
+
+        '
+- id: 62e21db5-25b7-4319-bf89-fe8aaa9840ac
+  alias: alarm/triggers.yaml
+  description: Sensors that trigger the alarm
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.office_window_contact
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.guest_bedroom_window_contact
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.patio_door_contact
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.balcony_door_contact
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.kitchen_window_contact
+    to: 'on'
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: unlocked
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: unlocking
+  - platform: state
+    entity_id: cover.gdo_door
+    to: open
+  - platform: state
+    entity_id: cover.gdo_door
+    to: opening
+  - platform: state
+    entity_id: binary_sensor.entry_door_window_vibration
+    to: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      state: armed_home
+      entity_id: alarm_control_panel.home_alarm
+    - condition: state
+      state: armed_away
+      entity_id: alarm_control_panel.home_alarm
+    - condition: state
+      state: armed_night
+      entity_id: alarm_control_panel.home_alarm
+  action:
+  - service: alarm_control_panel.alarm_trigger
+    target:
+      entity_id: alarm_control_panel.home_alarm
+- id: acb1aa5e-98b9-416b-ae53-145a0e745874
+  alias: alarm/front_door_auto_disarm.yaml
+  description: Disarm alarm if unlocked by known entity
+  mode: single
+  trigger:
+  - platform: state
+    entity_id:
+    - lock.front_door_lock
+    to: unlocked
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.home_alarm
+    state:
+    - armed_away
+    - armed_home
+  - condition: state
+    entity_id: sensor.front_door_lock_operator
+    state:
+    - Jena Drysdale
+    - Mike Chester
+  action:
+  - service: alarm_control_panel.alarm_disarm
+    data:
+      code: '!secret alarm_control_panel_code'
+    target:
+      entity_id: alarm_control_panel.home_alarm
+- id: 62e21db5-25b7-4319-bf89-fe8aaa9840ad
+  alias: alarm/notify_triggered.yaml
+  description: Notify when alarm is pending
+  mode: parallel
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.office_window_contact
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.guest_bedroom_window_contact
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.patio_door_contact
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.balcony_door_contact
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.kitchen_window_contact
+    to: 'on'
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: unlocked
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: unlocking
+  - platform: state
+    entity_id: cover.gdo_door
+    to: open
+  - platform: state
+    entity_id: cover.gdo_door
+    to: opening
+  - platform: state
+    entity_id: binary_sensor.entry_door_window_vibration
+    to: 'on'
+  action:
+  - alias: Save which sensor triggered
+    variables:
+      sensor_triggered: '{{ trigger.from_state.attributes.friendly_name }}'
+  - wait_for_trigger:
+    - platform: state
+      entity_id: alarm_control_panel.home_alarm
+      to: triggered
+    timeout: '120'
+    continue_on_timeout: false
+  - if:
+    - alias: Night Time Critical
+      condition: time
+      after: '23:00:00'
+      before: 06:00:00
+    then:
+    - service: notify.all_devices
+      data:
+        title: 'Home Alarm: Triggered!'
+        message: '{{ sensor_triggered }} was opened!'
+        data:
+          actions:
+          - action: ALARM_DISARM
+            title: Disarm
+          - action: ALARM_ARM
+            title: Re-Arm
+          ttl: 0
+          priority: high
+          channel: alarm_stream
+          push:
+            sound:
+              name: default
+              critical: 1
+              volume: 1.0
+    else:
+    - service: notify.all_devices
+      data:
+        title: 'Home Alarm: Triggered!'
+        message: '{{ sensor_triggered }} was opened!'
+        data:
+          actions:
+          - action: ALARM_DISARM
+            title: Disarm
+          - action: ALARM_ARM
+            title: Re-Arm
+- id: 80b25030-d09b-479b-a1b4-d397d53bb885
+  alias: alarm/notify_disarmed.yaml
+  description: Notify when alarm is disarmed
+  trigger:
+  - platform: state
+    entity_id: alarm_control_panel.home_alarm
+    to: disarmed
+  action:
+  - service: notify.all_devices
+    data:
+      title: 'Home Alarm: Disarmed'
+      message: The alarm is disarmed at {{ states('sensor.date_time') }}
+- id: 40587902-cef5-435e-8b42-15b2059d4b33
+  alias: alarm/leaving_home.yaml
+  description: Arm alarm when leaving home
+  mode: single
+  trigger:
+  - platform: zone
+    entity_id: person.jena
+    zone: zone.home
+    event: leave
+  - platform: zone
+    entity_id: person.mike
+    zone: zone.home
+    event: leave
+  condition:
+  - condition: not
+    conditions:
+    - condition: or
+      conditions:
+      - condition: zone
+        entity_id: person.jena
+        zone: zone.home
+      - condition: zone
+        entity_id: person.mike
+        zone: zone.home
+  action:
+  - service: alarm_control_panel.alarm_arm_away
+    target:
+      entity_id: alarm_control_panel.home_alarm
