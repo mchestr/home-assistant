@@ -106,7 +106,8 @@
       name: minimalist-ios-tapbar
       mode: dark
 - id: 13acacc8-ccc4-438d-8e99-3b8d35f76511
-  alias: tasks/tesla/location.yaml
+  alias: Tesla Location
+  description: ''
   trigger:
   - platform: mqtt
     topic: teslamate/cars/1/latitude
@@ -121,9 +122,8 @@
       - '{{ states.sensor.tesla_longitude.state }}'
   initial_state: true
 - id: 703d666a-bae6-445c-8c39-d6c62eefeb49
-  alias: tasks/action_handlers/garage_door.yaml
+  alias: Garage Door Actions
   description: ''
-  mode: single
   trigger:
   - platform: event
     event_type: mobile_app_notification_action
@@ -148,6 +148,7 @@
       - service: cover.open_cover
         target:
           entity_id: cover.gdo_door
+        data: {}
     - conditions:
       - condition: trigger
         id: CLOSE
@@ -158,11 +159,12 @@
       - service: cover.close_cover
         target:
           entity_id: cover.gdo_door
+        data: {}
     default: []
-- id: 7a561b01-25cb-45cf-be94-dac09bf360e9
-  alias: tasks/action_handlers/scene_living_room_selector.yaml
-  description: automation for input_select.living_room
   mode: single
+- id: 7a561b01-25cb-45cf-be94-dac09bf360e9
+  alias: Living Room Scene Selector
+  description: automation for input_select.living_room
   trigger:
   - platform: state
     entity_id: input_select.living_room
@@ -248,10 +250,10 @@
       sequence:
       - scene: scene.living_room_night_light
     default: []
-- id: 90bd2488-3a65-4697-9069-c3b2a316e527
-  alias: tasks/action_handlers/front_door.yaml
-  description: ''
   mode: single
+- id: 90bd2488-3a65-4697-9069-c3b2a316e527
+  alias: Front Door Actions
+  description: ''
   trigger:
   - platform: event
     event_type: mobile_app_notification_action
@@ -276,6 +278,7 @@
       - service: lock.unlock
         target:
           entity_id: lock.front_door_lock
+        data: {}
     - conditions:
       - condition: trigger
         id: LOCK
@@ -286,11 +289,12 @@
       - service: lock.lock
         target:
           entity_id: lock.front_door_lock
+        data: {}
     default: []
-- id: 369b6770-b1fe-4f14-a273-cb95db0f56bb
-  alias: tasks/action_handlers/scene_hue_go_selector.yaml
-  description: scene triggers for hue go
   mode: single
+- id: 369b6770-b1fe-4f14-a273-cb95db0f56bb
+  alias: Hue Go Scene Selector
+  description: scene triggers for hue go
   trigger:
   - platform: state
     entity_id: light.hue_go
@@ -304,6 +308,7 @@
       - service: light.turn_on
         target:
           entity_id: light.hue_go
+        data: {}
     - conditions:
       - condition: template
         value_template: '{{ trigger.to_state.state == "Off" }}'
@@ -311,6 +316,7 @@
       - service: light.turn_off
         target:
           entity_id: light.hue_go
+        data: {}
     - conditions:
       - condition: template
         value_template: '{{ trigger.to_state.state == "Dimmed" }}'
@@ -330,10 +336,10 @@
         target:
           entity_id: light.hue_go
     default: []
+  mode: single
 - id: 4a87ceb8-e84c-4076-952a-c8abaeb7b9c7
-  alias: tasks/action_handlers/home_alarm_actions.yaml
+  alias: Home Alarm Actions
   description: Confirm action, then cancel print
-  mode: parallel
   trigger:
   - platform: event
     event_type: mobile_app_notification_action
@@ -350,21 +356,25 @@
   - alias: Perform the action
     choose:
     - conditions:
-      - '{{ trigger.id == ''disarm'' }}'
+      - condition: template
+        value_template: '{{ trigger.id == ''disarm'' }}'
       sequence:
       - service: alarm_control_panel.alarm_disarm
         target:
           entity_id: alarm_control_panel.home_alarm
+        data: {}
     - conditions:
-      - '{{ trigger.id == ''arm'' }}'
+      - condition: template
+        value_template: '{{ trigger.id == ''arm'' }}'
       sequence:
       - service: alarm_control_panel.alarm_arm_home
         target:
           entity_id: alarm_control_panel.home_alarm
+        data: {}
+  mode: parallel
 - id: 5e123bef-5249-4946-b4d9-c4a8b1040391
-  alias: people/coming_home.yaml
+  alias: 'Coming Home: Entry Lights On'
   description: Coming home automation
-  mode: single
   trigger:
   - platform: zone
     entity_id: person.jena
@@ -395,17 +405,17 @@
       - light.entry_stairs_light
       - light.sonoff31_1
       - light.kitchen_light
-- id: a2d52348-e8e6-4129-a683-5b82a55d80b1
-  alias: people/mike/contact_lens.yaml
-  description: Contact Lens Notification Reminder
+    data: {}
   mode: single
+- id: a2d52348-e8e6-4129-a683-5b82a55d80b1
+  alias: Contact Lens Reminder
+  description: Contact Lens Notification Reminder
   trigger:
   - platform: time
     at: 09:00:00
   condition:
   - condition: template
-    value_template: -> {{ now().timestamp() | timestamp_custom('%Y-%m-%d') >= (state_attr('input_datetime.contact_lens_changed',
-      'timestamp') + 30*24*60*60) | timestamp_custom('%Y-%m-%d', false) }}
+    value_template: '{{ now().day == 6 }}'
   action:
   - alias: Set up variables for the actions
     variables:
@@ -429,10 +439,10 @@
       timestamp: '{{ now().timestamp() }}'
     target:
       entity_id: input_datetime.contact_lens_changed
-- id: a7fddf7d-e97c-45e0-a6e7-0eae5004ccbc
-  alias: people/mike/morning/lights_on.yaml
-  description: Turn on heated floors in the morning
   mode: single
+- id: a7fddf7d-e97c-45e0-a6e7-0eae5004ccbc
+  alias: Lights On Routine
+  description: ''
   trigger:
   - platform: template
     value_template: '{{now().strftime(''%a %h %d %H:%M %Z %Y'') == (((state_attr(''sensor.mike_phone_next_alarm'',
@@ -460,6 +470,7 @@
   - service: homeassistant.turn_on
     target:
       area_id: master_bathroom
+    data: {}
   - delay:
       minutes: 20
   - choose:
@@ -471,9 +482,11 @@
       - service: light.turn_on
         target:
           entity_id: light.master_bedroom_light
+        data: {}
   - service: light.turn_on
     target:
       area_id: hallway
+    data: {}
   - wait_for_trigger:
     - platform: state
       entity_id: light.master_bedroom_light
@@ -492,10 +505,10 @@
       area_id:
       - living_room
       - kitchen
-- id: 9a67d806-4cf0-44cb-93ea-f32d08d1ba62
-  alias: people/mike/evening/wireless_charging.yaml
-  description: Evening Routine, wireless charging trigger
   mode: single
+- id: 9a67d806-4cf0-44cb-93ea-f32d08d1ba62
+  alias: Wireless Charging Night Routine
+  description: Evening Routine, wireless charging trigger
   trigger:
   - platform: state
     entity_id: sensor.mike_phone_charger_type
@@ -511,6 +524,7 @@
   - service: alarm_control_panel.alarm_arm_night
     target:
       entity_id: alarm_control_panel.home_alarm
+    data: {}
   - alias: Turn all lights off, check if Jena is awake to cancel
     if:
     - condition: zone
@@ -559,10 +573,11 @@
   - service: light.turn_off
     target:
       entity_id: light.all_lights
-- id: e9e7e1f6-2b0f-408d-88e5-8a262cad80b7
-  alias: people/jena/morning/hue_go_routine.yaml
-  description: Turn Hue Go on in the morning
+    data: {}
   mode: single
+- id: e9e7e1f6-2b0f-408d-88e5-8a262cad80b7
+  alias: Hue Go Routine
+  description: Turn Hue Go on in the morning
   trigger:
   - platform: template
     value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
@@ -597,10 +612,11 @@
   - service: light.turn_off
     target:
       entity_id: light.hue_go
-- id: 6c11052a-1ed4-49f3-ab12-0293fd86c749
-  alias: people/jena/morning/turn_off_lights_away.yaml
-  description: Turn on heated floors in the morning
+    data: {}
   mode: single
+- id: 6c11052a-1ed4-49f3-ab12-0293fd86c749
+  alias: Lights Off Away
+  description: ''
   trigger:
   - platform: template
     value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
@@ -632,10 +648,11 @@
       area_id:
       - kitchen
       - living_room
-- id: e2c52eaa-0d5c-42bd-8b1a-6bc650b8825a
-  alias: people/jena/morning/main_floor_lights_on.yaml
-  description: Turn on living room lights in the morning
+    data: {}
   mode: single
+- id: e2c52eaa-0d5c-42bd-8b1a-6bc650b8825a
+  alias: Main Floor Lights On
+  description: Turn on living room lights in the morning
   trigger:
   - platform: template
     value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
@@ -664,10 +681,11 @@
       - light.wled_livingroom
       area_id:
       - kitchen
-- id: 16823993-6422-4ea6-b755-d38f61a6cff1
-  alias: seasons/christmas/christmas_lights_timer.yaml
-  description: Christmas lights timer
+    data: {}
   mode: single
+- id: 16823993-6422-4ea6-b755-d38f61a6cff1
+  alias: Outdoor Light Timer
+  description: Christmas lights timer
   trigger:
   - platform: sun
     event: sunset
@@ -701,10 +719,10 @@
         entity_id:
         - select.wled_bookshelf_preset
         - select.wled_livingroom_preset
-- id: 97d5b50f-8da1-4f7e-b867-3dac37099caa
-  alias: rooms/office/motion_light_on.yaml
-  description: Turn light on when motion detected
   mode: single
+- id: 97d5b50f-8da1-4f7e-b867-3dac37099caa
+  alias: Motion, Light On
+  description: Turn light on when motion detected
   trigger:
   - platform: state
     entity_id: binary_sensor.entry_motion_detector_occupancy
@@ -720,10 +738,11 @@
   - service: light.turn_on
     target:
       area_id: office
-- id: bf7229ca-f89b-43b1-bc22-7584d4931706
-  alias: rooms/entry/doorbell_offline.yaml
-  description: Notify if doorbell offline for 10 minutes
+    data: {}
   mode: single
+- id: bf7229ca-f89b-43b1-bc22-7584d4931706
+  alias: Doorbell Offline
+  description: Notify if doorbell offline for 10 minutes
   trigger:
   - platform: state
     entity_id:
@@ -741,10 +760,10 @@
       image: '{{ state_attr(''camera.doorbell'', ''entity_picture'') }}'
       message: since {{ as_timestamp(trigger.from_state.last_changed) | timestamp_custom('%y-%m-%d
         %H:%M', true) }}
-- id: a179567f-c15d-47d5-9ffa-3ebf626a5b99
-  alias: rooms/entry/outside_light_timer.yaml
-  description: Door light timer
   mode: single
+- id: a179567f-c15d-47d5-9ffa-3ebf626a5b99
+  alias: Entry Outside Light Timer
+  description: Door light timer
   trigger:
   - platform: sun
     event: sunset
@@ -765,10 +784,10 @@
   - service: light.{{ trigger.id }}
     target:
       entity_id: light.entry_light
+  mode: single
 - id: 88d5a3db-0080-41d7-92fe-5c32664b9d6e
-  alias: rooms/entry/doorbell_pressed_recently.yaml
+  alias: Doorbell Pressed Recently
   description: Doorbell Ring Notification
-  mode: restart
   trigger:
   - entity_id: binary_sensor.front_door_button_pressed
     platform: state
@@ -801,35 +820,10 @@
   - service: input_boolean.{{ trigger.id }}
     target:
       entity_id: input_boolean.doorbell_pressed_recently
-- id: 7ca5f5a9-bc8e-493c-8122-3cd6251e42ce
-  alias: rooms/entry/garage_entry_door_opened_entering.yaml
-  description: Automation triggered if entering entry from garage
-  mode: single
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.garage_entry_contact
-    to: 'on'
-    for:
-      minutes: 5
-  - platform: state
-    entity_id: binary_sensor.garage_motion_detector_occupancy
-    to: 'on'
-  condition:
-  - condition: sun
-    after: sunset
-    after_offset: -00:45:00
-  - condition: state
-    entity_id: light.entry_stairs_light
-    state: 'off'
-  action:
-  - service: light.turn_on
-    target:
-      entity_id: light.entry_stairs_light
+  mode: restart
 - id: 5e0b9900-d3f3-435e-9d2d-9788e9f86842
-  alias: rooms/entry/front_door_autolock.yaml
+  alias: Front Door Auto-Lock Timer
   description: Auto lock front door after 5 minutes
-  mode: single
   trigger:
   - platform: state
     entity_id: lock.front_door_lock
@@ -854,10 +848,11 @@
   - service: lock.lock
     target:
       entity_id: lock.front_door_lock
+    data: {}
+  mode: single
 - id: f0bb9575-0283-494d-b2b8-4082ff8a3f37
-  alias: rooms/entry/doorbell_pressed.yaml
+  alias: Doorbell Pressed Notify
   description: Doorbell Ring Notification
-  mode: parallel
   trigger:
   - entity_id: binary_sensor.front_door_button_pressed
     platform: state
@@ -884,7 +879,7 @@
           sound:
             name: US-EN-Morgan-Freeman-Someone-Is-Arriving.wav
             critical: 1
-            volume: 1.0
+            volume: 1
         image: '{{ image_file }}'
         actions:
         - action: URI
@@ -895,6 +890,7 @@
           uri: '{{ answer_uri }}'
         - action: '{{ action_1 }}'
           title: Unlock
+  mode: parallel
   variables:
     button: binary_sensor.front_door_button_pressed
     dashboard_uri: /lovelace/default_view
@@ -903,9 +899,8 @@
     image_file: /local/doorbell/{{ expand(button)[0].last_changed | as_timestamp  |
       timestamp_custom("%Y-%m-%d_%H-%M-%S") }}.jpg
 - id: aad80618-b3b1-43cc-925e-17628095ba40
-  alias: rooms/entry/doorbell_pressed_night_light_on.yaml
+  alias: Doorbell Pressed, Night, Light On
   description: Turn on entry light if doorbell pressed at night
-  mode: restart
   trigger:
   - platform: state
     entity_id: binary_sensor.front_door_button_pressed
@@ -922,13 +917,16 @@
   - service: light.turn_on
     target:
       entity_id: light.entry_light
+    data: {}
   - delay:
       minutes: 10
   - service: light.turn_off
     target:
       entity_id: light.entry_light
+    data: {}
+  mode: restart
 - id: c7cca918-1c0c-4a24-b87b-bf611df6cf4e
-  alias: rooms/entry/doorbell_notifications.yaml
+  alias: Doorbell Notification
   description: Doorbell notifications blueprint
   use_blueprint:
     path: SgtBatten/Stable.yaml
@@ -953,8 +951,8 @@
       - '16'
       - '17'
 - id: 9bade4b0-b05a-4e92-a395-cc3f055fb128
-  alias: rooms/living_room/theatre_mode_reset.yaml
-  mode: single
+  alias: Theatre Mode Periodic Reset
+  description: ''
   trigger:
   - platform: time
     at: 03:00:00
@@ -963,10 +961,10 @@
   - service: input_boolean.{{ trigger.id }}
     target:
       entity_id: input_boolean.theatre_mode
-- id: 0f398ec0-490a-4c1e-ad26-6567670e64f8
-  alias: rooms/living_room/lights_off_timer
-  description: Automation to turn off living room lights at a specified time
   mode: single
+- id: 0f398ec0-490a-4c1e-ad26-6567670e64f8
+  alias: Midnight Lights Off
+  description: Automation to turn off living room lights at a specified time
   trigger:
   - platform: time
     at: 00:00:00
@@ -986,10 +984,11 @@
   - service: light.turn_off
     target:
       area_id: living_room
-- id: dc3d21f7-5302-45ab-b348-1ce964580ea6
-  alias: rooms/living_room/fire_tv_paused_lights_down.yaml
-  description: FireTV Theatre Mode
+    data: {}
   mode: single
+- id: dc3d21f7-5302-45ab-b348-1ce964580ea6
+  alias: FireTV Paused, Lights On
+  description: FireTV Theatre Mode
   trigger:
   - platform: state
     entity_id:
@@ -1029,40 +1028,10 @@
       entity_id: select.wled_livingroom_preset
   - delay:
       minutes: 5
-- id: 1905f015-3e4b-46f1-8f53-17e3561cec35
-  alias: rooms/living_room/fire_tv_paused_lights_up.yaml
   mode: single
-  trigger:
-  - platform: state
-    entity_id:
-    - media_player.fire_tv
-    to: idle
-    for:
-      seconds: 5
-  condition:
-  - condition: sun
-    after: sunset
-    after_offset: +03:00:00
-  - condition: state
-    entity_id: input_boolean.theatre_mode
-    state: 'on'
-  action:
-  - service: light.turn_on
-    data:
-      transition: 5
-      brightness_pct: 100
-    target:
-      entity_id: light.living_room_lights
-  - service: select.select_option
-    data:
-      option: Bright
-    target:
-      entity_id: select.wled_livingroom_preset
-  - delay:
-      minutes: 5
 - id: 915eb363-ed77-414b-8eca-308741e468a0
-  alias: rooms/living_room/vacuum_schedule.yaml
-  mode: single
+  alias: Vacuum Schedule
+  description: ''
   trigger:
   - platform: time
     at: '15:00:00'
@@ -1102,6 +1071,7 @@
       - service: vacuum.start
         target:
           entity_id: vacuum.moomba
+        data: {}
     - conditions:
       - condition: time
         weekday:
@@ -1124,10 +1094,11 @@
       - service: vacuum.start
         target:
           entity_id: vacuum.moomba
-- id: 1a90f945-0125-4f2a-b0d7-c5024d747b26
-  alias: rooms/living_room/lights_on_sunset.yaml
-  description: Turn living room lights on at sunset
+        data: {}
   mode: single
+- id: 1a90f945-0125-4f2a-b0d7-c5024d747b26
+  alias: Lights On Sunset
+  description: Turn living room lights on at sunset
   trigger:
   - platform: sun
     event: sunset
@@ -1146,10 +1117,11 @@
   - service: light.turn_on
     target:
       area_id: living_room
-- id: 4b2201f9-9a6a-46ce-b6d8-2fc50c1db305
-  alias: rooms/living_room/camera_record_armed.yaml
-  description: Living Room
+    data: {}
   mode: single
+- id: 4b2201f9-9a6a-46ce-b6d8-2fc50c1db305
+  alias: Camera Record, Home Armed
+  description: Living Room
   trigger:
   - platform: state
     entity_id:
@@ -1174,10 +1146,10 @@
       - switch.living_room_motion
       - switch.living_room_recordings
       - switch.living_room_snapshots
+  mode: single
 - id: 9a93fee9-693d-4350-a77c-94ea66a4ce98
-  alias: rooms/powder_room/fan_aux_toggle.yaml
+  alias: Fan Aux Button Toggle
   description: Fan Aux Automations
-  mode: restart
   trigger:
   - platform: state
     entity_id: fan.powder_room_fan
@@ -1197,6 +1169,7 @@
         intensity_min: '{{ intensity_min }}'
         intensity_max: '{{ intensity_max }}'
         debug: '{{ debug }}'
+  mode: restart
   trigger_variables:
     entity_id: fan.powder_room_fan
   variables:
@@ -1205,9 +1178,8 @@
     intensity_max: 25
     debug: false
 - id: 73b6f288-d478-48ed-aac1-a0b7edaef342
-  alias: rooms/powder_room/fan_timer.yaml
+  alias: Fan Timer
   description: Fan Timer Automations
-  mode: restart
   trigger:
   - platform: template
     value_template: '{{ is_state(entity_id, ''on'') }}'
@@ -1254,6 +1226,7 @@
             off_color: '{{ off_color }}'
             off_intensity: '{{ off_intensity }}'
             debug: '{{ debug }}'
+  mode: restart
   trigger_variables:
     entity_id: fan.powder_room_fan
   variables:
@@ -1271,9 +1244,8 @@
     step_transition_last_only: true
     debug: false
 - id: 0ee989df-a6ff-4ffc-917a-5f9d6ae41163
-  alias: rooms/patio/outside_light_timer.yaml
+  alias: Light Timer
   description: Door light timer
-  mode: single
   trigger:
   - platform: state
     entity_id: binary_sensor.patio_door_contact
@@ -1290,10 +1262,11 @@
   - service: light.turn_off
     target:
       area_id: patio
-- id: bc4b2d28-ad77-4ad8-b266-8f75fee492db
-  alias: rooms/patio/patio_door_opened_lights_on.yaml
-  description: Patio door opened, turn on light
+    data: {}
   mode: single
+- id: bc4b2d28-ad77-4ad8-b266-8f75fee492db
+  alias: Patio Door Open, Lights On
+  description: Patio door opened, turn on light
   trigger:
   - platform: state
     entity_id: binary_sensor.patio_door_contact
@@ -1309,10 +1282,11 @@
   - service: light.turn_on
     target:
       area_id: patio
-- id: e8117429-dd3a-47f2-99bc-7f4fc39d0446
-  alias: rooms/guest_bathroom/fan_humidity_high.yaml
-  description: Bathroom Humidity High
+    data: {}
   mode: single
+- id: e8117429-dd3a-47f2-99bc-7f4fc39d0446
+  alias: Humidity Fan On
+  description: Bathroom Humidity High
   trigger:
   - platform: numeric_state
     entity_id: sensor.guest_bathroom_sensor_humidity
@@ -1328,15 +1302,15 @@
   - service: fan.{{ trigger.id }}
     target:
       entity_id: '{{ fan_entity_id }}'
+  mode: single
   variables:
     entity_id: sensor.guest_bathroom_sensor_humidity
     fan_entity_id: fan.guest_bathroom_fan
     above_threshold: 60
     below_threshold: 50
 - id: 1892ee1e-8573-4ca5-b0d2-3983f07d3fcc
-  alias: rooms/guest_bathroom/fan_aux_toggle.yaml
+  alias: Fan Aux Button Toggle
   description: Fan Aux Automations
-  mode: restart
   trigger:
   - platform: state
     entity_id: fan.guest_bathroom_fan
@@ -1356,6 +1330,7 @@
         intensity_min: '{{ intensity_min }}'
         intensity_max: '{{ intensity_max }}'
         debug: '{{ debug }}'
+  mode: restart
   trigger_variables:
     entity_id: fan.guest_bathroom_fan
   variables:
@@ -1364,9 +1339,8 @@
     intensity_max: 25
     debug: false
 - id: 68f0421a-ad83-4775-b04d-ba4798c30ad6
-  alias: rooms/guest_bathroom/fan_timer.yaml
+  alias: Fan Timer
   description: Fan Timer Automations
-  mode: restart
   trigger:
   - platform: template
     value_template: '{{ is_state(entity_id, ''on'') }}'
@@ -1413,6 +1387,7 @@
             off_color: '{{ off_color }}'
             off_intensity: '{{ off_intensity }}'
             debug: '{{ debug }}'
+  mode: restart
   trigger_variables:
     entity_id: fan.guest_bathroom_fan
   variables:
@@ -1430,9 +1405,8 @@
     step_transition_last_only: true
     debug: false
 - id: 94877b99-4d4e-47ec-9891-85043411cbd5
-  alias: rooms/garage/light_automations.yaml
+  alias: Light Automations
   description: Control the garage light
-  mode: single
   trigger:
   - platform: state
     entity_id: binary_sensor.garage_motion_detector_occupancy
@@ -1475,10 +1449,10 @@
       - service: light.{{ trigger.id }}
         target:
           entity_id: light.garage_light
-- id: 198106e7-6edd-42d9-9771-50bd50f48108
-  alias: rooms/master_bathroom/heated_floors_off.yaml
-  description: Turn heated floors off after a while
   mode: single
+- id: 198106e7-6edd-42d9-9771-50bd50f48108
+  alias: Heater Floors Off Timer
+  description: Turn heated floors off after a while
   trigger:
   - platform: state
     entity_id: climate.master_bathroom_heated_floors
@@ -1492,10 +1466,11 @@
   - service: climate.turn_off
     target:
       entity_id: climate.master_bathroom_heated_floors
-- id: b157a7b5-118e-4165-9255-7cf84355a778
-  alias: rooms/master_bathroom/fan_humidity_high.yaml
-  description: Bathroom Humidity High
+    data: {}
   mode: single
+- id: b157a7b5-118e-4165-9255-7cf84355a778
+  alias: Fan Humidity On
+  description: Bathroom Humidity High
   trigger:
   - platform: numeric_state
     entity_id: sensor.master_bathroom_sensor_humidity
@@ -1511,15 +1486,15 @@
   - service: fan.{{ trigger.id }}
     target:
       entity_id: '{{ fan_entity_id }}'
+  mode: single
   variables:
     entity_id: sensor.master_bathroom_sensor_humidity
     fan_entity_id: fan.master_bathroom_fan
     above_threshold: 60
     below_threshold: 50
 - id: a407bf63-bace-421c-bd38-53951cc3070b
-  alias: rooms/master_bathroom/fan_aux_toggle.yaml
+  alias: Fan Aux Button Toggle
   description: Fan Aux Automations
-  mode: restart
   trigger:
   - platform: state
     entity_id: fan.master_bathroom_fan
@@ -1539,6 +1514,7 @@
         intensity_min: '{{ intensity_min }}'
         intensity_max: '{{ intensity_max }}'
         debug: '{{ debug }}'
+  mode: restart
   trigger_variables:
     entity_id: fan.master_bathroom_fan
   variables:
@@ -1547,9 +1523,8 @@
     intensity_max: 25
     debug: false
 - id: d9d54a1b-599b-4f89-8a05-625d8e163740
-  alias: rooms/master_bathroom/heated_floors_on.yaml
+  alias: Heated Floors On Scheduled
   description: Turn on heated floors in the morning
-  mode: single
   trigger:
   - platform: template
     value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
@@ -1620,10 +1595,10 @@
       hvac_mode: heat
     target:
       entity_id: climate.master_bathroom_heated_floors
-- id: 47ce85de-4474-4a6a-b42d-2fbe16cd123e
-  alias: rooms/master_bathroom/heated_floors_sync_time.yaml
-  description: Periodically sync the time on the thermostat
   mode: single
+- id: 47ce85de-4474-4a6a-b42d-2fbe16cd123e
+  alias: Heated Floor NTP Sync
+  description: Periodically sync the time on the thermostat or it gets outdated
   trigger:
   - platform: time
     at: 04:00:00
@@ -1633,10 +1608,10 @@
     data:
       topic: zigbee2mqtt/Master Bathroom Heated Floors/set
       payload: '{"thermostat_time":""}'
+  mode: single
 - id: 976722e5-ead5-4d7d-8b2f-87c6cf2660e3
-  alias: rooms/master_bathroom/fan_timer.yaml
+  alias: Fan Timer
   description: Fan Timer Automations
-  mode: restart
   trigger:
   - platform: template
     value_template: '{{ is_state(entity_id, ''on'') }}'
@@ -1683,6 +1658,7 @@
             off_color: '{{ off_color }}'
             off_intensity: '{{ off_intensity }}'
             debug: '{{ debug }}'
+  mode: restart
   trigger_variables:
     entity_id: fan.master_bathroom_fan
   variables:
@@ -1700,9 +1676,8 @@
     step_transition_last_only: true
     debug: false
 - id: cad5624d-eb4c-419f-a4e7-ab23908374ec
-  alias: alarm/notify_armed_away.yaml
+  alias: 'Home Alarm: Notify Armed Away'
   description: Notify when alarm is armed in away mode
-  mode: single
   trigger:
   - platform: state
     entity_id: alarm_control_panel.home_alarm
@@ -1716,10 +1691,10 @@
     data:
       title: 'Home Alarm: Armed'
       message: The alarm is armed in away mode {{ states('sensor.date_time') }}
-- id: 34ef1af8-d192-491b-b1f4-b53abdb3989e
-  alias: alarm/notify_armed_home.yaml
-  description: Notify when alarm is armed in home mode
   mode: single
+- id: 34ef1af8-d192-491b-b1f4-b53abdb3989e
+  alias: 'Home Alarm: Notify Armed Home'
+  description: Notify when alarm is armed in home mode
   trigger:
   - platform: state
     entity_id: alarm_control_panel.home_alarm
@@ -1735,10 +1710,10 @@
       message: 'The alarm is armed in home mode {{ states(''sensor.date_time'') }}
 
         '
-- id: e0fa138f-125b-4981-9873-6090bc8b872a
-  alias: alarm/triggers.yaml
-  description: Sensors that trigger the alarm
   mode: single
+- id: e0fa138f-125b-4981-9873-6090bc8b872a
+  alias: 'Home Alarm: Entity Triggers'
+  description: Sensors that trigger the alarm
   trigger:
   - platform: state
     entity_id: binary_sensor.office_window_contact
@@ -1786,10 +1761,11 @@
   - service: alarm_control_panel.alarm_trigger
     target:
       entity_id: alarm_control_panel.home_alarm
-- id: 06707973-3d59-455b-a7dc-e2ab8b1b8769
-  alias: alarm/front_door_auto_disarm.yaml
-  description: Disarm alarm if unlocked by known entity
+    data: {}
   mode: single
+- id: 06707973-3d59-455b-a7dc-e2ab8b1b8769
+  alias: 'Home Alarm: Front Door Auto Disarm'
+  description: Disarm alarm if unlocked by known entity
   trigger:
   - platform: state
     entity_id:
@@ -1812,10 +1788,10 @@
       code: '!secret alarm_control_panel_code'
     target:
       entity_id: alarm_control_panel.home_alarm
+  mode: single
 - id: 2239d616-cfe2-40ab-8135-41888b1240da
-  alias: alarm/notify_triggered.yaml
+  alias: 'Home Alarm: Notify Alarm Pending'
   description: Notify when alarm is pending
-  mode: parallel
   trigger:
   - platform: state
     entity_id: binary_sensor.office_window_contact
@@ -1880,7 +1856,7 @@
             sound:
               name: default
               critical: 1
-              volume: 1.0
+              volume: 1
     else:
     - service: notify.all_devices
       data:
@@ -1892,8 +1868,9 @@
             title: Disarm
           - action: ALARM_ARM
             title: Re-Arm
+  mode: parallel
 - id: fa449fc7-fb68-40f9-b971-8295e4883180
-  alias: alarm/notify_disarmed.yaml
+  alias: 'Home Alarm: Notify Disarmed'
   description: Notify when alarm is disarmed
   trigger:
   - platform: state
@@ -1905,9 +1882,8 @@
       title: 'Home Alarm: Disarmed'
       message: The alarm is disarmed at {{ states('sensor.date_time') }}
 - id: e18e7f27-3d1a-46be-bdde-0f7bf3d54c03
-  alias: alarm/leaving_home.yaml
+  alias: 'Home Alarm: Armed Away Unoccupied'
   description: Arm alarm when leaving home
-  mode: single
   trigger:
   - platform: zone
     entity_id: person.jena
@@ -1932,3 +1908,5 @@
   - service: alarm_control_panel.alarm_arm_away
     target:
       entity_id: alarm_control_panel.home_alarm
+    data: {}
+  mode: single
