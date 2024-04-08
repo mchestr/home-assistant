@@ -1,0 +1,615 @@
+inovelli_aux_toggle_led_brightness:
+  alias: Inovelli Aux Toggle LED Brightness
+  sequence:
+  - alias: Set Variables
+    variables:
+      entity_name: number.{{ entity_id.replace('sensor.', '').replace('fan.', '')
+        }}_ledintensitywhenoff
+      debug: '{{ debug | default(false) }}'
+  - alias: Debug
+    if:
+    - condition: template
+      value_template: '{{ debug }}'
+    then:
+    - service: persistent_notification.create
+      data:
+        message: "inovelli_level_set \n  entity_id={{entity_id}}\n  entity_name={{entity_name}}\n
+          \ intensity_min={{intensity_min}}\n  intensity_max={{intensity_max}}\n  current_state={{int(states(entity_name),
+          0)}}\n"
+  - if:
+    - condition: template
+      value_template: '{{ int(states(entity_name), 0) > intensity_min }}'
+    then:
+    - service: number.set_value
+      data:
+        value: '{{ intensity_min }}'
+      target:
+        entity_id: '{{ entity_name }}'
+    else:
+    - service: number.set_value
+      data:
+        value: '{{ intensity_max }}'
+      target:
+        entity_id: '{{ entity_name }}'
+  mode: parallel
+  fields:
+    entity_id:
+      description: The Inovelli Switch
+      required: true
+      selector:
+        entity:
+          integration: mqtt
+          domain:
+          - light
+          - fan
+    intensity_min:
+      description: Intesity minimum
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    intensity_max:
+      description: Intesity maximum
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    debug:
+      description: Enable Debug
+      required: false
+inovelli_falling_led:
+  alias: Inovelli Falling LED
+  sequence:
+  - alias: Calculate Intervals
+    variables:
+      debug: '{{ debug | default(false) }}'
+      total_leds: '{{ total_leds | default(7) }}'
+      interval_seconds: '{{ (duration.hours | default(0) | multiply(3600) | int) +
+        (duration.minutes | default(0) | multiply(60) | int) + (duration.seconds |
+        default(0)) }}'
+      step_transition_duration: '{{ step_transition_duration | default(0) }}'
+      step_transition_last_only: '{{ iif(step_transition_last_only, true, false) }}'
+      total_step_duration: '{{ ((interval_seconds / total_leds) | int) }}'
+      entity_name: '{{ entity_id.replace(''sensor.'', '''').replace(''fan.'', '''')
+        }}'
+  - alias: Debug
+    if:
+    - condition: template
+      value_template: '{{ debug }}'
+    then:
+    - service: persistent_notification.create
+      data:
+        message: "inovelli_falling_led \n  entity_id={{entity_id}}\n  entity_name={{entity_name}}\n
+          \ total_leds={{total_leds}}\n  duration={{duration}}\n  on_color={{on_color}}\n
+          \ on_intensity={{on_intensity}}\n  off_color={{off_color}}\n  off_intensity={{off_intensity}}\n
+          \ interval_seconds={{interval_seconds}}\n  step_duration={{step_duration}}\n
+          \ step_transition_color={{step_transition_color}}\n  step_transition_effect={{step_transition_effect}}\n
+          \ step_transition_duration={{step_transition_duration}}\n  step_transition_level={{step_transition_level}}\n
+          \ step_transition_last_only={{step_transition_last_only}}\n"
+  - alias: Execute Transition Steps
+    repeat:
+      count: '{{ total_leds }}'
+      sequence:
+      - alias: Set variables for iteration
+        variables:
+          led: '{{ 1 + total_leds - repeat.index }}'
+          led_offset: '{{ led - 1 }}'
+          first_wait_duration: '{% if not step_transition_last_only or (step_transition_last_only
+            and led_offset == 0) %} {{ total_step_duration - step_transition_duration
+            }} {% else %} {{ total_step_duration }} {% endif %}
+
+            '
+      - delay:
+          seconds: '{{ first_wait_duration }}'
+      - alias: Trigger step transition effect
+        if:
+        - condition: template
+          value_template: '{{ step_transition_duration > 0 and ((step_transition_last_only
+            and led_offset == 0) or (not step_transition_last_only)) }}'
+        then:
+        - service: script.turn_on
+          target:
+            entity_id: script.inovelli_individual_led_effect
+          data:
+            variables:
+              entity_id: '{{ entity_id }}'
+              led: '{{ led_offset }}'
+              effect: '{{ step_transition_effect }}'
+              color: '{{ step_transition_color }}'
+              level: '{{ step_transition_level }}'
+              duration: '{{ step_transition_duration }}'
+              debug: '{{ debug }}'
+        - delay:
+            seconds: '{{ step_transition_duration }}'
+      - alias: Set Intensity Falling
+        service: number.set_value
+        target:
+          entity_id: number.{{ entity_name }}_defaultled{{ led }}intensitywhenon
+        data:
+          value: '{{ off_intensity }}'
+      - alias: Set Color Falling
+        service: number.set_value
+        target:
+          entity_id: number.{{ entity_name }}_defaultled{{ led }}colorwhenon
+        data:
+          value: '{{ off_color }}'
+  mode: parallel
+  fields:
+    entity_id:
+      description: The Inovelli Switch
+      required: true
+      selector:
+        entity:
+          integration: mqtt
+          domain:
+          - light
+          - fan
+    duration:
+      description: Length of time to fall in seconds
+      selector:
+        duration:
+    total_leds:
+      description: Number of LEDs per switch
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 7
+    on_color:
+      description: Colour of LED when on
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    on_intensity:
+      description: LED Intensity when on
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    off_color:
+      description: Colour of LED when off
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    off_intensity:
+      description: LED Intensity when off
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    step_transition_color:
+      description: Color for transition effect
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    step_transition_effect:
+      description: Effect to use during transition
+      required: true
+      selector:
+        select:
+          options:
+          - 'off'
+          - solid
+          - fast_blink
+          - slow_blink
+          - pulse
+          - chase
+          - open_close
+          - small_to_big
+          - aurora
+          - slow_falling
+          - medium_falling
+          - fast_falling
+          - slow_rising
+          - medium_rising
+          - fast_rising
+          - medium_blink
+          - slow_chase
+          - fast_chase
+          - fast_siren
+          - slow_siren
+          - clear_effect
+    step_transition_duration:
+      description: Duration of LED effct when state transitions. 0 to disable.
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 60
+    step_transition_level:
+      description: LED Intensity when transitioning
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    step_transition_last_only:
+      description: Only run transition on last LED
+      required: false
+      selector:
+        boolean:
+    debug:
+      description: Enable Debug
+      required: false
+inovelli_individual_led_effect:
+  alias: Inovelli Individual LED Effect
+  sequence:
+  - alias: Set Variables
+    variables:
+      debug: '{{ debug | default(false) }}'
+      friendly_name: '{{ state_attr(entity_id, ''friendly_name'') }}'
+      topic: '{{ topic_prefix | default(''z2m'') }}/{{ friendly_name }}/set'
+      payload: "{\n  \"individual_led_effect\": {\n    \"led\": \"{{ led }}\",\n    \"effect\":
+        \"{{ effect }}\",\n    \"color\": \"{{ color }}\",\n    \"level\": \"{{ level
+        }}\",\n    \"duration\": \"{{ duration }}\"\n  }\n}\n"
+  - alias: Debug
+    if:
+    - condition: template
+      value_template: '{{ debug }}'
+    then:
+    - service: persistent_notification.create
+      data:
+        message: "inovelli_individual_led_effect \n  entity_id={{entity_id}}\n  friendly_name={{friendly_name}}\n
+          \ topic={{topic}}\n  payload={{payload}}\n"
+  - alias: Publish MQTT
+    service: mqtt.publish
+    data:
+      topic: '{{ topic }}'
+      payload: '{{ payload }}'
+  mode: parallel
+  fields:
+    entity_id:
+      description: The Inovelli Switch
+      required: true
+      selector:
+        entity:
+          integration: mqtt
+          domain:
+          - light
+          - fan
+    led:
+      description: LED to apply effect on. This is 0-index based.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 6
+    effect:
+      description: Effect to use
+      required: true
+      selector:
+        select:
+          options:
+          - 'off'
+          - solid
+          - fast_blink
+          - slow_blink
+          - pulse
+          - chase
+          - open_close
+          - small_to_big
+          - aurora
+          - slow_falling
+          - medium_falling
+          - fast_falling
+          - slow_rising
+          - medium_rising
+          - fast_rising
+          - medium_blink
+          - slow_chase
+          - fast_chase
+          - fast_siren
+          - slow_siren
+          - clear_effect
+    color:
+      description: Color of LEDs
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    level:
+      description: Brightness of LEDs
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    duration:
+      description: Duration of effect. 1-60 is seconds, 60-120 (VALUE-60) is minutes,
+        121-255 (VALUE-120) is hours.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    topic_prefix:
+      description: Override topic prefix. default=z2m
+      required: false
+    debug:
+      description: Enable Debug
+      required: false
+      selector:
+        boolean:
+inovelli_led_effect:
+  alias: Inovelli LED Effect
+  sequence:
+  - alias: Set Variables
+    variables:
+      friendly_name: '{{ state_attr(entity_id, ''friendly_name'') }}'
+      debug: '{{ debug | default(false) }}'
+      topic_prefix: '{{ topic_prefix | default(''z2m'') }}'
+      topic: '{{ topic_prefix }}/{{ friendly_name }}/set'
+      payload: "{\n  \"led_effect\": {\n    \"effect\": \"{{ effect }}\",\n    \"color\":
+        \"{{ color }}\",\n    \"level\": \"{{ level }}\",\n    \"duration\": \"{{
+        duration }}\"\n  }\n}\n"
+  - alias: Debug
+    if:
+    - condition: template
+      value_template: '{{ debug }}'
+    then:
+    - service: persistent_notification.create
+      data:
+        message: "inovelli_led_effect \n  entity_id={{entity_id}}\n  friendly_name={{friendly_name}}\n
+          \ topic={{topic}},payload={{payload}}\n"
+  - alias: Publish MQTT
+    service: mqtt.publish
+    data:
+      topic: '{{ topic }}'
+      payload: '{{ payload }}'
+  mode: parallel
+  fields:
+    entity_id:
+      description: The Inovelli Switch
+      required: true
+      selector:
+        entity:
+          integration: mqtt
+          domain:
+          - light
+          - fan
+    effect:
+      description: Effect to use
+      required: true
+      selector:
+        select:
+          options:
+          - 'off'
+          - solid
+          - fast_blink
+          - slow_blink
+          - pulse
+          - chase
+          - open_close
+          - small_to_big
+          - aurora
+          - slow_falling
+          - medium_falling
+          - fast_falling
+          - slow_rising
+          - medium_rising
+          - fast_rising
+          - medium_blink
+          - slow_chase
+          - fast_chase
+          - fast_siren
+          - slow_siren
+          - clear_effect
+    color:
+      description: Color of LEDs
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    level:
+      description: Brightness of LEDs
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    duration:
+      description: Duration of effect. 1-60 is seconds, 60-120 (VALUE-60) is minutes,
+        121-255 (VALUE-120) is hours.
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    topic_prefix:
+      description: Override topic prefix. default=z2m
+      required: false
+    debug:
+      description: Enable Debug
+      required: false
+      selector:
+        boolean:
+inovelli_level_set:
+  alias: Inovelli Level Set
+  sequence:
+  - alias: Set Variables
+    variables:
+      entity_name: '{{ entity_id.replace(''sensor.'', '''').replace(''fan.'', '''')
+        }}'
+      total_leds: '{{ total_leds | default(7) }}'
+      debug: '{{ debug | default(false) }}'
+  - alias: Debug
+    if:
+    - condition: template
+      value_template: '{{ debug }}'
+    then:
+    - service: persistent_notification.create
+      data:
+        message: "inovelli_level_set \n  entity_id={{entity_id}}\n  entity_name={{entity_name}}\n
+          \ total_leds={{total_leds}}\n  on_color={{on_color}}\n  on_intensity={{on_intensity}}\n
+          \ off_color={{off_color}}\n  off_intensity={{off_intensity}}\n"
+  - alias: Set Colour When On
+    service: number.set_value
+    target:
+      entity_id: number.{{ entity_name }}_ledcolorwhenon
+    data:
+      value: '{{ on_color }}'
+  - alias: Set Intensity When On
+    service: number.set_value
+    target:
+      entity_id: number.{{ entity_name }}ledintensitywhenon
+    data:
+      value: '{{ on_intensity }}'
+  - alias: Set Colour When Off
+    service: number.set_value
+    target:
+      entity_id: number.{{ entity_name }}_ledcolorwhenoff
+    data:
+      value: '{{ off_color }}'
+  - alias: Set Intensity When Off
+    service: number.set_value
+    target:
+      entity_id: number.{{ entity_name }}ledintensitywhenoff
+    data:
+      value: '{{ off_intensity }}'
+  - alias: Level Set All LEDs
+    repeat:
+      count: '{{ total_leds }}'
+      sequence:
+      - alias: Set Intensity When On
+        service: number.set_value
+        target:
+          entity_id: number.{{ entity_name }}_defaultled{{ repeat.index }}intensitywhenon
+        data:
+          value: '{{ on_intensity }}'
+      - alias: Set Color When On
+        service: number.set_value
+        target:
+          entity_id: number.{{ entity_name }}_defaultled{{ repeat.index }}colorwhenon
+        data:
+          value: '{{ on_color }}'
+      - alias: Set Intensity When Off
+        service: number.set_value
+        target:
+          entity_id: number.{{ entity_name }}_defaultled{{ repeat.index }}intensitywhenoff
+        data:
+          value: '{{ off_intensity }}'
+      - alias: Set Color When Off
+        service: number.set_value
+        target:
+          entity_id: number.{{ entity_name }}_defaultled{{ repeat.index }}colorwhenoff
+        data:
+          value: '{{ off_color }}'
+  mode: parallel
+  fields:
+    entity_id:
+      description: The Inovelli Switch
+      required: true
+      selector:
+        entity:
+          integration: mqtt
+          domain:
+          - light
+          - fan
+    total_leds:
+      description: Number of LEDs per switch
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 7
+    on_color:
+      description: Colour of LED when on
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    on_intensity:
+      description: LED Intensity when on
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    off_color:
+      description: Colour of LED when off
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+    off_intensity:
+      description: LED Intensity when off
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+    debug:
+      description: Enable Debug
+      required: false
+firetv_start_plex:
+  alias: FireTV Start Plex
+  sequence:
+  - if:
+    - condition: state
+      entity_id: media_player.fire_tv
+      state: 'off'
+    then:
+    - service: media_player.turn_on
+      data: {}
+      target:
+        entity_id: media_player.fire_tv
+  - service: androidtv.adb_command
+    data:
+      command: am start -a android.intent.action.VIEW -n com.plexapp.android/com.plexapp.plex.activities.SplashActivity
+    target:
+      entity_id: media_player.fire_tv
+  mode: single
+  icon: mdi:plex
+reolink_ptz_control:
+  alias: Reolink PTZ Control
+  sequence:
+  - service: button.press
+    target:
+      entity_id: '{{ entity_control }}'
+  - delay:
+      seconds: 1
+  - service: button.press
+    target:
+      entity_id: '{{ entity_stop }}'
+  mode: single
+  icon: mdi:camera-control
+  fields:
+    entity_control:
+      description: The Reolink Camera Control
+      required: true
+    entity_stop:
+      description: The Reolink Camera Control to Stop
+      required: true
+firetv_start_twitch:
+  alias: FireTV Start Twitch
+  sequence:
+  - if:
+    - condition: state
+      entity_id: media_player.fire_tv
+      state: 'off'
+    then:
+    - service: media_player.turn_on
+      data: {}
+      target:
+        entity_id: media_player.fire_tv
+  - service: androidtv.adb_command
+    data:
+      command: am start -a android.intent.action.VIEW -n tv.twitch.android.viewer/tv.twitch.starshot64.app.StarshotActivity
+    target:
+      entity_id: media_player.fire_tv
+  mode: single
+  icon: mdi:twitch

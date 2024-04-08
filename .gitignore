@@ -15,6 +15,7 @@
 backups/
 custom_components
 deps
+logs/
 image/
 ip_bans.yaml
 lost+found/

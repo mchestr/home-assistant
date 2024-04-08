@@ -154,17 +154,12 @@ cards:
         cards:
           - type: custom:button-card
             template: card_vertical_button
-            entity: script.fire_tv_start_doorbell
-            icon: mdi:doorbell-video
-            name: Doorbell
-          - type: custom:button-card
-            template: card_vertical_button
-            entity: script.fire_tv_start_plex
+            entity: script.firetv_start_plex
             icon: mdi:plex
             name: Plex
           - type: custom:button-card
             template: card_vertical_button
-            entity: script.fire_tv_start_twitch
+            entity: script.firetv_start_twitch
             icon: mdi:twitch
             name: Twitch
           - type: custom:button-card
@@ -194,7 +189,7 @@ cards:
         cards:
           - type: custom:button-card
             template: card_vertical_button
-            entity: automation.rooms_living_room_vacuum_schedule_yaml
+            entity: automation.rooms_living_room_vacuum_schedule_yaml_2
             icon: mdi:calendar-month
             name: "[[[ return 'Scheduling: ' + (entity.state == 'on' ? 'On' : 'Off'); ]]]"
           - type: custom:button-card

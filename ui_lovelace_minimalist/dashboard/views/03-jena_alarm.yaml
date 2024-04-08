@@ -21,7 +21,7 @@ cards:
             template: card_binary_sensor
             variables:
               ulm_card_binary_sensor_name: Hue Go Routine
-            entity: automation.people_jena_morning_hue_go_routine_yaml
+            entity: automation.people_jena_morning_hue_go_routine_yaml_2
             lock:
               enabled: true
               unlock: double_tap
@@ -29,7 +29,7 @@ cards:
             template: card_binary_sensor
             variables:
               ulm_card_binary_sensor_name: Main Floor Lights
-            entity: automation.people_jena_morning_main_floor_lights_on_yaml
+            entity: automation.people_jena_morning_main_floor_lights_on_yaml_2
             lock:
               enabled: true
               unlock: double_tap

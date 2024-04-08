@@ -22,13 +22,11 @@ recorder:
 
 alert: !include alerts.yaml
 automation: !include automations.yaml
-script ui: !include scripts.yaml
-script yaml: !include_dir_named scripts/
+script: !include scripts.yaml
 scene: !include scenes.yaml
 light: !include lights.yaml
 group: !include_dir_named groups/
 input_boolean: !include_dir_merge_named input_booleans/
-binary_sensor: !include_dir_list binary_sensors/
 mqtt: !include mqtt.yaml
 
 sensor:
