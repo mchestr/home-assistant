@@ -162,10 +162,6 @@ template:
           {{ (current.month == 11 and current.day > 18) 
             or current.month == 12 or (current.month == 1
             and current.day <= 2) }}
-      - name: Indoor Temperature Falling & Heating On
-        state: "{{ is_state('binary_sensor.indoor_temperature_falling', 'on') and is_state_attr('climate.home', 'hvac_action', 'heating') and (now() - states.climate.home.last_changed) > timedelta(minutes=30) }}"
-      - name: Indoor Temperature Rising & Cooling On
-        state: "{{ is_state('binary_sensor.indoor_temperature_rising', 'on') and is_state_attr('climate.home', 'hvac_action', 'cooling') and (now() - states.climate.home.last_changed) > timedelta(minutes=30) }}"
 
 notify:
   - name: ALL_DEVICES
@@ -219,6 +215,8 @@ lovelace:
       type: module
     - url: /hacsfiles/webrtc/webrtc-camera.js?
       type: module
+    - url: /hacsfiles/lovelace-mushroom/mushroom.js
+      type: module
 
 waste_collection_schedule:
   sources:
@@ -261,3 +259,21 @@ alarm_control_panel:
       arming_time: 0
     armed_night:
       arming_time: 30
+
+rest_command:
+  buntzen_reservation_all_day:
+    url: https://api.yodelpass.com/api/portal-catalog-items
+    method: POST
+    headers:
+      user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+      x-api-version: "5.6"
+    content_type: application/json
+    payload: '{"userId":0,"placeId":10671,"reservationDate":"{{ date }}","catalogItemType":0,"scopeName":"buntzen lake","filterStartDate":null,"filterEndDate":null}'
+  buntzen_reservation_half_day:
+    url: https://api.yodelpass.com/api/portal-catalog-items
+    method: POST
+    headers:
+      user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+      x-api-version: "5.6"
+    content_type: application/json
+    payload: '{"userId":0,"placeId":10672,"reservationDate":"{{ date }}","catalogItemType":0,"scopeName":"buntzen lake","filterStartDate":null,"filterEndDate":null}'

@@ -9,48 +9,35 @@ cards:
 
       - type: horizontal-stack
         cards:
-          - type: custom:button-card
-            template: card_person
+          - type: custom:mushroom-person-card
             entity: person.mike
-            variables:
-              ulm_card_person_entity: person.mike
-              ulm_card_person_use_entity_picture: true
-              ulm_card_person_zone1: home
-              ulm_card_person_zone2: away
-          - type: custom:button-card
-            template: card_person
+            icon_type: entity-picture
+          - type: custom:mushroom-person-card
             entity: person.jena
-            variables:
-              ulm_card_person_entity: person.jena
-              ulm_card_person_use_entity_picture: true
-              ulm_card_person_zone1: home
-              ulm_card_person_zone2: away
-            hold_action:
-              action: more-info
-              entity: input_datetime.jena_alarm
+            icon_type: entity-picture
 
       - type: horizontal-stack
         cards:
-          - type: custom:button-card
-            template: card_vertical_button
+          - type: custom:mushroom-light-card
             entity: light.all_lights
-            icon: mdi:lightbulb
+            layout: vertical
+            secondary_info: none
             name: All
-          - type: custom:button-card
-            template: card_vertical_button
+          - type: custom:mushroom-light-card
             entity: light.first_floor_lights
-            icon: mdi:lightbulb
+            layout: vertical
+            secondary_info: none
             name: First Floor
-          - type: custom:button-card
-            template: card_vertical_button
+          - type: custom:mushroom-light-card
             entity: light.main_floor_lights
-            icon: mdi:lightbulb
             name: Main Floor
-          - type: custom:button-card
-            template: card_vertical_button
+            secondary_info: none
+            layout: vertical
+          - type: custom:mushroom-light-card
             entity: light.second_floor_lights
-            icon: mdi:lightbulb
-            name: Second Floor
+            name: Top Floor
+            layout: vertical
+            secondary_info: none
 
       - type: conditional
         conditions:
@@ -97,7 +84,8 @@ cards:
               service: homeassistant.turn_off
               data:
                 entity_id:
-                  - light.first_floor_lights
+                  - light.garage_lights
+                  - light.entry_lights
             variables:
               label_use_temperature: true
               label_use_brightness: false
@@ -117,12 +105,10 @@ cards:
                   service_data:
                     entity_id: lock.front_door_lock
               entity_2:
-                entity_id: light.garage_entry_lights
+                entity_id: binary_sensor.tesla_plugged_in
                 templates:
-                  - yellow_on
-                  - blue_off
-                tap_action:
-                  action: toggle
+                  - green_on
+                  - red_off
               # entity_3:
               #   entity_id: light.entry_seasonal_lights
               #   templates:

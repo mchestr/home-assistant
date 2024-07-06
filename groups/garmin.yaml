@@ -1,0 +1,5 @@
+name: Garmin
+entities:
+  - cover.gdo_door
+  - lock.front_door_lock
+  - light.all_lights

@@ -4,39 +4,28 @@ cards:
     cards:
       - type: horizontal-stack
         cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: entity
+                entity: camera.doorbell
+                icon: mdi:cctv
+                content_info: none
+              - type: alarm-control-panel
+                entity: alarm_control_panel.home_alarm
+              - type: template
+                content: |
+                  {{ states('sensor.next_collection') }}
+                icon: |
+                  {% if 'Garbage' in states('sensor.next_collection') %}
+                    mdi:trash-can
+                  {% else %}
+                    mdi:recycle
+                  {% endif %}
+                tap_action:
+                  action: navigate
+                  navigation_path: /calendar
           - type: custom:button-card
             template: chip_mdi_icon_only
             variables:
-              ulm_chip_mdi_icon_only_entity: camera.doorbell
-              ulm_chip_mdi_icon_only_icon: mdi:cctv
-          - type: custom:button-card
-            template: chip_alarm
-            entity: alarm_control_panel.home_alarm
-            variables:
-              ulm_translation_state: |-
-                [[[ 
-                  var name = 'Armed';
-                  if (entity.state.includes('disarmed')) {
-                    name = 'Disarmed';
-                  }
-                  return name; 
-                ]]]
-            tap_action:
-              action: "navigate"
-              navigation_path: "/lovelace/security"
-          - type: custom:button-card
-            template: chip_icon_label
-            entity: sensor.next_collection
-            label: |
-              [[[
-                return entity.state
-              ]]]
-            icon: |
-              [[[
-                if(entity.state.includes('Garbage'))
-                  return 'mdi:trash-can'
-                return 'mdi:recycle'
-              ]]]
-            tap_action:
-              action: navigate
-              navigation_path: /calendar
+              ulm_chip_mdi_icon_only_entity: input_boolean.guest_mode
+              ulm_chip_mdi_icon_only_icon: mdi:account-circle-outline
