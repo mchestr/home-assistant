@@ -2,6 +2,8 @@
 
 [Home Assistant Core](https://home-assistant.io/) running on [my Kubernetes cluster](https://github.com/mchestr/home-cluster).  This configuration is read and persisted within Home Assistant.
 
+I am slowly moving away from YAML configuration and using the UI for most things now as Home Assistant seems to be moving that way, and making automations on my phone is nice. The downside of using UI configuration however is the YAML thats generated doesn't look great, and things like Lovelace dashboards are not easily stored in git. However I take daily backups of the Home Assistant volume, so this repo is mostly for just sharing code, and I rely on the volume backups for disaster recovery.
+
 ## Automations
 
 The majority of the automations are found in [automations](./automations) directory using native Home Assistant yaml automations. 
