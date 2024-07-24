@@ -16,49 +16,6 @@
       title: '{{ trigger.calendar_event.summary }} Collection Reminder'
       message: Reminder that {{ trigger.calendar_event.summary }} pickup is tomorrow!
   mode: single
-- id: 8911b2c7-4f17-4166-b45a-2582ac663e75
-  alias: AC Window Open Notification
-  description: AC Windows Reminder
-  mode: single
-  trigger:
-  - platform: state
-    entity_id:
-    - climate.home
-    attribute: hvac_action
-    to: cooling
-    for:
-      minutes: 1
-  condition:
-  - condition: state
-    entity_id: group.window_sensors
-    state: 'on'
-  action:
-  - if:
-    - condition: state
-      entity_id: person.jena
-      state: home
-    then:
-    - service: notify.jena_phone
-      data:
-        title: Batten down the hatches!
-        message: '{{ states | selectattr(''entity_id'',''in'', state_attr(''group.window_sensors'',''entity_id''))
-          | selectattr(''state'',''eq'',''on'') | map(attribute=''name'') | join('',
-          '') }} are open!
-
-          '
-  - if:
-    - condition: state
-      entity_id: person.mike
-      state: home
-    then:
-    - service: notify.mike_phone
-      data:
-        title: Batten down the hatches!
-        message: '{{ states | selectattr(''entity_id'',''in'', state_attr(''group.window_sensors'',''entity_id''))
-          | selectattr(''state'',''eq'',''on'') | map(attribute=''name'') | join('',
-          '') }} are open!
-
-          '
 - id: 4085e051-34e7-4fe8-865b-876231d8360c
   alias: HACS Update Notification
   description: Check for HACS updates at noon and send notification
@@ -316,7 +273,7 @@
     at: 07:30:00
   condition:
   - condition: template
-    value_template: '{{ now().day == 6 }}'
+    value_template: '{{ now().day == 20 }}'
   action:
   - service: notify.mike_phone
     data:
@@ -335,6 +292,9 @@
   - condition: state
     entity_id: person.mike
     state: home
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
   action:
   - wait_for_trigger:
     - platform: state
@@ -658,6 +618,9 @@
   - condition: state
     entity_id: binary_sensor.is_christmas_ish_time
     state: 'off'
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
   action:
   - service: light.{{ trigger.id }}
     target:
@@ -864,6 +827,9 @@
       - condition: state
         entity_id: person.mike
         state: home
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
   action:
   - service: light.turn_off
     target:
@@ -926,6 +892,9 @@
     - mon
     - wed
     - fri
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
   action:
   - service: vacuum.start
     metadata: {}
@@ -950,6 +919,13 @@
     - condition: state
       entity_id: person.mike
       state: home
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
+  - condition: not
+    conditions:
+    - condition: time
+      after: '18:00:00'
   action:
   - service: light.turn_on
     target:
@@ -981,7 +957,7 @@
     to: armed_home
     id: turn_off
   action:
-  - service: homeassistant.{{ trigger.id }}
+  - service: switch.{{ trigger.id }}
     target:
       entity_id:
       - switch.living_room_detect
@@ -1101,6 +1077,9 @@
   - condition: state
     entity_id: light.patio_lights
     state: 'on'
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
   action:
   - service: light.turn_off
     target:
@@ -1128,19 +1107,40 @@
     data: {}
   mode: single
 - id: e8117429-dd3a-47f2-99bc-7f4fc39d0446
-  alias: Humidity Fan On
+  alias: Fan Humidity On
   description: Bathroom Humidity High
   trigger:
   - platform: numeric_state
-    entity_id: sensor.guest_bathroom_sensor_humidity
+    entity_id:
+    - sensor.guest_bathroom_sensor_humidity
     above: 60
     id: turn_on
-  - platform: numeric_state
-    entity_id: sensor.guest_bathroom_sensor_humidity
-    below: 50
     for:
-      minutes: 10
-    id: turn_off
+      hours: 0
+      minutes: 3
+      seconds: 0
+  - platform: numeric_state
+    entity_id:
+    - sensor.guest_bathroom_sensor_humidity
+    above: 70
+    id: turn_on
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  - platform: numeric_state
+    entity_id:
+    - sensor.guest_bathroom_sensor_humidity
+    above: 80
+    id: turn_on
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition:
+  - condition: state
+    entity_id: fan.guest_bathroom_fan
+    state: 'off'
   action:
   - service: fan.{{ trigger.id }}
     target:
@@ -1316,15 +1316,36 @@
   description: Bathroom Humidity High
   trigger:
   - platform: numeric_state
-    entity_id: sensor.master_bathroom_sensor_humidity
+    entity_id:
+    - sensor.master_bathroom_sensor_humidity
     above: 60
     id: turn_on
-  - platform: numeric_state
-    entity_id: sensor.master_bathroom_sensor_humidity
-    below: 50
     for:
-      minutes: 10
-    id: turn_off
+      hours: 0
+      minutes: 3
+      seconds: 0
+  - platform: numeric_state
+    entity_id:
+    - sensor.master_bathroom_sensor_humidity
+    above: 70
+    id: turn_on
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  - platform: numeric_state
+    entity_id:
+    - sensor.master_bathroom_sensor_humidity
+    above: 80
+    id: turn_on
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition:
+  - condition: state
+    entity_id: fan.master_bathroom_fan
+    state: 'off'
   action:
   - service: fan.{{ trigger.id }}
     target:
@@ -1518,44 +1539,8 @@
     step_transition_level: 100
     step_transition_last_only: true
     debug: false
-- id: cad5624d-eb4c-419f-a4e7-ab23908374ec
-  alias: 'Home Alarm: Notify Armed Away'
-  description: Notify when alarm is armed in away mode
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    to: armed_away
-  condition:
-  - condition: time
-    before: '23:00:00'
-    after: 07:00:00
-  action:
-  - service: notify.all_devices
-    data:
-      title: 'Home Alarm: Armed'
-      message: The alarm is armed in away mode {{ states('sensor.date_time') }}
-  mode: single
-- id: 34ef1af8-d192-491b-b1f4-b53abdb3989e
-  alias: 'Home Alarm: Notify Armed Home'
-  description: Notify when alarm is armed in home mode
-  trigger:
-  - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    to: armed_home
-  condition:
-  - condition: time
-    before: '23:00:00'
-    after: 07:00:00
-  action:
-  - service: notify.all_devices
-    data:
-      title: 'Home Alarm: Armed'
-      message: 'The alarm is armed in home mode {{ states(''sensor.date_time'') }}
-
-        '
-  mode: single
 - id: e0fa138f-125b-4981-9873-6090bc8b872a
-  alias: 'Home Alarm: Entity Triggers'
+  alias: '[Away] Home Alarm: Entity Triggers'
   description: Sensors that trigger the alarm
   trigger:
   - platform: state
@@ -1597,18 +1582,14 @@
   - platform: state
     entity_id: binary_sensor.entry_door_window_vibration
     to: 'on'
+  - platform: state
+    entity_id:
+    - binary_sensor.gdo_obstruction
+    to: 'on'
   condition:
-  - condition: or
-    conditions:
-    - condition: state
-      state: armed_home
-      entity_id: alarm_control_panel.home_alarm
-    - condition: state
-      state: armed_away
-      entity_id: alarm_control_panel.home_alarm
-    - condition: state
-      state: armed_night
-      entity_id: alarm_control_panel.home_alarm
+  - condition: state
+    state: armed_away
+    entity_id: alarm_control_panel.home_alarm
   action:
   - service: alarm_control_panel.alarm_trigger
     target:
@@ -1675,6 +1656,18 @@
   - platform: state
     entity_id: binary_sensor.entry_door_window_vibration
     to: 'on'
+  - platform: state
+    entity_id:
+    - binary_sensor.gdo_obstruction
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+  condition:
+  - condition: template
+    value_template: '{{ (as_timestamp(now()) - as_timestamp(state_attr(''automation.home_alarm_notify_alarm_pending'',
+      ''last_triggered''))) > 120 }}'
   action:
   - alias: Save which sensor triggered
     variables:
@@ -1720,19 +1713,40 @@
             title: Disarm
           - action: ALARM_ARM
             title: Re-Arm
-  mode: parallel
+  mode: single
 - id: fa449fc7-fb68-40f9-b971-8295e4883180
-  alias: 'Home Alarm: Notify Disarmed'
-  description: Notify when alarm is disarmed
+  alias: 'Home Alarm: Notify'
+  description: Notify when alarm changes state
   trigger:
   - platform: state
-    entity_id: alarm_control_panel.home_alarm
-    to: disarmed
+    entity_id:
+    - alarm_control_panel.home_alarm
+    to: armed_away
+    id: Away
+  - platform: state
+    entity_id:
+    - alarm_control_panel.home_alarm
+    to: armed_home
+    id: Home
+  - platform: state
+    entity_id:
+    - alarm_control_panel.home_alarm
+    to: armed_night
+    id: Night
+  - platform: state
+    entity_id:
+    - alarm_control_panel.home_alarm
+    to: armed_vacation
+    id: Vacation
+  condition:
+  - condition: template
+    value_template: '{{ (as_timestamp(now()) - as_timestamp(state_attr(''automation.home_alarm_notify'',
+      ''last_triggered''))) > 3600 }}'
   action:
   - service: notify.all_devices
     data:
-      title: 'Home Alarm: Disarmed'
-      message: The alarm is disarmed at {{ states('sensor.date_time') }}
+      title: 'Alarm Armed: {{ trigger.id }}'
+      message: Set at {{ states('sensor.date_time') }}
 - id: e18e7f27-3d1a-46be-bdde-0f7bf3d54c03
   alias: 'Home Alarm: Armed Away Unoccupied'
   description: Arm alarm when leaving home
@@ -1842,18 +1856,22 @@
   alias: Leaving Home
   description: Automations for everyone leaving the house
   trigger:
-  - platform: zone
-    entity_id: person.jena
-    zone: zone.home
-    event: leave
-  - platform: zone
-    entity_id: person.mike
-    zone: zone.home
-    event: leave
-  - platform: zone
-    entity_id: device_tracker.tesla_location
-    zone: zone.home
-    event: leave
+  - platform: state
+    entity_id:
+    - person.jena
+    to: not_home
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  - platform: state
+    entity_id:
+    - person.mike
+    to: not_home
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
   condition:
   - condition: state
     entity_id: input_boolean.guest_mode
@@ -1881,6 +1899,12 @@
       - first_floor
       - main_floor
       - second_floor
+  - service: select.select_option
+    metadata: {}
+    data:
+      option: away
+    target:
+      entity_id: select.home_current_mode
   mode: single
 - id: '1712979211230'
   alias: Korguh Charge Reminder
@@ -1942,7 +1966,7 @@
     to: armed_home
     id: turn_off
   action:
-  - service: homeassistant.{{ trigger.id }}
+  - service: switch.{{ trigger.id }}
     target:
       entity_id:
       - switch.garage_detect
@@ -1985,249 +2009,546 @@
           title: Peak Pricing Over
           message: Feel free to resume energy consumption.
   mode: single
-- id: '1720212495040'
-  alias: '[Tomorrow] Daily Buntzen Lake Check'
-  description: ''
-  trigger:
-  - platform: time_pattern
-    hours: /1
-    minutes: '14'
-  condition:
-  - condition: time
-    weekday:
-    - fri
-    - sat
-  action:
-  - variables:
-      formatted_date: '{{ as_timestamp(now() + timedelta(days=1)) | timestamp_custom(''%Y-%m-%d'')
-        }}'
-      notification_title: '{{ formatted_date }} Daily Buntzen Reservation Available!'
-      url: https://yodelportal.com/buntzen-lake/All-Day-Pass
-  - service: rest_command.buntzen_reservation_all_day
-    metadata: {}
-    data:
-      date: '{{ formatted_date }}'
-    response_variable: response
-  - if:
-    - condition: template
-      value_template: '{{ response[''status''] == 200 }}'
-    then:
-    - variables:
-        price_quotes: '{{ response[''content''][''catalogItemExtendedResultLst'']
-          }}'
-        statuses: "{%- for quote in price_quotes -%}\n  {{ quote['catalogItemCategory']
-          }}={{ quote['catalogItemStatus'] }}\n{%- endfor -%}\n"
-        available: "{%- for quote in price_quotes -%}\n  {%- if quote['catalogItemStatus']
-          != 'Sold Out' -%}\n    {{ quote['catalogItemCategory'] }}={{ quote['catalogItemStatus']
-          }}\n  {% endif -%}\n{%- endfor -%}\n"
-        is_available: '{{ available|length > 0 }}'
-    - if:
-      - condition: template
-        value_template: '{{ is_available }}'
-      then:
-      - service: notify.all_devices
-        metadata: {}
-        data:
-          title: '{{ notification_title }}'
-          data:
-            url: '{{ url }}'
-            clickAction: '{{ url }}'
-          message: '{{ formatted_date }}: {{ available }}
-
-            '
-    else:
-    - service: persistent_notification.create
-      metadata: {}
-      data:
-        title: Buntzen Checker {{ notification_title }} failed. Buntzen Checker turned
-          off. Please Check.
-    - service: automation.turn_off
-      metadata: {}
-      data:
-        stop_actions: true
-      target:
-        entity_id: automation.butzen_lake_check
-  mode: single
-- id: '1720213393931'
-  alias: '[Today] Daily Buntzen Lake Check'
-  description: ''
-  trigger:
-  - platform: time_pattern
-    minutes: /30
-  condition:
-  - condition: time
-    after: 00:00:00
-    before: '14:00:00'
-    weekday:
-    - sat
-    - sun
-  action:
-  - variables:
-      formatted_date: '{{ as_timestamp(now()) | timestamp_custom(''%Y-%m-%d'') }}'
-      notification_title: '{{ formatted_date }} Daily Buntzen Reservation Available!'
-      url: https://yodelportal.com/buntzen-lake/All-Day-Pass
-  - service: rest_command.buntzen_reservation_all_day
-    metadata: {}
-    data:
-      date: '{{ formatted_date }}'
-    response_variable: response
-  - if:
-    - condition: template
-      value_template: '{{ response[''status''] == 200 }}'
-    then:
-    - variables:
-        price_quotes: '{{ response[''content''][''catalogItemExtendedResultLst'']
-          }}'
-        statuses: "{%- for quote in price_quotes -%}\n  {{ quote['catalogItemCategory']
-          }}={{ quote['catalogItemStatus'] }}\n{%- endfor -%}\n"
-        available: "{%- for quote in price_quotes -%}\n  {%- if quote['catalogItemStatus']
-          != 'Sold Out' -%}\n    {{ quote['catalogItemCategory'] }}={{ quote['catalogItemStatus']
-          }}\n  {% endif -%}\n{%- endfor -%}\n"
-        is_available: '{{ available|length > 0 }}'
-    - if:
-      - condition: template
-        value_template: '{{ is_available }}'
-      then:
-      - service: notify.all_devices
-        metadata: {}
-        data:
-          title: '{{ notification_title }}'
-          data:
-            url: '{{ url }}'
-            clickAction: '{{ url }}'
-          message: '{{ formatted_date }}: {{ available }}
-
-            '
-    else:
-    - service: persistent_notification.create
-      metadata: {}
-      data:
-        title: Buntzen Checker {{ notification_title }} failed. Buntzen Checker turned
-          off. Please Check.
-    - service: automation.turn_off
-      metadata: {}
-      data:
-        stop_actions: true
-      target:
-        entity_id: automation.today_daily_buntzen_lake_check
-  mode: single
 - id: '1720213933196'
-  alias: '[Today] Buntzen Lake Half Day Checker'
-  description: ''
+  alias: Buntzen Lake Checker
+  description: Check For Buntzen Lake Reservations
   trigger:
   - platform: time_pattern
-    minutes: /45
+    minutes: /1
+  - platform: time
+    at: 06:57:00
+    id: reminder
   condition:
-  - condition: time
-    after: 00:00:00
-    before: '14:00:00'
-    weekday:
-    - sat
-    - sun
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_boolean.buntzen_today_daily
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.buntzen_today_morning
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.buntzen_today_afternoon
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.buntzen_tomorrow_daily
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.buntzen_tomorrow_morning
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.buntzen_tomorrow_afternoon
+      state: 'on'
+    - condition: trigger
+      id:
+      - reminder
   action:
   - variables:
-      formatted_date: '{{ as_timestamp(now()) | timestamp_custom(''%Y-%m-%d'') }}'
-      notification_title: '{{ formatted_date }} Half Day Buntzen Reservation Available!'
-      url: https://yodelportal.com/buntzen-lake/Half-Day-Pass
-  - service: rest_command.buntzen_reservation_half_day
-    metadata: {}
-    data:
-      date: '{{ formatted_date }}'
-    response_variable: response
-  - if:
-    - condition: template
-      value_template: '{{ response[''status''] == 200 }}'
+      today_date: '{{ as_timestamp(now()) | timestamp_custom(''%Y-%m-%d'') }}'
+      tomorrow_date: '{{ as_timestamp(now() + timedelta(days=1)) | timestamp_custom(''%Y-%m-%d'')
+        }}'
+      full_day_place_id: '10671'
+      full_day_url: https://yodelportal.com/buntzen-lake/All-Day-Pass
+      half_day_place_id: '10672'
+      half_day_url: https://yodelportal.com/buntzen-lake/Half-Day-Pass
+  - alias: Check Today Daily
+    if:
+    - condition: state
+      entity_id: input_boolean.buntzen_today_daily
+      state: 'on'
     then:
-    - variables:
-        price_quotes: '{{ response[''content''][''catalogItemExtendedResultLst'']
-          }}'
-        statuses: "{%- for quote in price_quotes -%}\n  {{ quote['catalogItemCategory']
-          }}={{ quote['catalogItemStatus'] }}\n{%- endfor -%}\n"
-        available: "{%- for quote in price_quotes -%}\n  {%- if quote['catalogItemStatus']
-          != 'Sold Out' -%}\n    {{ quote['catalogItemCategory'] }}={{ quote['catalogItemStatus']
-          }}\n  {% endif -%}\n{%- endfor -%}\n"
-        is_available: '{{ available|length > 0 }}'
+    - service: rest_command.buntzen_reservation
+      metadata: {}
+      data:
+        date: '{{ today_date }}'
+        placeId: '{{ full_day_place_id }}'
+      response_variable: response
     - if:
       - condition: template
-        value_template: '{{ is_available }}'
+        value_template: '{{ response[''status''] == 200 }}'
       then:
-      - service: notify.all_devices
-        metadata: {}
-        data:
-          title: '{{ notification_title }}'
+      - variables:
+          price_quotes: '{{ response[''content''][''catalogItemExtendedResultLst'']
+            }}'
+          available: "{%- for quote in price_quotes -%}\n  {%- if quote['catalogItemStatus']
+            != 'Sold Out' -%}\n    {{ quote['catalogItemCategory'] }}={{ quote['catalogItemStatus']
+            }}\n  {% endif -%}\n{%- endfor -%}\n"
+          is_available: '{{ available|length > 0 }}'
+      - if:
+        - condition: template
+          value_template: '{{ is_available }}'
+        then:
+        - service: notify.all_devices
+          metadata: {}
           data:
-            url: '{{ url }}'
-            clickAction: '{{ url }}'
-          message: '{{ formatted_date }}: {{ available }}
+            title: '[Today/Daily] Buntzen Available'
+            data:
+              url: '{{ full_day_url }}'
+              clickAction: '{{ full_day_url }}'
+            message: '{{ available }}
 
-            '
-    else:
-    - service: persistent_notification.create
+              '
+  - alias: Check Today Morning/Afternoon
+    if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: input_boolean.buntzen_today_morning
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.buntzen_today_afternoon
+        state: 'on'
+    then:
+    - service: rest_command.buntzen_reservation
       metadata: {}
       data:
-        title: Buntzen Checker {{ notification_title }} failed. Buntzen Checker turned
-          off. Please Check.
-    - service: automation.turn_off
+        date: '{{ today_date }}'
+        placeId: '{{ half_day_place_id }}'
+      response_variable: response
+    - if:
+      - condition: template
+        value_template: '{{ response[''status''] == 200 }}'
+      then:
+      - variables:
+          price_quotes: '{{ response[''content''][''catalogItemExtendedResultLst'']
+            }}'
+          available: "{%- for quote in price_quotes -%}\n  {%- if quote['catalogItemStatus']
+            != 'Sold Out' -%}\n    {%- if quote['catalogItemStatus'] == 'Morning'
+            and states('input_boolean.buntzen_today_morning') == 'on' -%}\n    {{
+            quote['catalogItemCategory'] }}={{ quote['catalogItemStatus'] }}\n    {%
+            endif %}\n    {%- if quote['catalogItemStatus'] == 'Afternoon' and states('input_boolean.buntzen_today_afternoon')
+            == 'on' -%}\n    {{ quote['catalogItemCategory'] }}={{ quote['catalogItemStatus']
+            }}\n    {% endif %}\n  {% endif %}\n{%- endfor -%}\n"
+          is_available: '{{ available|length > 0 }}'
+      - if:
+        - condition: template
+          value_template: '{{ is_available }}'
+        then:
+        - service: notify.all_devices
+          metadata: {}
+          data:
+            title: '[Today/Half] Buntzen Available'
+            data:
+              url: '{{ half_day_url }}'
+              clickAction: '{{ half_day_url }}'
+            message: '{{ available }}
+
+              '
+  - alias: Check Tomorrow Daily
+    if:
+    - condition: state
+      entity_id: input_boolean.buntzen_tomorrow_daily
+      state: 'on'
+    then:
+    - service: rest_command.buntzen_reservation
       metadata: {}
       data:
-        stop_actions: true
-      target:
-        entity_id: automation.today_buntzen_lake_half_day_checker
+        date: '{{ tomorrow_date }}'
+        placeId: '{{ full_day_place_id }}'
+      response_variable: response
+    - if:
+      - condition: template
+        value_template: '{{ response[''status''] == 200 }}'
+      then:
+      - variables:
+          price_quotes: '{{ response[''content''][''catalogItemExtendedResultLst'']
+            }}'
+          available: "{%- for quote in price_quotes -%}\n  {%- if quote['catalogItemStatus']
+            != 'Sold Out' -%}\n    {{ quote['catalogItemCategory'] }}={{ quote['catalogItemStatus']
+            }}\n  {% endif -%}\n{%- endfor -%}\n"
+          is_available: '{{ available|length > 0 }}'
+      - if:
+        - condition: template
+          value_template: '{{ is_available }}'
+        then:
+        - service: notify.all_devices
+          metadata: {}
+          data:
+            title: '[Tomorrow/Daily] Buntzen Available'
+            data:
+              url: '{{ full_day_url }}'
+              clickAction: '{{ full_day_url }}'
+            message: '{{ available }}
+
+              '
+  - alias: Check Tomorrow Morning/Afternoon
+    if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: input_boolean.buntzen_tomorrow_morning
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.buntzen_tomorrow_afternoon
+        state: 'on'
+    then:
+    - service: rest_command.buntzen_reservation
+      metadata: {}
+      data:
+        date: '{{ tomorrow_date }}'
+        placeId: '{{ half_day_place_id }}'
+      response_variable: response
+    - if:
+      - condition: template
+        value_template: '{{ response[''status''] == 200 }}'
+      then:
+      - variables:
+          price_quotes: '{{ response[''content''][''catalogItemExtendedResultLst'']
+            }}'
+          available: "{%- for quote in price_quotes -%}\n  {%- if quote['catalogItemStatus']
+            != 'Sold Out' -%}\n    {%- if quote['catalogItemStatus'] == 'Morning'
+            and states('input_boolean.buntzen_tomorrow_morning') == 'on' -%}\n    {{
+            quote['catalogItemCategory'] }}={{ quote['catalogItemStatus'] }}\n    {%
+            endif %}\n    {%- if quote['catalogItemStatus'] == 'Afternoon' and states('input_boolean.buntzen_tomorrow_afternoon')
+            == 'on' -%}\n    {{ quote['catalogItemCategory'] }}={{ quote['catalogItemStatus']
+            }}\n    {% endif %}\n  {% endif %}\n{%- endfor -%}\n"
+          is_available: '{{ available|length > 0 }}'
+      - if:
+        - condition: template
+          value_template: '{{ is_available }}'
+        then:
+        - service: notify.all_devices
+          metadata: {}
+          data:
+            title: '[Tomorrow/Half] Buntzen Available'
+            data:
+              url: '{{ half_day_url }}'
+              clickAction: '{{ half_day_url }}'
+            message: '{{ available }}
+
+              '
+  - if:
+    - condition: trigger
+      id:
+      - reminder
+    then:
+    - service: notify.mike_phone
+      metadata: {}
+      data:
+        title: New Buntzen Available Soon!
+        data:
+          url: '{{ full_day_url }}'
+          clickAction: '{{ full_day_url }}'
+        message: 'check at 7am!
+
+          '
+    alias: Reminder
   mode: single
-- id: '1720214135944'
-  alias: '[Tomorrow] Buntzen Lake Half Day Checker'
+- id: '1720585849250'
+  alias: HVAC Last Action Update
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.hvac_action
+  condition: []
+  action:
+  - service: input_text.set_value
+    data:
+      value: '{{ trigger.from_state.state }}'
+    target:
+      entity_id: input_text.hvac_last_action_state
+  - service: input_datetime.set_datetime
+    data:
+      datetime: '{{ trigger.from_state.last_changed }}'
+    target:
+      entity_id: input_datetime.hvac_last_action_last_changed
+  mode: single
+- id: '1720667630996'
+  alias: '[Home] Home Alarm: Entity Triggers'
+  description: Sensors that trigger the alarm
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.patio_door_contact
+    to: 'on'
+    from: Closed
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: unlocked
+  - platform: state
+    entity_id: lock.front_door_lock
+    to: unlocking
+  - platform: state
+    entity_id:
+    - cover.gdo_door
+    to: opening
+    from: closed
+  - platform: state
+    entity_id:
+    - cover.gdo_door
+    to: open
+    from: closed
+  - platform: state
+    entity_id: binary_sensor.entry_door_window_vibration
+    to: 'on'
+  - platform: state
+    entity_id:
+    - binary_sensor.gdo_obstruction
+    to: 'on'
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: alarm_control_panel.home_alarm
+      state: armed_home
+    - condition: state
+      state: armed_night
+      entity_id: alarm_control_panel.home_alarm
+  action:
+  - service: alarm_control_panel.alarm_trigger
+    target:
+      entity_id: alarm_control_panel.home_alarm
+    data: {}
+  mode: single
+- id: '1720731045485'
+  alias: 'Coming Home: Ecobee Home'
+  description: Set thermostat to Home when coming home.
+  trigger:
+  - platform: state
+    entity_id:
+    - person.jena
+    to: home
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  - platform: state
+    entity_id:
+    - person.mike
+    to: home
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  condition: []
+  action:
+  - service: select.select_option
+    metadata: {}
+    data:
+      option: home
+    target:
+      entity_id: select.home_current_mode
+    alias: Select 'Home' on Home Current Mode
+  mode: single
+- id: '1720905695915'
+  alias: Climate Automation
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.main_floor_windows_and_doors
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    id: 'off'
+  - platform: state
+    entity_id:
+    - binary_sensor.main_floor_windows_and_doors
+    from: 'on'
+    to: 'off'
+    id: heat_cool
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  condition:
+  - condition: or
+    conditions:
+    - condition: zone
+      entity_id: person.jena
+      zone: zone.home
+    - condition: zone
+      entity_id: person.mike
+      zone: zone.home
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
+  action:
+  - variables:
+      hvac_cooldown: 900
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - heat_cool
+      - condition: state
+        entity_id: climate.home
+        state: 'off'
+      sequence:
+      - alias: Check HVAC Cooldown Met
+        if:
+        - condition: template
+          value_template: '{{ states(''sensor.hvac_action'') == "idle" and (as_timestamp(now())
+            - as_timestamp(states.sensor.hvac_action.last_changed)) < hvac_cooldown
+            }}'
+        then:
+        - variables:
+            notification_title: Waiting to Resume HVAC
+            notification_message: HVAC was recently turned off. Will resume in {{
+              ( (hvac_cooldown | int) - (as_timestamp(now()) - as_timestamp(states.sensor.hvac_action.last_changed)))
+              | timestamp_custom('%m minutes and %S seconds') }}
+        - alias: Notify Jena if home
+          if:
+          - condition: zone
+            entity_id: person.jena
+            zone: zone.home
+          then:
+          - service: notify.jena_phone
+            metadata: {}
+            data:
+              title: '{{ notification_title }}'
+              message: '{{ notification_message }}'
+        - alias: Notify Mike if home
+          if:
+          - condition: zone
+            entity_id: person.mike
+            zone: zone.home
+          then:
+          - service: notify.mike_phone
+            metadata: {}
+            data:
+              title: '{{ notification_title }}'
+              message: '{{ notification_message }}'
+        - wait_template: '{{ states(''sensor.hvac_action'') == "idle" and (as_timestamp(now())
+            - as_timestamp(states.sensor.hvac_action.last_changed)) > hvac_cooldown
+            }}'
+          continue_on_timeout: false
+      - device_id: 518792424019a0d841721abf5e2832be
+        domain: climate
+        entity_id: 4603ab93cd51ebd9b08052f25bda3972
+        type: set_hvac_mode
+        hvac_mode: heat_cool
+      - device_id: 518792424019a0d841721abf5e2832be
+        domain: select
+        entity_id: 2bb1f583ac5427eb86c9f87d611d1a4c
+        type: select_option
+        option: home
+      - variables:
+          notification_title: HVAC Turned On
+          notification_message: HVAC operation was resumed.
+      - alias: Notify Jena if home
+        if:
+        - condition: zone
+          entity_id: person.jena
+          zone: zone.home
+        then:
+        - service: notify.jena_phone
+          metadata: {}
+          data:
+            title: '{{ notification_title }}'
+            message: '{{ notification_message }}'
+      - alias: Notify Mike if home
+        if:
+        - condition: zone
+          entity_id: person.mike
+          zone: zone.home
+        then:
+        - service: notify.mike_phone
+          metadata: {}
+          data:
+            title: '{{ notification_title }}'
+            message: '{{ notification_message }}'
+    - conditions:
+      - condition: trigger
+        id:
+        - 'off'
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: climate.home
+          state: 'off'
+      sequence:
+      - alias: Wait for HVAC idle
+        wait_template: '{{ states(''sensor.hvac_action'') == "idle" }}'
+        continue_on_timeout: false
+        timeout: 00:30:00
+      - device_id: 518792424019a0d841721abf5e2832be
+        domain: climate
+        entity_id: 4603ab93cd51ebd9b08052f25bda3972
+        type: set_hvac_mode
+        hvac_mode: 'off'
+      - variables:
+          notification_title: HVAC Turned Off
+          notification_message: "The {%- for entity_id in state_attr('binary_sensor.main_floor_windows_and_doors',
+            'entity_id') -%}\n  {% set parts = entity_id.split('.') -%}\n  {%- if
+            states(entity_id) == 'on' %}\n  {%- if loop.first %} {% elif loop.last
+            %} and the {% else %}, the {% endif -%}{{ states[parts[0]][parts[1]].name
+            }}{% endif -%}\n{%- endfor %} was opened. Turning HVAC off to save energy.
+            Will resume once windows and doors are closed."
+      - alias: Notify Jena if home
+        if:
+        - condition: zone
+          entity_id: person.jena
+          zone: zone.home
+        then:
+        - service: notify.jena_phone
+          metadata: {}
+          data:
+            title: '{{ notification_title }}'
+            message: '{{ notification_message }}'
+      - alias: Notify Mike if home
+        if:
+        - condition: zone
+          entity_id: person.mike
+          zone: zone.home
+        then:
+        - service: notify.mike_phone
+          metadata: {}
+          data:
+            title: '{{ notification_title }}'
+            message: '{{ notification_message }}'
+  mode: single
+- id: '1720978314044'
+  alias: Upcoming Calendar Events
   description: ''
   trigger:
   - platform: time_pattern
     hours: /1
-    minutes: '10'
-  condition:
-  - condition: time
-    weekday:
-    - fri
-    - sat
+  condition: []
   action:
-  - variables:
-      formatted_date: '{{ as_timestamp(now() + timedelta(days=1)) | timestamp_custom(''%Y-%m-%d'')
-        }}'
-      notification_title: '{{ formatted_date }} Daily Buntzen Reservation Available!'
-      url: https://yodelportal.com/buntzen-lake/Half-Day-Pass
-  - service: rest_command.buntzen_reservation_half_day
+  - service: calendar.get_events
     metadata: {}
     data:
-      date: '{{ formatted_date }}'
-    response_variable: response
-  - if:
-    - condition: template
-      value_template: '{{ response[''status''] == 200 }}'
-    then:
-    - variables:
-        price_quotes: '{{ response[''content''][''catalogItemExtendedResultLst'']
-          }}'
-        statuses: "{%- for quote in price_quotes -%}\n  {{ quote['catalogItemCategory']
-          }}={{ quote['catalogItemStatus'] }}\n{%- endfor -%}\n"
-        available: "{%- for quote in price_quotes -%}\n  {%- if quote['catalogItemStatus']
-          != 'Sold Out' -%}\n    {{ quote['catalogItemCategory'] }}={{ quote['catalogItemStatus']
-          }}\n  {% endif -%}\n{%- endfor -%}\n"
-        is_available: '{{ available|length > 0 }}'
-    - if:
-      - condition: template
-        value_template: '{{ is_available }}'
-      then:
-      - service: notify.all_devices
-        metadata: {}
-        data:
-          title: '{{ notification_title }}'
-          data:
-            url: '{{ url }}'
-            clickAction: '{{ url }}'
-          message: '{{ formatted_date }}: {{ available }}
-
-            '
-    else:
-    - service: persistent_notification.create
-      metadata: {}
-      data:
-        title: Buntzen Checker {{ notification_title }} failed. Buntzen Checker turned
-          off. Please Check.
+      start_date_time: '{{ now() }}'
+      duration:
+        hours: 72
+    response_variable: events
+    target:
+      entity_id:
+      - calendar.jena_s_calendar
+      - calendar.mike_s_calendar
+      - calendar.shared_calendar
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.upcoming_calendar_events
+    data:
+      value: '{{ events | length }}'
+  mode: single
+- id: '1720978393641'
+  alias: Upcoming Birthdays
+  description: ''
+  trigger:
+  - platform: time_pattern
+    hours: /1
+  condition: []
+  action:
+  - service: calendar.get_events
+    metadata: {}
+    data:
+      start_date_time: '{{ now() }}'
+      duration:
+        hours: 144
+    response_variable: events
+    target:
+      entity_id:
+      - calendar.birthdays
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.upcoming_birthdays
+    data:
+      value: '{{ events | length }}'
   mode: single

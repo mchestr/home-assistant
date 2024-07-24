@@ -1,15 +1,4 @@
-- platform: group
-  name: Garage Lights
-  entities:
-    - light.garage_light
-    # - light.outdoor_christmas_lights
 
-- platform: group
-  name: Entry Lights
-  entities:
-    - light.entry_light
-    - light.sonoff31_1
-  
 - platform: group
   name: Living Room Lights All
   all: true

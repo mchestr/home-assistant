@@ -51,6 +51,27 @@ sensor:
       - name: Bus To Home
         route: !secret gtfs_bus_route
         stopid: !secret gtfs_to_home_bus_stopid
+  - platform: history_stats
+    name: HVAC Cooling Today
+    entity_id: sensor.hvac_action
+    state: "cooling"
+    type: time
+    start: "{{ today_at() }}"
+    end: "{{ now() }}"
+  - platform: history_stats
+    name: HVAC Heating Today
+    entity_id: sensor.hvac_action
+    state: "heating"
+    type: time
+    start: "{{ today_at() }}"
+    end: "{{ now() }}"
+  - platform: history_stats
+    name: HVAC Idle Today
+    entity_id: sensor.hvac_action
+    state: "idle"
+    type: time
+    start: "{{ today_at() }}"
+    end: "{{ now() }}"
   - platform: template
     sensors:
       tesla_est_battery_range_mi:
@@ -58,70 +79,70 @@ sensor:
         unit_of_measurement: mi
         icon_template: mdi:gauge
         value_template: >
-          {{ (states('sensor.tesla_est_battery_range_km') | float / 1.609344) | round(2) }}
+          {{ (states('sensor.tesla_est_battery_range_km') | float(0) / 1.609344) | round(2) }}
 
       tesla_rated_battery_range_mi:
         friendly_name: Rated Range (mi)
         unit_of_measurement: mi
         icon_template: mdi:gauge
         value_template: >
-          {{ (states('sensor.tesla_rated_battery_range_km') | float / 1.609344) | round(2) }}
+          {{ (states('sensor.tesla_rated_battery_range_km') | float(0) / 1.609344) | round(2) }}
 
       tesla_ideal_battery_range_mi:
         friendly_name: Ideal Range (mi)
         unit_of_measurement: mi
         icon_template: mdi:gauge
         value_template: >
-          {{ (states('sensor.tesla_ideal_battery_range_km') | float / 1.609344) | round(2) }}
+          {{ (states('sensor.tesla_ideal_battery_range_km') | float(0) / 1.609344) | round(2) }}
 
       tesla_odometer_mi:
         friendly_name: Odometer (mi)
         unit_of_measurement: mi
         icon_template: mdi:counter
         value_template: >
-          {{ (states('sensor.tesla_odometer') | float / 1.609344) | round(2) }}
+          {{ (states('sensor.tesla_odometer') | float(0) / 1.609344) | round(2) }}
 
       tesla_speed_mph:
         friendly_name: Speed (MPH)
         unit_of_measurement: mph
         icon_template: mdi:speedometer
         value_template: >
-          {{ (states('sensor.tesla_speed') | float / 1.609344) | round(2) }}
+          {{ (states('sensor.tesla_speed') | float(0) / 1.609344) | round(2) }}
 
       tesla_elevation_ft:
         friendly_name: Elevation (ft)
         unit_of_measurement: ft
         icon_template: mdi:image-filter-hdr
         value_template: >
-          {{ (states('sensor.tesla_elevation') | float * 3.2808 ) | round(2) }}
+          {{ (states('sensor.tesla_elevation') | float(0) * 3.2808 ) | round(2) }}
 
       tesla_tpms_pressure_fl_psi:
         friendly_name: Front Left Tire Pressure (psi)
         unit_of_measurement: psi
         icon_template: mdi:car-tire-alert
         value_template: >
-          {{ (states('sensor.tesla_tpms_fl') | float * 14.50377) | round(2) }}
+          {{ (states('sensor.tesla_tpms_fl') | float(0) * 14.50377) | round(2) }}
 
       tesla_tpms_pressure_fr_psi:
         friendly_name: Front Right Tire Pressure (psi)
         unit_of_measurement: psi
         icon_template: mdi:car-tire-alert
         value_template: >
-          {{ (states('sensor.tesla_tpms_fr') | float * 14.50377) | round(2) }}
+          {{ (states('sensor.tesla_tpms_fr') | float(0) * 14.50377) | round(2) }}
 
       tesla_tpms_pressure_rl_psi:
         friendly_name: Rear Left Tire Pressure (psi)
         unit_of_measurement: psi
         icon_template: mdi:car-tire-alert
         value_template: >
-          {{ (states('sensor.tesla_tpms_rl') | float * 14.50377) | round(2) }}
+          {{ (states('sensor.tesla_tpms_rl') | float(0) * 14.50377) | round(2) }}
 
       tesla_tpms_pressure_rr_psi:
         friendly_name: Rear Right Tire Pressure (psi)
         unit_of_measurement: psi
         icon_template: mdi:car-tire-alert
         value_template: >
-          {{ (states('sensor.tesla_tpms_rr') | float * 14.50377) | round(2) }}
+          {{ (states('sensor.tesla_tpms_rr') | float(0) * 14.50377) | round(2) }}
   - platform: template
     sensors:
       tesla_park_brake:
@@ -143,7 +164,7 @@ template:
       - name: Master Bed And Bathroom
         state: "{{ states('group.master_bed_bathroom') }}"
         attributes:
-          current_temperature: "{{ states('sensor.master_bathroom_sensor_temperature') }}"
+          current_temperature: "{{ states('sensor.upstairs_temperature') }}"
       - name: Guest Bed And Bathroom
         state: "{{ states('group.guest_bed_bathroom') }}"
         attributes:
@@ -152,8 +173,14 @@ template:
         state: "{{ states('group.garage_entry') }}"
         attributes:
           current_temperature: "{{ states('sensor.garage_temperature') }}"
-      - name: Home HVAC Action
-        state: "{{ state_attr('climate.home', 'hvac_action') }}"
+      - name: Office And Hallway
+        state: "{{ states('group.office_hallway') }}"
+        attributes:
+          current_temperature: "{{ states('sensor.office_temperature') }}"
+      - name: Powder And Patio
+        state: "{{ states('group.powder_patio') }}"
+        attributes:
+          current_temperature: "{{ states('sensor.outside_patio_temperature') }}"
 
   - binary_sensor:
       - name: Is Christmas-ish time
@@ -168,7 +195,7 @@ notify:
     platform: group
     services:
       - service: mobile_app_mike_phone
-      - service: mobile_app_iphone_210
+      - service: mobile_app_jena_phone
   - name: mike_phone
     platform: group
     services:
@@ -176,7 +203,7 @@ notify:
   - name: jena_phone
     platform: group
     services:
-      - service: mobile_app_iphone_210
+      - service: mobile_app_jena_phone
 
 lovelace:
   mode: yaml
@@ -216,6 +243,8 @@ lovelace:
     - url: /hacsfiles/webrtc/webrtc-camera.js?
       type: module
     - url: /hacsfiles/lovelace-mushroom/mushroom.js
+      type: module
+    - url: /hacsfiles/stack-in-card/stack-in-card.js
       type: module
 
 waste_collection_schedule:
@@ -261,19 +290,11 @@ alarm_control_panel:
       arming_time: 30
 
 rest_command:
-  buntzen_reservation_all_day:
+  buntzen_reservation:
     url: https://api.yodelpass.com/api/portal-catalog-items
     method: POST
     headers:
       user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
       x-api-version: "5.6"
     content_type: application/json
-    payload: '{"userId":0,"placeId":10671,"reservationDate":"{{ date }}","catalogItemType":0,"scopeName":"buntzen lake","filterStartDate":null,"filterEndDate":null}'
-  buntzen_reservation_half_day:
-    url: https://api.yodelpass.com/api/portal-catalog-items
-    method: POST
-    headers:
-      user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
-      x-api-version: "5.6"
-    content_type: application/json
-    payload: '{"userId":0,"placeId":10672,"reservationDate":"{{ date }}","catalogItemType":0,"scopeName":"buntzen lake","filterStartDate":null,"filterEndDate":null}'
+    payload: '{"userId":0,"placeId":"{{ placeId }}","reservationDate":"{{ date }}","catalogItemType":0,"scopeName":"buntzen lake","filterStartDate":null,"filterEndDate":null}'

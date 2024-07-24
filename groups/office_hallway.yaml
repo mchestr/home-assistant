@@ -1,0 +1,4 @@
+name: Office & Hallway Group Entities
+entities:
+  - light.office_lights
+  - light.hallway_lights

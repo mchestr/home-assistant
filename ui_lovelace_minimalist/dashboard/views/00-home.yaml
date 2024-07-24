@@ -268,9 +268,9 @@ cards:
               - card_room
               - yellow_on
             name: Powder & Patio
-            entity: group.powder_patio
+            entity: sensor.powder_and_patio
             icon: mdi:faucet
-            show_label: false
+            show_label: true
             tap_action:
               action: navigate
               navigation_path: /lovelace/powder-patio
@@ -283,7 +283,7 @@ cards:
                   - light.powder_room_fan
                   - light.patio_lights
             variables:
-              label_use_temperature: false
+              label_use_temperature: true
               label_use_brightness: false
               entity_1:
                 entity_id: light.powder_room_light
@@ -306,14 +306,15 @@ cards:
                   - blue_off
                 tap_action:
                   action: toggle
+
           - type: custom:button-card
             template:
               - card_room
               - yellow_on
             name: Office & Hallway
-            entity: light.office_hallway_lights
+            entity: sensor.office_and_hallway
             icon: mdi:desk-lamp
-            show_label: false
+            show_label: true
             tap_action:
               action: navigate
               navigation_path: /lovelace/office-hallway
@@ -325,8 +326,8 @@ cards:
                   - light.office_light
                   - light.hallway_light
             variables:
-              label_use_temperature: false
-              label_use_brightness: true
+              label_use_temperature: true
+              label_use_brightness: false
               entity_1:
                 entity_id: light.office_light
                 templates:

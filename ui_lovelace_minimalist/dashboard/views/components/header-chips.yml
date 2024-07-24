@@ -12,6 +12,7 @@ cards:
                 content_info: none
               - type: alarm-control-panel
                 entity: alarm_control_panel.home_alarm
+                content_info: none
               - type: template
                 content: |
                   {{ states('sensor.next_collection') }}
@@ -24,6 +25,18 @@ cards:
                 tap_action:
                   action: navigate
                   navigation_path: /calendar
+              - type: entity
+                entity: input_number.upcoming_calendar_events
+                name: Events
+                tap_action:
+                  action: navigate
+                  navigation_path: /dashboard-calendars/0
+              - type: entity
+                entity: input_number.upcoming_birthdays
+                tap_action:
+                  action: navigate
+                  navigation_path: /dashboard-calendars/birthdays
+                name: Birthdays
           - type: custom:button-card
             template: chip_mdi_icon_only
             variables:
