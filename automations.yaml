@@ -428,9 +428,12 @@
   alias: Hue Go Routine
   description: Turn Hue Go on in the morning
   trigger:
-  - platform: template
-    value_template: '{{ now().timestamp() | timestamp_custom(''%H:%M'') == (state_attr(''input_datetime.jena_alarm'',
-      ''timestamp'') - 5*60) | timestamp_custom(''%H:%M'', false) }}'
+  - platform: time
+    at: 06:05:00
+    id: First
+  - platform: time
+    at: 06:05:00
+    id: Second
   condition:
   - condition: state
     entity_id: input_boolean.jena_alarm_enabled
@@ -443,14 +446,35 @@
     state: 'on'
   - condition: template
     value_template: '{{ now().month >= 8 or now().month <= 4 }}'
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: time
+        weekday:
+        - mon
+        - tue
+        - wed
+      - condition: trigger
+        id:
+        - First
+    - condition: and
+      conditions:
+      - condition: time
+        weekday:
+        - thu
+        - fri
+      - condition: trigger
+        id:
+        - Second
   action:
-  - service: light.turn_on
-    data:
+  - data:
       transition: 300
       brightness_step: 200
       color_temp: 355
     target:
       entity_id: light.hue_go
+    action: light.turn_on
   - wait_for_trigger:
     - platform: state
       entity_id:
@@ -458,10 +482,10 @@
       to: 'on'
     timeout:
       minutes: 25
-  - service: light.turn_off
-    target:
+  - target:
       entity_id: light.hue_go
     data: {}
+    action: light.turn_off
   mode: single
 - id: 6c11052a-1ed4-49f3-ab12-0293fd86c749
   alias: Lights Off Away
@@ -1113,7 +1137,7 @@
   - platform: numeric_state
     entity_id:
     - sensor.guest_bathroom_sensor_humidity
-    above: 60
+    above: 75
     id: turn_on
     for:
       hours: 0
@@ -1122,7 +1146,7 @@
   - platform: numeric_state
     entity_id:
     - sensor.guest_bathroom_sensor_humidity
-    above: 70
+    above: 80
     id: turn_on
     for:
       hours: 0
@@ -1131,7 +1155,7 @@
   - platform: numeric_state
     entity_id:
     - sensor.guest_bathroom_sensor_humidity
-    above: 80
+    above: 90
     id: turn_on
     for:
       hours: 0
@@ -1906,41 +1930,6 @@
     target:
       entity_id: select.home_current_mode
   mode: single
-- id: '1712979211230'
-  alias: Korguh Charge Reminder
-  description: Notification to plug Korguh in if at home.
-  trigger:
-  - platform: time
-    at: '21:00:00'
-  condition:
-  - condition: state
-    entity_id: device_tracker.tesla_location
-    state: home
-    for:
-      hours: 0
-      minutes: 30
-      seconds: 0
-  - condition: state
-    entity_id: binary_sensor.tesla_plugged_in
-    state: 'off'
-  - condition: template
-    value_template: '{{ states(''sensor.tesla_battery_level'') < states(''sensor.tesla_charge_limit_soc'')
-      }}'
-  - condition: zone
-    entity_id: person.mike
-    zone: zone.home
-  action:
-  - service: notify.mike_phone
-    metadata: {}
-    data:
-      title: Plug Korguh In!
-      message: 'Korguh needs charging and is not plugged in.
-
-        Currently {{ states(''sensor.tesla_battery_level'') }}% / {{ states(''sensor.tesla_charge_limit_soc'')
-        }}%.
-
-        '
-  mode: single
 - id: '1717463297058'
   alias: Camera Detection Toggle Automation
   description: Garage
@@ -1985,7 +1974,13 @@
   - platform: time
     at: '21:00:00'
     id: 'off'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: person.jena
+    state: home
+  - condition: state
+    entity_id: person.mike
+    state: home
   action:
   - choose:
     - conditions:
@@ -2018,6 +2013,7 @@
   - platform: time
     at: 06:57:00
     id: reminder
+    enabled: false
   condition:
   - condition: or
     conditions:
@@ -2057,12 +2053,12 @@
       entity_id: input_boolean.buntzen_today_daily
       state: 'on'
     then:
-    - service: rest_command.buntzen_reservation
-      metadata: {}
+    - metadata: {}
       data:
         date: '{{ today_date }}'
         placeId: '{{ full_day_place_id }}'
       response_variable: response
+      action: rest_command.buntzen_reservation
     - if:
       - condition: template
         value_template: '{{ response[''status''] == 200 }}'
@@ -2078,8 +2074,7 @@
         - condition: template
           value_template: '{{ is_available }}'
         then:
-        - service: notify.all_devices
-          metadata: {}
+        - metadata: {}
           data:
             title: '[Today/Daily] Buntzen Available'
             data:
@@ -2088,6 +2083,7 @@
             message: '{{ available }}
 
               '
+          action: notify.all_devices
   - alias: Check Today Morning/Afternoon
     if:
     - condition: or
@@ -2099,12 +2095,12 @@
         entity_id: input_boolean.buntzen_today_afternoon
         state: 'on'
     then:
-    - service: rest_command.buntzen_reservation
-      metadata: {}
+    - metadata: {}
       data:
         date: '{{ today_date }}'
         placeId: '{{ half_day_place_id }}'
       response_variable: response
+      action: rest_command.buntzen_reservation
     - if:
       - condition: template
         value_template: '{{ response[''status''] == 200 }}'
@@ -2124,8 +2120,7 @@
         - condition: template
           value_template: '{{ is_available }}'
         then:
-        - service: notify.all_devices
-          metadata: {}
+        - metadata: {}
           data:
             title: '[Today/Half] Buntzen Available'
             data:
@@ -2134,18 +2129,19 @@
             message: '{{ available }}
 
               '
+          action: notify.all_devices
   - alias: Check Tomorrow Daily
     if:
     - condition: state
       entity_id: input_boolean.buntzen_tomorrow_daily
       state: 'on'
     then:
-    - service: rest_command.buntzen_reservation
-      metadata: {}
+    - metadata: {}
       data:
         date: '{{ tomorrow_date }}'
         placeId: '{{ full_day_place_id }}'
       response_variable: response
+      action: rest_command.buntzen_reservation
     - if:
       - condition: template
         value_template: '{{ response[''status''] == 200 }}'
@@ -2161,8 +2157,7 @@
         - condition: template
           value_template: '{{ is_available }}'
         then:
-        - service: notify.all_devices
-          metadata: {}
+        - metadata: {}
           data:
             title: '[Tomorrow/Daily] Buntzen Available'
             data:
@@ -2171,6 +2166,7 @@
             message: '{{ available }}
 
               '
+          action: notify.all_devices
   - alias: Check Tomorrow Morning/Afternoon
     if:
     - condition: or
@@ -2182,12 +2178,12 @@
         entity_id: input_boolean.buntzen_tomorrow_afternoon
         state: 'on'
     then:
-    - service: rest_command.buntzen_reservation
-      metadata: {}
+    - metadata: {}
       data:
         date: '{{ tomorrow_date }}'
         placeId: '{{ half_day_place_id }}'
       response_variable: response
+      action: rest_command.buntzen_reservation
     - if:
       - condition: template
         value_template: '{{ response[''status''] == 200 }}'
@@ -2207,8 +2203,7 @@
         - condition: template
           value_template: '{{ is_available }}'
         then:
-        - service: notify.all_devices
-          metadata: {}
+        - metadata: {}
           data:
             title: '[Tomorrow/Half] Buntzen Available'
             data:
@@ -2217,13 +2212,13 @@
             message: '{{ available }}
 
               '
+          action: notify.all_devices
   - if:
     - condition: trigger
       id:
       - reminder
     then:
-    - service: notify.mike_phone
-      metadata: {}
+    - metadata: {}
       data:
         title: New Buntzen Available Soon!
         data:
@@ -2232,6 +2227,7 @@
         message: 'check at 7am!
 
           '
+      action: notify.mike_phone
     alias: Reminder
   mode: single
 - id: '1720585849250'
@@ -2552,3 +2548,221 @@
     data:
       value: '{{ events | length }}'
   mode: single
+- id: '1724704337236'
+  alias: 'Korguh: Garage Door Automation'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.tesla_shift_state
+    to: P
+    id: Leaving
+  - platform: state
+    entity_id:
+    - device_tracker.tesla_location
+    to: home
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: Arriving
+  condition:
+  - condition: zone
+    entity_id: device_tracker.tesla_location
+    zone: zone.home
+  - condition: time
+    after: 07:00:00
+    before: '21:00:00'
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Arriving
+      sequence:
+      - alias: Wait for car slowing
+        wait_template: '{{ states(''sensor.tesla_speed'') | int < 20 }}'
+        continue_on_timeout: true
+        timeout: 00:00:25
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 15
+          milliseconds: 0
+      - if:
+        - condition: state
+          entity_id: cover.gdo_door
+          state: closed
+        then:
+        - action: cover.open_cover
+          metadata: {}
+          data: {}
+          target:
+            entity_id: cover.gdo_door
+      - wait_for_trigger:
+        - platform: state
+          entity_id:
+          - binary_sensor.gdo_obstruction
+          from: 'on'
+          to: 'off'
+        continue_on_timeout: false
+        timeout:
+          hours: 0
+          minutes: 3
+          seconds: 0
+          milliseconds: 0
+      - wait_for_trigger:
+        - platform: state
+          entity_id:
+          - sensor.tesla_shift_state
+          to: P
+          from: R
+        continue_on_timeout: false
+        timeout:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - action: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          entity_id: cover.gdo_door
+    - conditions:
+      - condition: trigger
+        id:
+        - Leaving
+      sequence:
+      - wait_for_trigger:
+        - platform: state
+          entity_id:
+          - sensor.tesla_shift_state
+          from: P
+          to: D
+          for:
+            hours: 0
+            minutes: 0
+            seconds: 0
+        continue_on_timeout: false
+        timeout:
+          hours: 0
+          minutes: 0
+          seconds: 30
+          milliseconds: 0
+        alias: Wait for car in drive
+      - if:
+        - condition: state
+          entity_id: cover.gdo_door
+          state: closed
+        then:
+        - action: cover.open_cover
+          metadata: {}
+          data: {}
+          target:
+            entity_id: cover.gdo_door
+      - wait_for_trigger:
+        - platform: state
+          entity_id:
+          - cover.gdo_door
+          to: open
+        continue_on_timeout: false
+        timeout:
+          hours: 0
+          minutes: 0
+          seconds: 30
+          milliseconds: 0
+        alias: Wait for door open
+      - alias: Wait till clear door
+        wait_for_trigger:
+        - platform: state
+          entity_id:
+          - binary_sensor.gdo_obstruction
+          from: 'on'
+          to: 'off'
+          for:
+            hours: 0
+            minutes: 0
+            seconds: 3
+        continue_on_timeout: false
+        timeout:
+          hours: 0
+          minutes: 5
+          seconds: 0
+          milliseconds: 0
+      - action: cover.close_cover
+        metadata: {}
+        data: {}
+        target:
+          entity_id: cover.gdo_door
+  mode: single
+- id: '1730687064723'
+  alias: Master Bedroom Light Scenes
+  description: Zooz71 Scene Automation
+  use_blueprint:
+    path: mchestr/zooz_zen71_zwavejsui.yaml
+    input:
+      zooz_zen71_up: sensor.master_bedroom_light_scene_state_scene_001
+      zooz_zen71_down: sensor.master_bedroom_light_scene_state_scene_002
+      switch_up_2x: []
+      switch_down_2x:
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          area_id: master_bathroom
+      switch_down_3x:
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          area_id: master_bathroom
+- id: '1730687399904'
+  alias: Entry Light Scene Automation
+  description: ''
+  use_blueprint:
+    path: mchestr/zooz_zen71_zwavejsui.yaml
+    input:
+      zooz_zen71_up: sensor.entry_light_scene_state_scene_001
+      zooz_zen71_down: sensor.entry_light_scene_state_scene_002
+      switch_down_2x:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          floor_id:
+          - first_floor
+          - main_floor
+          - second_floor
+      switch_down_3x:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          floor_id:
+          - first_floor
+          - main_floor
+          - second_floor
+      switch_down_4x:
+      - delay:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          floor_id:
+          - first_floor
+          - main_floor
+          - second_floor

@@ -189,6 +189,12 @@ template:
           {{ (current.month == 11 and current.day > 18) 
             or current.month == 12 or (current.month == 1
             and current.day <= 2) }}
+      - name: Fridge Temperature High
+        state: "{{ states('sensor.fridge_temperature') | float(default=0) > 10 }}"
+      - name: Freeze Temperature High
+        state: "{{ states('sensor.freezer_temperature') | float(default=0) > 0 }}"
+      - name: Deep Freeze Temperature High
+        state: "{{ states('sensor.deep_freeze_temperature') | float(default=0) > 0 }}"
 
 notify:
   - name: ALL_DEVICES

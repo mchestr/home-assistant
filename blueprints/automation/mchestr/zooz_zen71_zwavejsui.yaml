@@ -1,0 +1,173 @@
+blueprint:
+  homeassistant:
+    min_version: 2024.6.0
+  name: Zooz ZEN71
+  description: Automations helper for the Zooz ZEN71 Switch using Zwave JS UI.
+  domain: automation
+  input:
+    zooz_zen71_up:
+      name: Zooz ZEN71 Up Scene (001)
+      description: The ZEN71 up scene sensor
+      selector:
+        entity:
+          filter:
+            domain: sensor
+            integration: mqtt
+    zooz_zen71_down:
+      name: Zooz ZEN71 Down Scene (002)
+      description: The ZEN71 down scene sensor
+      selector:
+        entity:
+          filter:
+            domain: sensor
+            integration: mqtt
+    switch_up_1x:
+      name: Top Paddle 1x
+      description: 'Action to run on switch upper paddle single tap. Default: Turn
+        on switch.'
+      default: []
+      selector:
+        action: {}
+    switch_up_2x:
+      name: Top Paddle 2x
+      description: Action to run on switch upper paddle double tap.
+      default: []
+      selector:
+        action: {}
+    switch_up_3x:
+      name: Top Paddle 3x
+      description: 'Action to run on switch upper paddle triple tap. Default: Enter
+        inclusion/pairing mode.'
+      default: []
+      selector:
+        action: {}
+    switch_up_4x:
+      name: Top Paddle 4x
+      description: Action to run on switch upper paddle quadruple tap.
+      default: []
+      selector:
+        action: {}
+    switch_up_5x:
+      name: Top Paddle 5x
+      description: Action to run on switch upper paddle quintuple tap.
+      default: []
+      selector:
+        action: {}
+    switch_up_hold:
+      name: Top Paddle Hold
+      description: 'Action to run on switch upper paddle press-and-hold.'
+      default: []
+      selector:
+        action: {}
+    switch_up_release:
+      name: Top Paddle Release
+      description: Action to run on switch upper paddle release.
+      default: []
+      selector:
+        action: {}
+    switch_down_1x:
+      name: Lower Paddle 1x
+      description: 'Action to run on switch lower paddle single tap. Default: Turn
+        off switch.'
+      default: []
+      selector:
+        action: {}
+    switch_down_2x:
+      name: Lower Paddle 2x
+      description: Action to run on switch lower paddle double tap.
+      default: []
+      selector:
+        action: {}
+    switch_down_3x:
+      name: Lower Paddle 3x
+      description: 'Action to run on switch lower paddle triple tap. Default: Enter
+        exclusion/un-pairing mode.'
+      default: []
+      selector:
+        action: {}
+    switch_down_4x:
+      name: Lower Paddle 4x
+      description: Action to run on switch lower paddle quadruple tap.
+      default: []
+      selector:
+        action: {}
+    switch_down_5x:
+      name: Lower Paddle 5x
+      description: Action to run on switch lower paddle quintuple tap.
+      default: []
+      selector:
+        action: {}
+    switch_down_hold:
+      name: Bottom Paddle Hold
+      description: 'Action to run on switch lower paddle press-and-hold.'
+      default: []
+      selector:
+        action: {}
+    switch_down_release:
+      name: Bottom Paddle Release
+      description: Action to run on switch lower paddle double tap.
+      default: []
+      selector:
+        action: {}
+  source_url: https://community.home-assistant.io/t/zooz-zen30-double-switch-automation-helper/281362
+mode: single
+max_exceeded: silent
+trigger:
+  - trigger: state
+    entity_id: !input zooz_zen71_up
+    id: up
+  - trigger: state
+    entity_id: !input zooz_zen71_down
+    id: down
+conditions:
+- condition: state
+  entity_id:
+    - !input zooz_zen71_up
+    - !input zooz_zen71_down
+  match: any
+  state:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+action:
+- variables:
+    scene_id: '{{ trigger.to_state.state }}'
+- choose:
+  - conditions: '{{ trigger.id == ''up'' }}'
+    sequence:
+    - choose:
+      - conditions: '{{ scene_id == 0 }}'
+        sequence: !input 'switch_up_1x'
+      - conditions: '{{ scene_id == 1 }}'
+        sequence: !input 'switch_up_release'
+      - conditions: '{{ scene_id == 2 }}'
+        sequence: !input 'switch_up_hold'
+      - conditions: '{{ scene_id == 3 }}'
+        sequence: !input 'switch_up_2x'
+      - conditions: '{{ scene_id == 4 }}'
+        sequence: !input 'switch_up_3x'
+      - conditions: '{{ scene_id == 5 }}'
+        sequence: !input 'switch_up_4x'
+      - conditions: '{{ scene_id == 6 }}'
+        sequence: !input 'switch_up_5x'
+  - conditions: '{{ trigger.id == ''down'' }}'
+    sequence:
+    - choose:
+      - conditions: '{{ scene_id == 0 }}'
+        sequence: !input 'switch_down_1x'
+      - conditions: '{{ scene_id == 1 }}'
+        sequence: !input 'switch_down_release'
+      - conditions: '{{ scene_id == 2 }}'
+        sequence: !input 'switch_down_hold'
+      - conditions: '{{ scene_id == 3 }}'
+        sequence: !input 'switch_down_2x'
+      - conditions: '{{ scene_id == 4 }}'
+        sequence: !input 'switch_down_3x'
+      - conditions: '{{ scene_id == 5 }}'
+        sequence: !input 'switch_down_4x'
+      - conditions: '{{ scene_id == 6 }}'
+        sequence: !input 'switch_down_5x'

@@ -55,23 +55,33 @@ utility_closet_water_detected:
   can_acknowledge: true
   notifiers:
     - ALL_DEVICES
-indoor_heating_on_temp_falling:
-  name:  Indoor Temperature is Falling!
-  done_message: Temperature is rising
-  entity_id: binary_sensor.indoor_temperature_falling_heating_on
-  state: 'on'
-  repeat: 3
-  can_acknowledge: true
+deep_freeze_temperature:
+  name: Deep freeze temperature
+  done_message: Downstairs deep freeze is warming
+  entity_id: binary_sensor.deep_freeze_temperature_high
+  state: "on"
+  repeat: 10
   skip_first: true
+  can_acknowledge: true
   notifiers:
     - ALL_DEVICES
-indoor_cooling_on_temp_rising:
-  name: Indoor Temperature is Rising!
-  done_message: Temperature is falling
-  entity_id: binary_sensor.indoor_temperature_rising_cooling_on
-  state: 'on'
-  repeat: 3
-  can_acknowledge: true
+freezer_temperature:
+  name: Freeze temperature
+  done_message: Upstairs fridge freezer is warming
+  entity_id: binary_sensor.freezer_temperature_high
+  state: "on"
+  repeat: 10
   skip_first: true
+  can_acknowledge: true
   notifiers:
-    - mike_phone
+    - ALL_DEVICES
+fridge_temperature:
+  name: Fridge temperature
+  done_message: Upstairs fridge is warming
+  entity_id: binary_sensor.fridge_temperature_high
+  state: "on"
+  repeat: 10
+  skip_first: true
+  can_acknowledge: true
+  notifiers:
+    - ALL_DEVICES
